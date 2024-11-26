@@ -1,0 +1,36 @@
+spring:
+  application:
+    name: eureka-server
+
+management:
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+  cloud:
+    discovery:
+      enabled: false
+
+server:
+  port: 8761  # Eureka server port
+
+eureka:
+  client:
+    register-with-eureka: false  # Eureka server doesn't need to register itself with Eureka
+    fetch-registry: false  # Eureka server doesn't need to fetch registry from another Eureka server
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
+  server:
+    enable-self-preservation: false  # Optional: Disable self-preservation during development (to clear stale data quickly)
+    eviction-interval-timer-in-ms: 60000  # Time for cleaning up expired instances
+    peer-awareness:
+      enabled: false  # Optional: Disable peer-awareness if running single Eureka server
+
+  instance:
+    hostname: localhost  # Make sure Eureka server uses the correct hostname or IP address
+
+logging:
+  level:
+    com.netflix.discovery: DEBUG
