@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-@Table(name = "USER")
+@Table(name = "users") // Renamed to 'users' to avoid reserved keyword conflict
 public class User extends BaseEntity {
 
     @Id

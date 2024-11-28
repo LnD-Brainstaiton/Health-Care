@@ -1,4 +1,4 @@
-package com.health_care.user_service.api;
+package com.health_care.user_service.controller;
 
 import com.health_care.user_service.domain.common.ApiResponse;
 import com.health_care.user_service.domain.dto.Demo;
@@ -10,6 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class RegistrationResource {
 
     public ApiResponse<Demo> register() {
-
+        return new ApiResponse<>();
     }
 }
