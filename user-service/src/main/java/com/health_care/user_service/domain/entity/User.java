@@ -2,31 +2,34 @@ package com.health_care.user_service.domain.entity;
 
 import com.health_care.user_service.domain.enums.Role;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "users") // Renamed to 'users' to avoid reserved keyword conflict
+@Table(name = "users")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
-    private String username;
+    @Column(nullable = false)
+    private String userName;
 
     @Column(nullable = false)
     private String password;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private Role usertype;
+    private Role userType;
 
     @Column(name = "last_logged_in")
     private LocalDateTime lastLoggedIn;
+
 }

@@ -28,15 +28,28 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.7.2</version> <!-- Use the latest version -->
 		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>42.6.0</version> <!-- Use the latest compatible version -->
+			<version>42.7.2</version> <!-- Use the latest compatible version -->
+		</dependency>
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct</artifactId>
+			<version>1.5.5.Final</version> <!-- Replace with the latest version if needed -->
 		</dependency>
 
+		<!-- MapStruct Processor (used by the compiler to generate mappers) -->
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct-processor</artifactId>
+			<version>1.5.5.Final</version> <!-- Replace with the same version as the API -->
+			<scope>provided</scope> <!-- Processor is only needed at compile-time -->
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
@@ -58,6 +71,8 @@
 			<artifactId>jjwt-api</artifactId>
 			<version>0.11.5</version>
 		</dependency>
+
+
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-impl</artifactId>
@@ -71,9 +86,8 @@
 
 		<!-- H2 Database -->
 		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<scope>runtime</scope>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 
 		<!-- Lombok -->
@@ -88,6 +102,12 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>jakarta.validation</groupId>
+			<artifactId>jakarta.validation-api</artifactId>
+			<version>3.0.2</version>
+			<scope>compile</scope>
 		</dependency>
 	</dependencies>
 
