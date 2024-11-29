@@ -25,6 +25,7 @@ public class AuthConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        // TODO Need To add url in DB or Properties
         return http.csrf().disable()
                 .authorizeHttpRequests()
                 .requestMatchers("/api/v1/user/token", "/api/v1/user/list", "/auth/validate").permitAll()
