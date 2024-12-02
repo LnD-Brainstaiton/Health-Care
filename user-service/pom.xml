@@ -38,6 +38,13 @@
 			<version>1.5.5.Final</version> <!-- Replace with the latest version if needed -->
 		</dependency>
 
+		<dependency>
+			<groupId>org.hibernate.validator</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>8.0.1.Final</version>
+		</dependency>
+
+
 		<!-- MapStruct Processor (used by the compiler to generate mappers) -->
 		<dependency>
 			<groupId>org.mapstruct</groupId>

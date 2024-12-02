@@ -24,7 +24,7 @@ public class RegistrationResource {
 
     private final IRegistrationService registrationService;
 
-    @PostMapping("/register")
+    @PostMapping("/patient/register")
     public ApiResponse<RegisterResponse> register(@RequestBody RegisterRequest user) {
         RegisterResponse response = registrationService.registerUser(user);
         return ResponseUtils.createResponseObject(ResponseMessage.OPERATION_SUCCESSFUL, response);
