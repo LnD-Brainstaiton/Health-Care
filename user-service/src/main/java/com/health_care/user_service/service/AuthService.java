@@ -32,28 +32,4 @@ public class AuthService {
         return new ApiResponse<>(ApiResponseCode.OPERATION_SUCCESSFUL.getResponseCode(), "Token generated successfully", tokenResponse);
     }
 
-    public List<User> getAllUsers() {
-        // Dummy data for demonstration purposes
-        List<User> users = new ArrayList<>();
-
-        User user1 = new User();
-        user1.setId(1L);
-        user1.setUserName("john_doe");
-        user1.setPassword("encrypted_password_1");
-        user1.setUserType(Role.USER);
-        user1.setLastLoggedIn(LocalDateTime.now().minusDays(1));
-
-        User user2 = new User();
-        user2.setId(2L);
-        user2.setUserName("jane_smith");
-        user2.setPassword("encrypted_password_2");
-        user2.setUserType(Role.ADMIN);
-        user2.setLastLoggedIn(LocalDateTime.now().minusHours(5));
-
-        users.add(user1);
-        users.add(user2);
-
-        return users;
-    }
-
 }

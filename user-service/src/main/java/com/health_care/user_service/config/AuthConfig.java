@@ -22,13 +22,12 @@ public class AuthConfig {
         return new CustomUserDetailsService();
     }
 
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         // TODO Need To add url in DB or Properties
         return http.csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/v1/user/token", "/auth/token", "/auth/validate","/api/v1/user/register").permitAll()
+                .requestMatchers("/api/v1/user/token","/api/v1/user/patient/register","/api/v1/user/admin/create","/api/v1/user/doctor/create").permitAll()
                 .and()
                 .build();
     }
