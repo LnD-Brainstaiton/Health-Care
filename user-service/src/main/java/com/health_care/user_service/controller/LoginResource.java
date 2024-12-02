@@ -31,8 +31,6 @@ public class LoginResource {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-
-
     @PostMapping("/token")
     public ApiResponse<TokenResponse> getToken(@RequestBody LoginRequest loginRequest) {
         Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUserName(), loginRequest.getPassword()));
@@ -41,15 +39,6 @@ public class LoginResource {
         } else {
             return new ApiResponse<>(ApiResponseCode.INVALID_REQUEST_DATA.getResponseCode(), "Invalid Access, Please Provide Valid credential", new TokenResponse());
         }
-    }
-
-    @GetMapping("/list")
-    public ApiResponse<List<User>> getAllUsers() {
-        List<User> users = service.getAllUsers();
-        ApiResponse<List<User>> response = new ApiResponse<>();
-        response.setResponseCode(ApiResponseCode.OPERATION_SUCCESSFUL.getResponseCode());
-        response.setData(users);
-        return response;
     }
 
 }
