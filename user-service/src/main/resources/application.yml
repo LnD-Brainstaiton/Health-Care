@@ -2,9 +2,9 @@ spring:
   application:
     name: user-service  # Service name
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres
-    username: tasin
-    password: 1234
+    url: jdbc:postgresql://localhost:5432/health_care_user_service
+    username: admin
+    password: admin
   jpa:
     hibernate:
       ddl-auto: update

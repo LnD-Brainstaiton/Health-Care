@@ -28,7 +28,7 @@ public class AuthConfig {
         // TODO Need To add url in DB or Properties
         return http.csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/v1/user/token", "/api/v1/user/list", "/auth/validate").permitAll()
+                .requestMatchers("/api/v1/user/token", "/auth/token", "/auth/validate","/api/v1/user/register").permitAll()
                 .and()
                 .build();
     }
