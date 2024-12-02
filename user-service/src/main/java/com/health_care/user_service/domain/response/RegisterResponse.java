@@ -11,6 +11,5 @@ public class RegisterResponse {
 
     private String userName;
     private String userType;
-    private LocalDateTime lastLoggedIn;
 
 }
