@@ -7,11 +7,11 @@ import com.health_care.user_service.common.logger.UserServiceLogger;
 import com.health_care.user_service.domain.common.ApiResponse;
 import com.health_care.user_service.domain.enums.ResponseMessage;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -43,6 +43,19 @@ public class UserServiceExceptionHandler extends BaseExceptionHandler{
         errorLogger.error(ex.getLocalizedMessage(), ex);
         ApiResponse<Void> apiResponse = buildApiResponse(ex.getMessageCode(), ex.getMessage());
         return new ResponseEntity<>(apiResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public final ResponseEntity<ApiResponse<Void>> handleBadCredentialsException(BadCredentialsException ex) {
+        logger.error("Authentication failed: " + ex.getLocalizedMessage(), ex);
+
+        // Create an appropriate response message
+        ApiResponse<Void> apiResponse = buildApiResponse(
+                ResponseMessage.AUTHENTICATION_FAILED.getResponseCode(),
+                ResponseMessage.AUTHENTICATION_FAILED.getResponseMessage()
+        );
+
+        return new ResponseEntity<>(apiResponse, HttpStatus.UNAUTHORIZED);
     }
 
 //    @ExceptionHandler(DataAccessException.class)

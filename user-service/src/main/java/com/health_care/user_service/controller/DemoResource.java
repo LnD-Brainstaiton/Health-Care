@@ -1,6 +1,5 @@
-package com.health_care.user_service.api;
+package com.health_care.user_service.controller;
 
-import com.health_care.user_service.common.exceptions.InvalidRequestDataException;
 import com.health_care.user_service.common.utils.AppUtils;
 import com.health_care.user_service.common.utils.ResponseUtils;
 import com.health_care.user_service.domain.common.ApiResponse;

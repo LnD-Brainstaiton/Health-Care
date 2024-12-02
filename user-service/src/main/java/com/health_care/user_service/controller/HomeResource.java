@@ -1,4 +1,4 @@
-package com.health_care.user_service.api;
+package com.health_care.user_service.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
