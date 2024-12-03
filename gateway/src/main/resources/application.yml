@@ -13,6 +13,8 @@ spring:
           uri: lb://user-service  # Load balanced URI for the user service registered in Eureka
           predicates:
             - Path=/api/v1/user/**  # Route all requests to /user/** to the user service
+          filters:
+            - AuthenticationFilter
 
         # You can add other routes here for additional services as needed.
         # - id: other-service

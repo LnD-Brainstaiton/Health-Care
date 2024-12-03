@@ -1,6 +1,15 @@
 spring:
   application:
     name: user-service  # Service name
+  datasource:
+    url: jdbc:postgresql://localhost:5432/health_care_user_service
+    username: admin
+    password: admin
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
 
 management:
   endpoint:
@@ -21,3 +30,4 @@ eureka:
   instance:
     hostname: localhost  # Optional: specify the hostname
     prefer-ip-address: true
+
