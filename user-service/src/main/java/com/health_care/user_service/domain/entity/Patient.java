@@ -40,9 +40,6 @@ public class Patient extends BaseEntity{
     @Column(columnDefinition = "TEXT")
     private String address;
 
-    @Column(nullable = false, unique = true, length = 50)
-    private String userid;
-
     @Column(nullable = false, unique = true, length = 100)
     private String email;
 
@@ -53,7 +50,7 @@ public class Patient extends BaseEntity{
     private String nid;
 
     @Column(nullable = false)
-    private Boolean isActive = true; // Default value is true
+    private Boolean isActive; // Default value is true
 
     @Column(name = "blood_group", length = 5)
     private String bloodGroup; // Add validation for allowed values at the service level

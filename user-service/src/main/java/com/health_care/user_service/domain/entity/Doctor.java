@@ -37,9 +37,6 @@ public class Doctor extends BaseEntity{
     @Column(length = 10)
     private String gender; // Add validation at the service level for allowed values
 
-    @Column(nullable = false, unique = true, length = 50)
-    private String userid;
-
     @Column(nullable = false, unique = true, length = 100)
     private String email;
 
@@ -49,9 +46,12 @@ public class Doctor extends BaseEntity{
     @Column(length = 100)
     private String department;
 
+    @Column(nullable = false)
+    private Boolean isActive;
+
     @Column(columnDefinition = "TEXT")
     private String specialities; // Store comma-separated values; consider using a converter if necessary
 
-    @Column(precision = 10, scale = 2)
-    private Double fee; // Add validation for non-negative values at the service level
+    @Column(precision = 10) // Specify only precision
+    private double fee;// Add validation for non-negative values at the service level
 }

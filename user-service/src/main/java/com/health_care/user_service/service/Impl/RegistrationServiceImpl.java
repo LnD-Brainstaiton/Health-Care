@@ -1,10 +1,12 @@
 package com.health_care.user_service.service.Impl;
 
+import com.health_care.user_service.common.exceptions.InvalidRequestDataException;
 import com.health_care.user_service.config.AuthConfig;
 import com.health_care.user_service.domain.entity.Admin;
 import com.health_care.user_service.domain.entity.Doctor;
 import com.health_care.user_service.domain.entity.Patient;
 import com.health_care.user_service.domain.entity.User;
+import com.health_care.user_service.domain.enums.ResponseMessage;
 import com.health_care.user_service.domain.enums.Role;
 import com.health_care.user_service.domain.mapper.RegisterMapper;
 import com.health_care.user_service.domain.request.RegisterRequest;
@@ -56,11 +58,14 @@ public class RegistrationServiceImpl implements IRegistrationService {
     private RegisterResponse register(RegisterRequest request, Role role, Consumer<RegisterRequest> saveEntityFunction) {
         checkForDuplicate(request);
 
+        // Create and save the User
         User user = createUser(request, role);
         User savedUser = userRepository.save(user);
 
-        saveEntityFunction.accept(request); // Save corresponding entity (Patient, Doctor, or Admin)
+        // Save the corresponding entity (Patient, Doctor, or Admin)
+        saveEntityFunction.accept(request);
 
+        // Log and return response
         logRegistration(role.name(), request.getMobile());
         return registerMapper.toRegisterResponse(savedUser);
     }
@@ -79,6 +84,7 @@ public class RegistrationServiceImpl implements IRegistrationService {
                 .firstname(request.getFirstName())
                 .lastname(request.getLastName())
                 .email(request.getEmail())
+                .isActive(Boolean.TRUE)
                 .build();
         patientRepository.save(patient);
     }
@@ -89,6 +95,7 @@ public class RegistrationServiceImpl implements IRegistrationService {
                 .firstname(request.getFirstName())
                 .lastname(request.getLastName())
                 .email(request.getEmail())
+                .isActive(Boolean.TRUE)
                 .build();
         doctorRepository.save(doctor);
     }
@@ -105,7 +112,7 @@ public class RegistrationServiceImpl implements IRegistrationService {
 
     private void checkForDuplicate(RegisterRequest request) {
         if (userRepository.existsByUserName(request.getMobile())) {
-            throw new IllegalArgumentException("Mobile number is already registered");
+            throw new InvalidRequestDataException(ResponseMessage.INVALID_MOBILE_NUMBER);
         }
     }
 
