@@ -17,6 +17,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Map;
 import java.util.Objects;
@@ -43,6 +44,15 @@ public class UserServiceExceptionHandler extends BaseExceptionHandler{
         errorLogger.error(ex.getLocalizedMessage(), ex);
         ApiResponse<Void> apiResponse = buildApiResponse(ex.getMessageCode(), ex.getMessage());
         return new ResponseEntity<>(apiResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ResponseStatusException.class)
+    public final ResponseEntity<ApiResponse<Void>> handleResponseStatusException(ResponseStatusException ex) {
+        ApiResponse<Void> apiResponse = ApiResponse.<Void>builder()
+                .responseCode(String.valueOf(ex.getStatusCode().value())) // Use the HTTP status code
+                .responseMessage(ex.getReason()) // The reason passed when throwing the exception
+                .build();
+        return new ResponseEntity<>(apiResponse, ex.getStatusCode());
     }
 
     @ExceptionHandler(BadCredentialsException.class)
