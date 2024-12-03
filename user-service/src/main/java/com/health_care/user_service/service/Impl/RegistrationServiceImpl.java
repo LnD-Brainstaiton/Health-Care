@@ -65,7 +65,6 @@ public class RegistrationServiceImpl implements IRegistrationService {
         // Save the corresponding entity (Patient, Doctor, or Admin)
         saveEntityFunction.accept(request);
 
-        // Log and return response
         logRegistration(role.name(), request.getMobile());
         return registerMapper.toRegisterResponse(savedUser);
     }
