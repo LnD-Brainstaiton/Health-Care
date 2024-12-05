@@ -1,5 +1,6 @@
 package com.healthcare.tfaservice.domain.enums;
 
+import com.healthcare.tfaservice.common.utils.MessageSourceProvider;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -19,6 +20,11 @@ public enum ResponseMessage {
     TFA_CONFIGURATION_NOT_FOUND_EXCEPTION(ApiResponseCode.RECORD_NOT_FOUND.getResponseCode(), "tfa.configuration.not.found"),
     TRY_LATER_WITH_TIME(ApiResponseCode.INVALID_REQUEST_DATA.getResponseCode(), "try.later.with.time"),
     OTP_EXPIRED(ApiResponseCode.INVALID_REQUEST_DATA.getResponseCode(), "otp.expired");
+
     private String responseCode;
     private String responseMessage;
+
+    public String getLocalizedMessage() {
+        return MessageSourceProvider.getMessage(this.responseMessage);
+    }
 }

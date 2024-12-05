@@ -26,7 +26,7 @@ public class ResponseUtils {
     public static <T> ApiResponse<T> createResponseObject(ResponseMessage responseMessage, T data) {
         ApiResponse apiResponse = new ApiResponse<T>();
         apiResponse.setResponseCode(responseMessage.getResponseCode());
-        apiResponse.setResponseMessage(responseMessage.getResponseMessage());
+        apiResponse.setResponseMessage(responseMessage.getLocalizedMessage());
         apiResponse.setData(data);
         return apiResponse;
     }
@@ -34,7 +34,7 @@ public class ResponseUtils {
     public static <T> ApiResponse<T> createResponseObject(ResponseMessage responseMessage) {
         ApiResponse apiResponse = new ApiResponse<T>();
         apiResponse.setResponseCode(responseMessage.getResponseCode());
-        apiResponse.setResponseMessage(responseMessage.getResponseMessage());
+        apiResponse.setResponseMessage(responseMessage.getLocalizedMessage());
         return apiResponse;
     }
 

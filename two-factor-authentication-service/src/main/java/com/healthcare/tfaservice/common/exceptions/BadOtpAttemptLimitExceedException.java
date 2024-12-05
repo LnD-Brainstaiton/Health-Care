@@ -1,5 +1,6 @@
 package com.healthcare.tfaservice.common.exceptions;
 
+
 import com.healthcare.tfaservice.domain.enums.ResponseMessage;
 
 public class BadOtpAttemptLimitExceedException extends CustomRootException {

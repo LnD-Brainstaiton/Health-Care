@@ -10,7 +10,7 @@ import java.io.Serializable;
 @Setter
 public class TfaVerifyRequest implements Serializable {
 
-    @NotBlank(message = "Username cannot be empty or contain only whitespace.")
+    @NotBlank(message = "username.notblank")
     private String userName;
 
     @NotBlank(message = "Generated OTP cannot be empty or null.")

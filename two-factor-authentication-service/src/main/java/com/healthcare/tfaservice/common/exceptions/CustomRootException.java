@@ -1,18 +1,20 @@
 package com.healthcare.tfaservice.common.exceptions;
 
 import com.healthcare.tfaservice.domain.enums.ResponseMessage;
+import com.healthcare.tfaservice.common.utils.MessageSourceProvider;
 
 public abstract class CustomRootException extends RuntimeException {
 
     private String messageCode;
 
     public CustomRootException(ResponseMessage responseMessage) {
-        super(responseMessage.getResponseMessage());
+        super(MessageSourceProvider.getMessage(responseMessage.getResponseMessage()));
         this.messageCode = responseMessage.getResponseCode();
     }
 
+
     public CustomRootException(String messageCode, String messageKey) {
-        super(messageKey);
+        super(MessageSourceProvider.getMessage(messageKey));
         this.messageCode = messageCode;
     }
 
@@ -23,5 +25,4 @@ public abstract class CustomRootException extends RuntimeException {
     public String getMessageCode() {
         return messageCode;
     }
-
 }

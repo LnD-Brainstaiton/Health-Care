@@ -10,7 +10,7 @@ import java.io.Serializable;
 @Setter
 public class TfaRequest implements Serializable {
 
-    @NotBlank(message = "Username cannot be empty or whitespace")
+    @NotBlank(message = "{username.notblank}")
     private String userName;
 
     private String tfaTypeCode;
