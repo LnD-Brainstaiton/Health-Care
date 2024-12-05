@@ -3,13 +3,15 @@ package com.healthcare.tfaservice.service.impl;
 import com.healthcare.tfaservice.common.exceptions.BadOtpAttemptLimitExceedException;
 import com.healthcare.tfaservice.common.exceptions.RecordNotFoundException;
 import com.healthcare.tfaservice.common.utils.DateTimeUtils;
-import com.healthcare.tfaservice.domain.entity.UserTfaBadOdtCount;
+import com.healthcare.tfaservice.domain.entity.UserBadOtpCount;
 import com.healthcare.tfaservice.domain.enums.ResponseMessage;
 import com.healthcare.tfaservice.domain.request.TfaRequest;
+import com.healthcare.tfaservice.domain.request.TfaVerifyRequest;
 import com.healthcare.tfaservice.domain.response.TfaResponse;
 import com.healthcare.tfaservice.service.interfaces.ITfaService;
 import com.healthcare.tfaservice.service.interfaces.ITwoFactorGeneratorService;
-import com.healthcare.tfaservice.service.interfaces.IUserTfaBadOdtCountService;
+import com.healthcare.tfaservice.service.interfaces.ITwoFactorVerifierService;
+import com.healthcare.tfaservice.service.interfaces.IUserTfaBadOtpCountService;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,10 +28,13 @@ import java.util.Objects;
 public class TfaService implements ITfaService {
 
     @Autowired
-    IUserTfaBadOdtCountService userTfaBadOdtCountService;
+    IUserTfaBadOtpCountService userTfaBadOdtCountService;
 
     @Autowired
     ITwoFactorGeneratorService twoFactorGeneratorService;
+
+    @Autowired
+    ITwoFactorVerifierService twoFactorVerifierService;
 
     //Todo: temporary kept it in application.yml, need to discuss if it will be in db
     @Value("${otp.bad-odt-limit}")
@@ -37,33 +42,43 @@ public class TfaService implements ITfaService {
 
     @Override
     public TfaResponse generateOtp(TfaRequest tfaRequest) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        UserTfaBadOdtCount userTfaBadOdtCount = userTfaBadOdtCountService.findAndSaveIfNotExist(
-                tfaRequest.getUserName());
-
-        if (ObjectUtils.isEmpty(userTfaBadOdtCount)) {
-            throw new RecordNotFoundException(ResponseMessage.TFA_CONFIGURATION_NOT_FOUND_EXCEPTION);
-        }
-
-        if (isBadAttemptExceeded(userTfaBadOdtCount)) {
-            if (ObjectUtils.isEmpty(userTfaBadOdtCount.getTempBlockDate()) || ObjectUtils.isEmpty(userTfaBadOdtCount.getTempUnblockDate())) {
-                userTfaBadOdtCountService.setTempBlockAndUnblockDate(userTfaBadOdtCount);
-            }
-
-            final LocalDateTime currentTime = LocalDateTime.now();
-            if (!isUserEligibleToUnblock(userTfaBadOdtCount.getTempUnblockDate(), currentTime)) {
-                final String formattedMsg = DateTimeUtils.getFormattedErrorMessageWithTime(userTfaBadOdtCount.getTempUnblockDate(), currentTime);
-                throw new BadOtpAttemptLimitExceedException(formattedMsg);
-            }
-
-            userTfaBadOdtCountService.resetUserTfaBadOdtLimit(userTfaBadOdtCount);
-        }
+        validateBadOtpCount(tfaRequest.getUserName());
 
         TfaResponse tfaResponse = twoFactorGeneratorService.getOtp(tfaRequest);
 
         return tfaResponse;
     }
 
-    private boolean isBadAttemptExceeded(UserTfaBadOdtCount configuration) {
+    @Override
+    public Boolean validateOtp(TfaVerifyRequest tfaVerifyRequest) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        validateBadOtpCount(tfaVerifyRequest.getUserName());
+        return twoFactorVerifierService.verifyOtp(tfaVerifyRequest);
+    }
+
+    private void validateBadOtpCount(String userName) {
+        UserBadOtpCount userBadOtpCount = userTfaBadOdtCountService.findAndSaveIfNotExist(
+                userName);
+
+        if (ObjectUtils.isEmpty(userBadOtpCount)) {
+            throw new RecordNotFoundException(ResponseMessage.TFA_CONFIGURATION_NOT_FOUND_EXCEPTION);
+        }
+
+        if (isBadAttemptExceeded(userBadOtpCount)) {
+            if (ObjectUtils.isEmpty(userBadOtpCount.getTempBlockDate()) || ObjectUtils.isEmpty(userBadOtpCount.getTempUnblockDate())) {
+                userTfaBadOdtCountService.setTempBlockAndUnblockDate(userBadOtpCount);
+            }
+
+            final LocalDateTime currentTime = LocalDateTime.now();
+            if (!isUserEligibleToUnblock(userBadOtpCount.getTempUnblockDate(), currentTime)) {
+                final String formattedMsg = DateTimeUtils.getFormattedErrorMessageWithTime(userBadOtpCount.getTempUnblockDate(), currentTime);
+                throw new BadOtpAttemptLimitExceedException(formattedMsg);
+            }
+
+            userTfaBadOdtCountService.resetUserTfaBadOdtLimit(userBadOtpCount);
+        }
+    }
+
+    private boolean isBadAttemptExceeded(UserBadOtpCount configuration) {
         int badConsecutiveOtpLimit = badOdtLimit;
         int totalBadAttempts = Objects.isNull(configuration.getConsecutiveBadAttempts()) ? 0 : configuration.getConsecutiveBadAttempts();
 

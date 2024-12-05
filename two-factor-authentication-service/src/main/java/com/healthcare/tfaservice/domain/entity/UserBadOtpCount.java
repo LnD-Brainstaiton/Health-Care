@@ -5,13 +5,12 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Setter
 @Getter
 @Entity
-@Table(name = "USER_TFA_BAD_ODT_COUNT")
-public class UserTfaBadOdtCount extends BaseEntity {
+@Table(name = "USER_BAD_OTP_COUNT")
+public class UserBadOtpCount extends BaseEntity {
 
     @Id
     @Column(name = "ID")

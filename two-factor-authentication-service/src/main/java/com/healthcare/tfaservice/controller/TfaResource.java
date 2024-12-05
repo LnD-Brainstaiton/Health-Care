@@ -5,6 +5,7 @@ import com.healthcare.tfaservice.common.utils.ResponseUtils;
 import com.healthcare.tfaservice.domain.common.ApiResponse;
 import com.healthcare.tfaservice.domain.enums.ResponseMessage;
 import com.healthcare.tfaservice.domain.request.TfaRequest;
+import com.healthcare.tfaservice.domain.request.TfaVerifyRequest;
 import com.healthcare.tfaservice.domain.response.TfaResponse;
 import com.healthcare.tfaservice.service.interfaces.ITfaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,5 +27,10 @@ public class TfaResource {
     @PostMapping("/generate-otp")
     public ApiResponse<TfaResponse> generateOtp(@RequestBody TfaRequest tfaRequest) throws NoSuchAlgorithmException, InvalidKeySpecException {
         return ResponseUtils.createResponseObject(ResponseMessage.OPERATION_SUCCESSFUL, iTfaService.generateOtp(tfaRequest));
+    }
+
+    @PostMapping("/validate-otp")
+    public ApiResponse<Boolean> validateOtp(@RequestBody TfaVerifyRequest tfaVerifyRequest) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        return ResponseUtils.createResponseObject(ResponseMessage.OPERATION_SUCCESSFUL, iTfaService.validateOtp(tfaVerifyRequest));
     }
 }

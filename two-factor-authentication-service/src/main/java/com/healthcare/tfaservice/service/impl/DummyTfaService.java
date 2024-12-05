@@ -1,6 +1,7 @@
 package com.healthcare.tfaservice.service.impl;
 
 import com.healthcare.tfaservice.domain.request.TfaRequest;
+import com.healthcare.tfaservice.domain.request.TfaVerifyRequest;
 import com.healthcare.tfaservice.domain.response.TfaResponse;
 import com.healthcare.tfaservice.service.interfaces.ITfaService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -16,5 +17,10 @@ public class DummyTfaService implements ITfaService {
     @Override
     public TfaResponse generateOtp(TfaRequest tfaRequest) {
         return new TfaResponse(UUID.randomUUID().toString(),String.valueOf(ONE).repeat(4),10);
+    }
+
+    @Override
+    public Boolean validateOtp(TfaVerifyRequest tfaVerifyRequest) {
+        return true;
     }
 }
