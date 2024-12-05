@@ -5,7 +5,6 @@ server:
 spring:
   application:
     name: gateway
-
   cloud:
     gateway:
       routes:
@@ -15,6 +14,13 @@ spring:
             - Path=/api/v1/user/**  # Route all requests to /user/** to the user service
           filters:
             - AuthenticationFilter
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:3000"
+            allowedMethods: "GET, POST, PUT, DELETE, OPTIONS"
+            allowedHeaders: "*"
+            allowCredentials: true
 
         # You can add other routes here for additional services as needed.
         # - id: other-service
