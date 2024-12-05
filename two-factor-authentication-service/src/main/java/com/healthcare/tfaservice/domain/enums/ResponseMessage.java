@@ -17,8 +17,8 @@ public enum ResponseMessage {
     RECORD_NOT_MATCHED(ApiResponseCode.RECORD_NOT_FOUND.getResponseCode(), "record.not.matched"),
     RECORD_ALREADY_EXIST(ApiResponseCode.INVALID_REQUEST_DATA.getResponseCode(), "record.already.exist"),
     TFA_CONFIGURATION_NOT_FOUND_EXCEPTION(ApiResponseCode.RECORD_NOT_FOUND.getResponseCode(), "tfa.configuration.not.found"),
-    TRY_LATER_WITH_TIME(ApiResponseCode.INVALID_REQUEST_DATA.getResponseCode(),"try.later.with.time"),
-    ;
+    TRY_LATER_WITH_TIME(ApiResponseCode.INVALID_REQUEST_DATA.getResponseCode(), "try.later.with.time"),
+    OTP_EXPIRED(ApiResponseCode.INVALID_REQUEST_DATA.getResponseCode(), "otp.expired");
     private String responseCode;
     private String responseMessage;
 }

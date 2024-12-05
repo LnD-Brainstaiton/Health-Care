@@ -7,7 +7,6 @@ import com.healthcare.tfaservice.domain.request.TfaRequest;
 import com.healthcare.tfaservice.domain.response.TfaResponse;
 import com.healthcare.tfaservice.repository.OneTimePasswordRepository;
 import com.healthcare.tfaservice.service.interfaces.ITwoFactorGeneratorService;
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,19 +24,19 @@ import java.util.stream.IntStream;
 
 
 @Service
-@RequiredArgsConstructor
 public class TwoFactorOtpGeneratorService implements ITwoFactorGeneratorService {
 
     @Autowired
-    OneTimePasswordRepository oneTimePasswordRepository;
+    private OneTimePasswordRepository oneTimePasswordRepository;
+
+    @Autowired
+    private OtpUtils otpUtils;
 
     private final SecureRandom secureRandom = new SecureRandom();
 
     private final Random random = new Random();
 
     private static final Integer UPPER_BOUND = 10;
-
-    private final OtpUtils otpUtils;
 
     @Value("${otp.length}")
     private int otpLength;
@@ -50,7 +49,7 @@ public class TwoFactorOtpGeneratorService implements ITwoFactorGeneratorService 
     public TfaResponse getOtp(TfaRequest request) throws NoSuchAlgorithmException, InvalidKeySpecException {
         TfaResponse tfaResponse = new TfaResponse();
         tfaResponse.setSessionId(UUID.randomUUID().toString());
-        tfaResponse.setGeneratedOtp(getOtp(otpLength));
+        tfaResponse.setGeneratedOtp(generateOtp(otpLength));
         tfaResponse.setOtpValidityInMinute(otpValidityInMinute);
 
         updateAndSaveToDatabase(request.getUserName(), tfaResponse);
@@ -59,7 +58,7 @@ public class TwoFactorOtpGeneratorService implements ITwoFactorGeneratorService 
     }
 
 
-    private String getOtp(int otpLength) {
+    private String generateOtp(int otpLength) {
         IntUnaryOperator intUnary = i -> secureRandom.nextInt(UPPER_BOUND);
         return IntStream
                 .iterate(random.nextInt(UPPER_BOUND), intUnary)
@@ -77,6 +76,7 @@ public class TwoFactorOtpGeneratorService implements ITwoFactorGeneratorService 
 
         LocalDateTime currentTime = LocalDateTime.now();
 
+        oneTimePasswordForUser.setUserName(userName);
         oneTimePasswordForUser.setGeneratedOtp(otpUtils.generateHash(tfaResponse.getGeneratedOtp()));
         oneTimePasswordForUser.setSessionId(tfaResponse.getSessionId());
         oneTimePasswordForUser.setOtpExpireTime(DateTimeUtils.addMinutes(currentTime, otpValidityInMinute));

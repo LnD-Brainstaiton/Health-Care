@@ -14,7 +14,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class TfaResponse implements Serializable {
 
-    @JsonIgnore
     private String generatedOtp;
 
     private String sessionId;
