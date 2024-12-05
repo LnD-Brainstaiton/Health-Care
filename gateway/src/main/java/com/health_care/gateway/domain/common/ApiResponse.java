@@ -1,7 +1,6 @@
-package com.health_care.user_service.domain.common;
+package com.health_care.gateway.domain.common;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,7 +11,6 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class ApiResponse<T> implements Serializable {
     private String responseCode;
     private String responseMessage;
