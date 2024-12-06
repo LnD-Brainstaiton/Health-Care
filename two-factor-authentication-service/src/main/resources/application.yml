@@ -2,9 +2,9 @@ spring:
   application:
     name: two-factor-authentication-service
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres
-    username: postgres
-    password: admin
+    url: jdbc:postgresql://172.16.230.59:5432/health_care?currentSchema=tfa
+    username: superadmin
+    password: admin@123
   jpa:
     hibernate:
       ddl-auto: update
