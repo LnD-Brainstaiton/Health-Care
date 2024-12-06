@@ -5,7 +5,6 @@ server:
 spring:
   application:
     name: gateway
-
   cloud:
     gateway:
       routes:
@@ -13,6 +12,15 @@ spring:
           uri: lb://user-service  # Load balanced URI for the user service registered in Eureka
           predicates:
             - Path=/api/v1/user/**  # Route all requests to /user/** to the user service
+          filters:
+            - AuthenticationFilter
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:3000"
+            allowedMethods: "GET, POST, PUT, DELETE, OPTIONS"
+            allowedHeaders: "*"
+            allowCredentials: true
 
         # You can add other routes here for additional services as needed.
         # - id: other-service
@@ -22,6 +30,20 @@ spring:
 
     config:
       enabled: false
+
+  r2dbc:
+    url: r2dbc:postgresql://172.16.230.59:5432/health_care?currentSchema=gateway
+    username: superadmin
+    password: admin@123
+  jpa:
+    open-in-view: false  # Optional: Not needed for reactive programming
+
+    # Connection pooling (optional, requires r2dbc-pool)
+    r2dbc-pool:
+      enabled: true
+      initial-size: 5
+      max-size: 20
+      max-idle-time: 30s
 
 
 management:

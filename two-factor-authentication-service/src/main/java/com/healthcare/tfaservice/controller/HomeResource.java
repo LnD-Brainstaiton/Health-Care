@@ -1,4 +1,4 @@
-package com.health_care.user_service.api;
+package com.healthcare.tfaservice.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,7 +10,7 @@ public class HomeResource{
 
     @GetMapping
     public String index() {
-        return "Welcome to Health Care - User Service is running...!";
+        return "Welcome to Health Care - Two Factor Authentication Service is running...!";
     }
 
 }
