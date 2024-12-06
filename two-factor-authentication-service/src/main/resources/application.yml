@@ -9,10 +9,8 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
-  mvc:
-    validation:
-      enabled: true
-
+  main:
+    allow-bean-definition-overriding: true
 
 management:
   endpoint:
@@ -21,6 +19,8 @@ management:
         enabled: true
 
 server:
+  tomcat:
+    URI-encoding: UTF-8
   port: 8090
   shutdown: graceful # Service port
 

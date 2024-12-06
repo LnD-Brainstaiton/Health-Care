@@ -1,6 +1,8 @@
 package com.healthcare.tfaservice.domain.request;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,10 +15,10 @@ public class TfaVerifyRequest implements Serializable {
     @NotBlank(message = "username.notblank")
     private String userName;
 
-    @NotBlank(message = "Generated OTP cannot be empty or null.")
+    @NotBlank(message = "generatedOtp.notblank")
     private String generatedOtp;
 
-    @NotBlank(message = "Session ID cannot be empty or null.")
+    @NotNull(message = "sessionId.notnull")
     private String sessionId;
 
 
