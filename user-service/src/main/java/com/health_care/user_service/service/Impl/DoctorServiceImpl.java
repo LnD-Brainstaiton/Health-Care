@@ -6,6 +6,7 @@ import com.health_care.user_service.domain.enums.ApiResponseCode;
 import com.health_care.user_service.domain.enums.ResponseMessage;
 import com.health_care.user_service.domain.mapper.DoctorMapper;
 import com.health_care.user_service.domain.request.DoctorInfoUpdateRequest;
+import com.health_care.user_service.domain.response.CountResponse;
 import com.health_care.user_service.domain.response.DoctorInfoResponse;
 import com.health_care.user_service.repository.DoctorRepository;
 import com.health_care.user_service.service.IDoctorService;
@@ -75,6 +76,18 @@ public class DoctorServiceImpl implements IDoctorService {
 
         return ApiResponse.<List<DoctorInfoResponse>>builder()
                 .data(doctorInfoResponses)
+                .responseCode(ApiResponseCode.OPERATION_SUCCESSFUL.getResponseCode())
+                .responseMessage(ResponseMessage.OPERATION_SUCCESSFUL.getResponseMessage())
+                .build();
+    }
+
+    @Override
+    public ApiResponse<CountResponse> getDoctorsCount() {
+        List<Doctor> doctors = doctorRepository.findAllByIsActiveTrue();
+        CountResponse countResponse = new CountResponse();
+        countResponse.setCount(doctors.size());
+        return ApiResponse.<CountResponse>builder()
+                .data(countResponse)
                 .responseCode(ApiResponseCode.OPERATION_SUCCESSFUL.getResponseCode())
                 .responseMessage(ResponseMessage.OPERATION_SUCCESSFUL.getResponseMessage())
                 .build();

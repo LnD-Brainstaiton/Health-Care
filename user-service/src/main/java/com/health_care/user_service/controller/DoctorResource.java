@@ -6,6 +6,7 @@ import com.health_care.user_service.domain.common.ApiResponse;
 import com.health_care.user_service.domain.enums.ResponseMessage;
 import com.health_care.user_service.domain.request.DoctorInfoUpdateRequest;
 import com.health_care.user_service.domain.request.RegisterRequest;
+import com.health_care.user_service.domain.response.CountResponse;
 import com.health_care.user_service.domain.response.DoctorInfoResponse;
 import com.health_care.user_service.domain.response.RegisterResponse;
 import com.health_care.user_service.service.IDoctorService;
@@ -56,6 +57,14 @@ public class DoctorResource {
         ApiResponse<List<DoctorInfoResponse>> response = doctorService.getAllDoctorInfo(page, size, sort);
         return response;
     }
+
+    @GetMapping("/doctor/count")
+    public ApiResponse<CountResponse> getDoctorsCount(){
+        ApiResponse<CountResponse> response = doctorService.getDoctorsCount();
+        return response;
+    }
+
+
 
 
 }

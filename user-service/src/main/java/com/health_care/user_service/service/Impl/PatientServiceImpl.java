@@ -1,16 +1,20 @@
 package com.health_care.user_service.service.Impl;
 
 import com.health_care.user_service.domain.common.ApiResponse;
+import com.health_care.user_service.domain.entity.Doctor;
 import com.health_care.user_service.domain.entity.Patient;
 import com.health_care.user_service.domain.enums.ApiResponseCode;
 import com.health_care.user_service.domain.enums.ResponseMessage;
 import com.health_care.user_service.domain.request.PatientInfoUpdateRequest;
+import com.health_care.user_service.domain.response.CountResponse;
 import com.health_care.user_service.repository.PatientRepository;
 import com.health_care.user_service.service.IPatientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -42,6 +46,18 @@ public class PatientServiceImpl implements IPatientService {
                         HttpStatus.NOT_FOUND,
                         ResponseMessage.RECORD_NOT_FOUND.getResponseMessage()
                 ));
+    }
+
+    @Override
+    public ApiResponse<CountResponse> getAPatientsCount() {
+        List<Patient> patients = patientRepository.findAllByIsActiveTrue();
+        CountResponse countResponse = new CountResponse();
+        countResponse.setCount(patients.size());
+        return ApiResponse.<CountResponse>builder()
+                .data(countResponse)
+                .responseCode(ApiResponseCode.OPERATION_SUCCESSFUL.getResponseCode())
+                .responseMessage(ResponseMessage.OPERATION_SUCCESSFUL.getResponseMessage())
+                .build();
     }
 
     private ApiResponse<Void> updatePatientDetails(Patient patient, PatientInfoUpdateRequest request) {
