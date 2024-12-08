@@ -28,7 +28,8 @@ public class AuthConfig {
         return http.csrf().disable()
                 .authorizeHttpRequests()
                 .requestMatchers("/api/v1/user/token","/api/v1/user/patient/register","/api/v1/user/admin/create","/api/v1/user/doctor/create",
-                        "/api/v1/user/doctor/all","/api/v1/user/doctor/count","/api/v1/user/admin/count","/api/v1/user/patient/count","/api/v1/user/admin/{id}").permitAll()
+                        "/api/v1/user/doctor/all","/api/v1/user/doctor/count","/api/v1/user/admin/count","/api/v1/user/patient/count",
+                        "/api/v1/user/admin/{id}","/api/v1/user/admin/all","/api/v1/user/patient/all").permitAll()
                 .and()
                 .build();
     }

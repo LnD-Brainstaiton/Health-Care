@@ -26,11 +26,17 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -65,10 +71,27 @@ public class RegistrationServiceImpl implements IRegistrationService {
     }
 
     @Override
-    public RegisterResponse getAllAdminList() {
-        List<Admin> adminList = adminRepository.findAll();
+    public ApiResponse<List<AdminInfoResponse>> getAllAdminList(int page, int size, String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.asc(sort)));
+        Page<Admin> activeDoctorsPage = adminRepository.findAllByIsActiveTrue(pageable);
 
-        return null;
+        if (activeDoctorsPage.isEmpty()) {
+            return ApiResponse.<List<AdminInfoResponse>>builder()
+                    .data(Collections.emptyList())
+                    .responseCode(ApiResponseCode.RECORD_NOT_FOUND.getResponseCode())
+                    .responseMessage(ResponseMessage.RECORD_NOT_FOUND.getResponseMessage())
+                    .build();
+        }
+
+        List<AdminInfoResponse> adminInfoResponses = activeDoctorsPage.getContent().stream()
+                .map(adminMapper::toAdminInfoResponse)
+                .collect(Collectors.toList());
+
+        return ApiResponse.<List<AdminInfoResponse>>builder()
+                .data(adminInfoResponses)
+                .responseCode(ApiResponseCode.OPERATION_SUCCESSFUL.getResponseCode())
+                .responseMessage(ResponseMessage.OPERATION_SUCCESSFUL.getResponseMessage())
+                .build();
     }
 
     @Override

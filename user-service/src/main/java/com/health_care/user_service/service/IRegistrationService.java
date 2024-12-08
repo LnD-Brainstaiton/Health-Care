@@ -4,7 +4,10 @@ import com.health_care.user_service.domain.common.ApiResponse;
 import com.health_care.user_service.domain.request.RegisterRequest;
 import com.health_care.user_service.domain.response.AdminInfoResponse;
 import com.health_care.user_service.domain.response.CountResponse;
+import com.health_care.user_service.domain.response.DoctorInfoResponse;
 import com.health_care.user_service.domain.response.RegisterResponse;
+
+import java.util.List;
 
 public interface IRegistrationService {
 
@@ -14,7 +17,7 @@ public interface IRegistrationService {
 
     RegisterResponse registerAdmin(RegisterRequest admin);
 
-    RegisterResponse getAllAdminList();
+    ApiResponse<List<AdminInfoResponse>> getAllAdminList(int page, int size, String sort);
 
     ApiResponse<CountResponse> getAdminsCount();
 

@@ -8,16 +8,15 @@ import com.health_care.user_service.domain.enums.ResponseMessage;
 import com.health_care.user_service.domain.request.PatientInfoUpdateRequest;
 import com.health_care.user_service.domain.request.RegisterRequest;
 import com.health_care.user_service.domain.response.CountResponse;
+import com.health_care.user_service.domain.response.DoctorInfoResponse;
+import com.health_care.user_service.domain.response.PatientInfoResponse;
 import com.health_care.user_service.domain.response.RegisterResponse;
 import com.health_care.user_service.service.IPatientService;
 import com.health_care.user_service.service.IRegistrationService;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(AppUtils.BASE_URL)
@@ -48,6 +47,15 @@ public class PatientResource {
     @GetMapping("/patient/count")
     public ApiResponse<CountResponse> getAPatientsCount(){
         ApiResponse<CountResponse> response = patientService.getAPatientsCount();
+        return response;
+    }
+
+    @GetMapping("/patient/all")
+    public ApiResponse<List<PatientInfoResponse>> getAllPatientList(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "firstname") String sort) {
+        ApiResponse<List<PatientInfoResponse>> response = patientService.getAllPatientList(page,size,sort);
         return response;
     }
 }

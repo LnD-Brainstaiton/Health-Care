@@ -13,6 +13,8 @@ import com.health_care.user_service.service.IRegistrationService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(AppUtils.BASE_URL)
 @AllArgsConstructor
@@ -33,9 +35,12 @@ public class AdminResource {
     }
 
     @GetMapping("/admin/all")
-    public ApiResponse<RegisterResponse> getAllAdminList() {
-        RegisterResponse response = registrationService.getAllAdminList();
-        return ResponseUtils.createResponseObject(ResponseMessage.OPERATION_SUCCESSFUL, response);
+    public ApiResponse<List<AdminInfoResponse>> getAllAdminList(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "firstname") String sort) {
+        ApiResponse<List<AdminInfoResponse>> response = registrationService.getAllAdminList(page, size, sort);
+        return response;
     }
 
     @GetMapping("/admin/count")
