@@ -2,6 +2,7 @@ package com.health.care.appointment.service.domain.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @Getter

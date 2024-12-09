@@ -1,4 +1,6 @@
+
 package com.health.care.appointment.service.common.exceptions;
+
 
 import com.health.care.appointment.service.domain.enums.ResponseMessage;
 
@@ -8,6 +10,7 @@ public abstract class CustomRootException extends RuntimeException {
 
     public CustomRootException(ResponseMessage responseMessage) {
         super(responseMessage.getResponseMessage());
+
         this.messageCode = responseMessage.getResponseCode();
     }
 
