@@ -2,13 +2,17 @@ spring:
   application:
     name: user-service  # Service name
   datasource:
-    url: jdbc:postgresql://localhost:5432/health_care_user_service
-    username: admin
-    password: admin
+    url: jdbc:postgresql://172.16.230.59:5432/health_care?currentSchema=users
+    username: superadmin
+    password: admin@123
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 
 management:
   endpoint:

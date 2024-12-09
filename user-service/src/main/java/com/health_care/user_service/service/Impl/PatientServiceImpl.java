@@ -4,19 +4,31 @@ import com.health_care.user_service.domain.common.ApiResponse;
 import com.health_care.user_service.domain.entity.Patient;
 import com.health_care.user_service.domain.enums.ApiResponseCode;
 import com.health_care.user_service.domain.enums.ResponseMessage;
+import com.health_care.user_service.domain.mapper.PatientMapper;
 import com.health_care.user_service.domain.request.PatientInfoUpdateRequest;
+import com.health_care.user_service.domain.response.CountResponse;
+import com.health_care.user_service.domain.response.PatientInfoResponse;
 import com.health_care.user_service.repository.PatientRepository;
 import com.health_care.user_service.service.IPatientService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class PatientServiceImpl implements IPatientService {
 
     private final PatientRepository patientRepository;
+    private final PatientMapper patientMapper;
 
     @Override
     public ApiResponse<Void> updatePatient(PatientInfoUpdateRequest request) {
@@ -42,6 +54,44 @@ public class PatientServiceImpl implements IPatientService {
                         HttpStatus.NOT_FOUND,
                         ResponseMessage.RECORD_NOT_FOUND.getResponseMessage()
                 ));
+    }
+
+    @Override
+    public ApiResponse<CountResponse> getAPatientsCount() {
+        List<Patient> patients = patientRepository.findAllByIsActiveTrue();
+        CountResponse countResponse = new CountResponse();
+        countResponse.setCount(patients.size());
+        return ApiResponse.<CountResponse>builder()
+                .data(countResponse)
+                .responseCode(ApiResponseCode.OPERATION_SUCCESSFUL.getResponseCode())
+                .responseMessage(ResponseMessage.OPERATION_SUCCESSFUL.getResponseMessage())
+                .build();
+    }
+
+
+
+    @Override
+    public ApiResponse<List<PatientInfoResponse>> getAllPatientList(int page, int size, String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.asc(sort)));
+        Page<Patient> activePatientsPage = patientRepository.findAllByIsActiveTrue(pageable);
+
+        if (activePatientsPage.isEmpty()) {
+            return ApiResponse.<List<PatientInfoResponse>>builder()
+                    .data(Collections.emptyList())
+                    .responseCode(ApiResponseCode.RECORD_NOT_FOUND.getResponseCode())
+                    .responseMessage(ResponseMessage.RECORD_NOT_FOUND.getResponseMessage())
+                    .build();
+        }
+
+        List<PatientInfoResponse> patientInfoResponses = activePatientsPage.getContent().stream()
+                .map(patientMapper::toPatientInfoResponse)
+                .collect(Collectors.toList());
+
+        return ApiResponse.<List<PatientInfoResponse>>builder()
+                .data(patientInfoResponses)
+                .responseCode(ApiResponseCode.OPERATION_SUCCESSFUL.getResponseCode())
+                .responseMessage(ResponseMessage.OPERATION_SUCCESSFUL.getResponseMessage())
+                .build();
     }
 
     private ApiResponse<Void> updatePatientDetails(Patient patient, PatientInfoUpdateRequest request) {
