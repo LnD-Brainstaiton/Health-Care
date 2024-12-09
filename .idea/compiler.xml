@@ -9,6 +9,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="user-service" />
         <module name="two-factor-authentication-service" />
+        <module name="appointment-service" />
         <module name="discovery" />
         <module name="gateway" />
       </profile>
@@ -16,6 +17,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="appointment-service" options="-parameters" />
       <module name="discovery" options="-parameters" />
       <module name="gateway" options="-parameters" />
       <module name="two-factor-authentication-service" options="-parameters" />
