@@ -21,6 +21,7 @@ public enum ApiResponseCode {
     ;
     private String responseCode;
 
+
     public static boolean isOperationSuccessful(ApiResponse apiResponse) {
         return Objects.nonNull(apiResponse) && apiResponse.getResponseCode().equals(ApiResponseCode.OPERATION_SUCCESSFUL.getResponseCode());
     }
