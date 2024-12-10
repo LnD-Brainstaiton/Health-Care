@@ -144,6 +144,8 @@ public class RegistrationServiceImpl implements IRegistrationService {
         User user = createUser(request, role);
         User savedUser = userRepository.save(user);
 
+        request.setUniqueId(user.getUserId());
+
         // Save the corresponding entity (Patient, Doctor, or Admin)
         saveEntityFunction.accept(request);
 
@@ -152,9 +154,12 @@ public class RegistrationServiceImpl implements IRegistrationService {
     }
 
     private User createUser(RegisterRequest request, Role role) {
+        String uniqueIdPrefix = getUniqueIdPrefixForRole(role);
+        String uniqueId = uniqueIdGenerator.generateUniqueIdWithPrefix(uniqueIdPrefix);
+
         return User.builder()
                 .userName(request.getMobile())
-                .userId(uniqueIdGenerator.generateUniqueIdWithPrefix("UR"))
+                .userId(uniqueId)
                 .password(authConfig.passwordEncoder().encode(request.getPassword()))
                 .userType(role)
                 .build();
@@ -164,7 +169,7 @@ public class RegistrationServiceImpl implements IRegistrationService {
         Patient patient = Patient.builder()
                 .mobile(request.getMobile())
                 .firstname(request.getFirstName())
-                .patientId(uniqueIdGenerator.generateUniqueIdWithPrefix("PT"))
+                .patientId(request.getUniqueId())
                 .lastname(request.getLastName())
                 .email(request.getEmail())
                 .isActive(Boolean.TRUE)
@@ -177,7 +182,7 @@ public class RegistrationServiceImpl implements IRegistrationService {
                 .mobile(request.getMobile())
                 .firstname(request.getFirstName())
                 .lastname(request.getLastName())
-                .doctorId(uniqueIdGenerator.generateUniqueIdWithPrefix("DR"))
+                .doctorId(request.getUniqueId())
                 .email(request.getEmail())
                 .isActive(Boolean.TRUE)
                 .build();
@@ -188,11 +193,20 @@ public class RegistrationServiceImpl implements IRegistrationService {
         Admin admin = Admin.builder()
                 .mobile(request.getMobile())
                 .firstname(request.getFirstName())
-                .adminId(uniqueIdGenerator.generateUniqueIdWithPrefix("AD"))
+                .adminId(request.getUniqueId())
                 .lastname(request.getLastName())
                 .email(request.getEmail())
                 .build();
         adminRepository.save(admin);
+    }
+
+    private String getUniqueIdPrefixForRole(Role role) {
+        return switch (role) {
+            case PATIENT -> "PT";
+            case DOCTOR -> "DR";
+            case ADMIN -> "AD";
+            default -> throw new IllegalArgumentException("Invalid role");
+        };
     }
 
     private void checkForDuplicate(RegisterRequest request) {
