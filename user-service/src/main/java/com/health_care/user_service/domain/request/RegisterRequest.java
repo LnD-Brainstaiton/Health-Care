@@ -33,5 +33,4 @@ public class RegisterRequest {
 
     private String uniqueId;
 
-
 }

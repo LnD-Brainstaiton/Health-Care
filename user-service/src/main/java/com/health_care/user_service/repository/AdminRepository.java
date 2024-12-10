@@ -15,4 +15,6 @@ public interface AdminRepository extends JpaRepository<Admin, Long> {
     Page<Admin> findAllByIsActiveTrue(Pageable pageable);
 
     Optional<Admin> getAdminByMobileAndIsActive(String id, Boolean aTrue);
+
+    Optional<Admin> getAdminByAdminIdAndIsActive(String adminId, Boolean aTrue);
 }

@@ -14,6 +14,7 @@ import com.health_care.user_service.domain.enums.ResponseMessage;
 import com.health_care.user_service.domain.enums.Role;
 import com.health_care.user_service.domain.mapper.AdminMapper;
 import com.health_care.user_service.domain.mapper.RegisterMapper;
+import com.health_care.user_service.domain.request.AdminInfoUpdateRequest;
 import com.health_care.user_service.domain.request.RegisterRequest;
 import com.health_care.user_service.domain.response.AdminInfoResponse;
 import com.health_care.user_service.domain.response.CountResponse;
@@ -29,7 +30,6 @@ import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -121,8 +121,8 @@ public class RegistrationServiceImpl implements IRegistrationService {
     }
 
     @Override
-    public ApiResponse<AdminInfoResponse> getAdminByMobile(String id) {
-        Optional<Admin> adminOptional = adminRepository.getAdminByMobileAndIsActive(id, Boolean.TRUE);
+    public ApiResponse<AdminInfoResponse> getAdminByUniqueId(String id) {
+        Optional<Admin> adminOptional = adminRepository.getAdminByAdminIdAndIsActive(id, Boolean.TRUE);
 
         return adminOptional.map(admin -> {
             AdminInfoResponse response = adminMapper.toAdminInfoResponse(admin);
@@ -135,6 +135,34 @@ public class RegistrationServiceImpl implements IRegistrationService {
                 .responseCode(ApiResponseCode.RECORD_NOT_FOUND.getResponseCode())
                 .responseMessage(ResponseMessage.RECORD_NOT_FOUND.getResponseMessage())
                 .build());
+    }
+
+    @Override
+    public ApiResponse<Void> updateAdmin(AdminInfoUpdateRequest request) {
+        return adminRepository.getAdminByAdminIdAndIsActive(request.getAdminId(), Boolean.TRUE)
+                .map(admin -> updateAdminDetails(admin, request))
+                .orElseGet(() -> ApiResponse.<Void>builder()
+                        .responseCode(ApiResponseCode.RECORD_NOT_FOUND.getResponseCode())
+                        .responseMessage(ResponseMessage.RECORD_NOT_FOUND.getResponseMessage())
+                        .build()
+                );
+    }
+
+    private ApiResponse<Void> updateAdminDetails(Admin admin, AdminInfoUpdateRequest request) {
+        admin.setFirstname(request.getFirstname());
+        admin.setLastname(request.getLastname());
+        admin.setMobile(request.getMobile());
+        admin.setEmail(request.getEmail());
+        adminRepository.save(admin);
+
+        Optional<User> user = userRepository.findByUserId(request.getAdminId());
+        user.get().setPassword(authConfig.passwordEncoder().encode(request.getPassword()));
+        userRepository.save(user.get());
+
+        return ApiResponse.<Void>builder()
+                .responseCode(ApiResponseCode.OPERATION_SUCCESSFUL.getResponseCode())
+                .responseMessage(ResponseMessage.OPERATION_SUCCESSFUL.getResponseMessage())
+                .build();
     }
 
     private RegisterResponse register(RegisterRequest request, Role role, Consumer<RegisterRequest> saveEntityFunction) {

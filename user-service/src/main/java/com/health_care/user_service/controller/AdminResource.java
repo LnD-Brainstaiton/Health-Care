@@ -4,6 +4,8 @@ import com.health_care.user_service.common.utils.AppUtils;
 import com.health_care.user_service.common.utils.ResponseUtils;
 import com.health_care.user_service.domain.common.ApiResponse;
 import com.health_care.user_service.domain.enums.ResponseMessage;
+import com.health_care.user_service.domain.request.AdminInfoUpdateRequest;
+import com.health_care.user_service.domain.request.PatientInfoUpdateRequest;
 import com.health_care.user_service.domain.request.RegisterRequest;
 import com.health_care.user_service.domain.response.AdminInfoResponse;
 import com.health_care.user_service.domain.response.CountResponse;
@@ -29,8 +31,14 @@ public class AdminResource {
     }
 
     @GetMapping("/admin/{id}")
-    public ApiResponse<AdminInfoResponse> getAdminByMobile(@PathVariable String id) {
-        ApiResponse<AdminInfoResponse> response = registrationService.getAdminByMobile(id);
+    public ApiResponse<AdminInfoResponse> getAdminByUniqueId(@PathVariable String id) {
+        ApiResponse<AdminInfoResponse> response = registrationService.getAdminByUniqueId(id);
+        return response;
+    }
+
+    @PutMapping("/admin/update")
+    public ApiResponse<Void> updateAdmin(@RequestBody AdminInfoUpdateRequest request) {
+        ApiResponse<Void> response = registrationService.updateAdmin(request);
         return response;
     }
 
