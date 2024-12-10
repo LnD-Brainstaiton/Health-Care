@@ -2,6 +2,19 @@ spring:
   application:
     name: appointment-service  # Service name
 
+  datasource:
+    url: jdbc:postgresql://172.16.230.59:5432/health_care?currentSchema=appointment
+    username: superadmin
+    password: admin@123
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
 management:
   endpoint:
     health:
