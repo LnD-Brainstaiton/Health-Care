@@ -10,6 +10,7 @@
         <option value="$PROJECT_DIR$/two-factor-authentication-service/pom.xml" />
         <option value="$PROJECT_DIR$/appointment-service/appointment-service/pom.xml" />
         <option value="$PROJECT_DIR$/appointment-service/pom.xml" />
+        <option value="$PROJECT_DIR$/unique-id-generator/pom.xml" />
       </list>
     </option>
   </component>

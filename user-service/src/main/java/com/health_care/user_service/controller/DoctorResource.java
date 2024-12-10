@@ -3,11 +3,13 @@ package com.health_care.user_service.controller;
 import com.health_care.user_service.common.utils.AppUtils;
 import com.health_care.user_service.common.utils.ResponseUtils;
 import com.health_care.user_service.domain.common.ApiResponse;
+import com.health_care.user_service.domain.enums.ApiResponseCode;
 import com.health_care.user_service.domain.enums.ResponseMessage;
 import com.health_care.user_service.domain.request.DoctorInfoUpdateRequest;
 import com.health_care.user_service.domain.request.RegisterRequest;
 import com.health_care.user_service.domain.response.CountResponse;
 import com.health_care.user_service.domain.response.DoctorInfoResponse;
+import com.health_care.user_service.domain.response.PaginationResponse;
 import com.health_care.user_service.domain.response.RegisterResponse;
 import com.health_care.user_service.service.IDoctorService;
 import com.health_care.user_service.service.IRegistrationService;
@@ -50,13 +52,27 @@ public class DoctorResource {
 
 
     @GetMapping("/doctor/all")
-    public ApiResponse<List<DoctorInfoResponse>> getAllDoctors(
+    public ApiResponse<PaginationResponse<DoctorInfoResponse>> getAllDoctors(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "department") String sort) {
-        ApiResponse<List<DoctorInfoResponse>> response = doctorService.getAllDoctorInfo(page, size, sort);
-        return response;
+        PaginationResponse<DoctorInfoResponse> response = doctorService.getAllDoctorInfo(page, size, sort);
+
+        if (response.getData() == null || response.getData().isEmpty()) {
+            return ApiResponse.<PaginationResponse<DoctorInfoResponse>>builder()
+                    .data(response) // Empty pagination response
+                    .responseCode(ApiResponseCode.RECORD_NOT_FOUND.getResponseCode())
+                    .responseMessage(ResponseMessage.RECORD_NOT_FOUND.getResponseMessage())
+                    .build();
+        }
+
+        return ApiResponse.<PaginationResponse<DoctorInfoResponse>>builder()
+                .data(response)
+                .responseCode(ApiResponseCode.OPERATION_SUCCESSFUL.getResponseCode())
+                .responseMessage(ResponseMessage.OPERATION_SUCCESSFUL.getResponseMessage())
+                .build();
     }
+
 
     @GetMapping("/doctor/count")
     public ApiResponse<CountResponse> getDoctorsCount(){
