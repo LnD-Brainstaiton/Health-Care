@@ -2,14 +2,20 @@ package com.health_care.user_service.service.Impl;
 
 import com.health_care.user_service.common.exceptions.InvalidRequestDataException;
 import com.health_care.user_service.config.AuthConfig;
+import com.health_care.user_service.domain.common.ApiResponse;
 import com.health_care.user_service.domain.entity.Admin;
 import com.health_care.user_service.domain.entity.Doctor;
 import com.health_care.user_service.domain.entity.Patient;
 import com.health_care.user_service.domain.entity.User;
+import com.health_care.user_service.domain.enums.ApiResponseCode;
 import com.health_care.user_service.domain.enums.ResponseMessage;
 import com.health_care.user_service.domain.enums.Role;
+import com.health_care.user_service.domain.mapper.AdminMapper;
 import com.health_care.user_service.domain.mapper.RegisterMapper;
 import com.health_care.user_service.domain.request.RegisterRequest;
+import com.health_care.user_service.domain.response.AdminInfoResponse;
+import com.health_care.user_service.domain.response.CountResponse;
+import com.health_care.user_service.domain.response.DoctorInfoResponse;
 import com.health_care.user_service.domain.response.RegisterResponse;
 import com.health_care.user_service.repository.AdminRepository;
 import com.health_care.user_service.repository.DoctorRepository;
@@ -20,9 +26,17 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -35,6 +49,7 @@ public class RegistrationServiceImpl implements IRegistrationService {
     private final PatientRepository patientRepository;
     private final DoctorRepository doctorRepository;
     private final AuthConfig authConfig;
+    private final AdminMapper adminMapper;
     private final RegisterMapper registerMapper;
 
     @Override
@@ -53,6 +68,59 @@ public class RegistrationServiceImpl implements IRegistrationService {
     @Transactional
     public RegisterResponse registerAdmin(RegisterRequest request) {
         return register(request, Role.ADMIN, this::saveAdmin);
+    }
+
+    @Override
+    public ApiResponse<List<AdminInfoResponse>> getAllAdminList(int page, int size, String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.asc(sort)));
+        Page<Admin> activeDoctorsPage = adminRepository.findAllByIsActiveTrue(pageable);
+
+        if (activeDoctorsPage.isEmpty()) {
+            return ApiResponse.<List<AdminInfoResponse>>builder()
+                    .data(Collections.emptyList())
+                    .responseCode(ApiResponseCode.RECORD_NOT_FOUND.getResponseCode())
+                    .responseMessage(ResponseMessage.RECORD_NOT_FOUND.getResponseMessage())
+                    .build();
+        }
+
+        List<AdminInfoResponse> adminInfoResponses = activeDoctorsPage.getContent().stream()
+                .map(adminMapper::toAdminInfoResponse)
+                .collect(Collectors.toList());
+
+        return ApiResponse.<List<AdminInfoResponse>>builder()
+                .data(adminInfoResponses)
+                .responseCode(ApiResponseCode.OPERATION_SUCCESSFUL.getResponseCode())
+                .responseMessage(ResponseMessage.OPERATION_SUCCESSFUL.getResponseMessage())
+                .build();
+    }
+
+    @Override
+    public ApiResponse<CountResponse> getAdminsCount() {
+        List<Admin> admins = adminRepository.findAllByIsActiveTrue();
+        CountResponse countResponse = new CountResponse();
+        countResponse.setCount(admins.size());
+        return ApiResponse.<CountResponse>builder()
+                .data(countResponse)
+                .responseCode(ApiResponseCode.OPERATION_SUCCESSFUL.getResponseCode())
+                .responseMessage(ResponseMessage.OPERATION_SUCCESSFUL.getResponseMessage())
+                .build();
+    }
+
+    @Override
+    public ApiResponse<AdminInfoResponse> getAdminByMobile(String id) {
+        Optional<Admin> adminOptional = adminRepository.getAdminByMobileAndIsActive(id, Boolean.TRUE);
+
+        return adminOptional.map(admin -> {
+            AdminInfoResponse response = adminMapper.toAdminInfoResponse(admin);
+            return ApiResponse.<AdminInfoResponse>builder()
+                    .data(response)
+                    .responseCode(ApiResponseCode.OPERATION_SUCCESSFUL.getResponseCode())
+                    .responseMessage(ResponseMessage.OPERATION_SUCCESSFUL.getResponseMessage())
+                    .build();
+        }).orElseGet(() -> ApiResponse.<AdminInfoResponse>builder()
+                .responseCode(ApiResponseCode.RECORD_NOT_FOUND.getResponseCode())
+                .responseMessage(ResponseMessage.RECORD_NOT_FOUND.getResponseMessage())
+                .build());
     }
 
     private RegisterResponse register(RegisterRequest request, Role role, Consumer<RegisterRequest> saveEntityFunction) {
