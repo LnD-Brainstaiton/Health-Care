@@ -1,5 +1,7 @@
 package com.health_care.user_service.service.Impl;
 
+
+import com.health_care.unique_id_generator.Api.UniqueIdGenerator;
 import com.health_care.user_service.common.exceptions.InvalidRequestDataException;
 import com.health_care.user_service.config.AuthConfig;
 import com.health_care.user_service.domain.common.ApiResponse;
@@ -15,17 +17,19 @@ import com.health_care.user_service.domain.mapper.RegisterMapper;
 import com.health_care.user_service.domain.request.RegisterRequest;
 import com.health_care.user_service.domain.response.AdminInfoResponse;
 import com.health_care.user_service.domain.response.CountResponse;
-import com.health_care.user_service.domain.response.DoctorInfoResponse;
 import com.health_care.user_service.domain.response.RegisterResponse;
 import com.health_care.user_service.repository.AdminRepository;
 import com.health_care.user_service.repository.DoctorRepository;
 import com.health_care.user_service.repository.PatientRepository;
 import com.health_care.user_service.repository.UserRepository;
 import com.health_care.user_service.service.IRegistrationService;
+
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -51,6 +55,16 @@ public class RegistrationServiceImpl implements IRegistrationService {
     private final AuthConfig authConfig;
     private final AdminMapper adminMapper;
     private final RegisterMapper registerMapper;
+    private final UniqueIdGenerator uniqueIdGenerator;
+
+//    @Value("${unique.id.patient.prefix}")
+//    private String patientPrefix;
+//
+//    @Value("${unique.id.admin.prefix}")
+//    private String adminPrefix;
+//
+//    @Value("${unique.id.doctor.prefix}")
+//    private String doctorPrefix;
 
     @Override
     @Transactional
@@ -140,6 +154,7 @@ public class RegistrationServiceImpl implements IRegistrationService {
     private User createUser(RegisterRequest request, Role role) {
         return User.builder()
                 .userName(request.getMobile())
+                .userId(uniqueIdGenerator.generateUniqueIdWithPrefix("UR"))
                 .password(authConfig.passwordEncoder().encode(request.getPassword()))
                 .userType(role)
                 .build();
@@ -149,6 +164,7 @@ public class RegistrationServiceImpl implements IRegistrationService {
         Patient patient = Patient.builder()
                 .mobile(request.getMobile())
                 .firstname(request.getFirstName())
+                .patientId(uniqueIdGenerator.generateUniqueIdWithPrefix("PT"))
                 .lastname(request.getLastName())
                 .email(request.getEmail())
                 .isActive(Boolean.TRUE)
@@ -161,6 +177,7 @@ public class RegistrationServiceImpl implements IRegistrationService {
                 .mobile(request.getMobile())
                 .firstname(request.getFirstName())
                 .lastname(request.getLastName())
+                .doctorId(uniqueIdGenerator.generateUniqueIdWithPrefix("DR"))
                 .email(request.getEmail())
                 .isActive(Boolean.TRUE)
                 .build();
@@ -171,6 +188,7 @@ public class RegistrationServiceImpl implements IRegistrationService {
         Admin admin = Admin.builder()
                 .mobile(request.getMobile())
                 .firstname(request.getFirstName())
+                .adminId(uniqueIdGenerator.generateUniqueIdWithPrefix("AD"))
                 .lastname(request.getLastName())
                 .email(request.getEmail())
                 .build();
