@@ -1,5 +1,7 @@
 package com.health.care.appointment.service.domain.entity;
 
+import com.health.care.appointment.service.domain.enums.PatientGender;
+import com.health.care.appointment.service.domain.enums.Status;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -33,9 +35,9 @@ public class Appointment extends BaseEntity {
     @Column(name = "APPOINTMENT_TIME", nullable = false)
     private LocalTime appointmentTime;
 
-    //Todo: Enum
     @Column(name = "STATUS")
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     @Column(name = "IS_PAYMENT_DONE" , nullable = false)
     private Boolean isPaymentDone;
@@ -46,9 +48,9 @@ public class Appointment extends BaseEntity {
     @Column(name = "PATIENT_AGE")
     private Integer patientAge;
 
-    //Todo: Enum
     @Column(name = "PATIENT_GENDER")
-    private String patientGender;
+    @Enumerated(EnumType.STRING)
+    private PatientGender patientGender;
 
     @Column(name = "PATIENT_ID" , nullable = false)
     private String patientId;
