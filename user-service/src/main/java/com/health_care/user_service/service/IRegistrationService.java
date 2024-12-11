@@ -1,6 +1,7 @@
 package com.health_care.user_service.service;
 
 import com.health_care.user_service.domain.common.ApiResponse;
+import com.health_care.user_service.domain.request.AdminInfoUpdateRequest;
 import com.health_care.user_service.domain.request.RegisterRequest;
 import com.health_care.user_service.domain.response.AdminInfoResponse;
 import com.health_care.user_service.domain.response.CountResponse;
@@ -21,5 +22,7 @@ public interface IRegistrationService {
 
     ApiResponse<CountResponse> getAdminsCount();
 
-    ApiResponse<AdminInfoResponse> getAdminByMobile(String id);
+    ApiResponse<AdminInfoResponse> getAdminByUniqueId(String id);
+
+    ApiResponse<Void> updateAdmin(AdminInfoUpdateRequest request);
 }
