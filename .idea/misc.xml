@@ -10,6 +10,8 @@
         <option value="$PROJECT_DIR$/two-factor-authentication-service/pom.xml" />
         <option value="$PROJECT_DIR$/appointment-service/appointment-service/pom.xml" />
         <option value="$PROJECT_DIR$/appointment-service/pom.xml" />
+        <option value="$PROJECT_DIR$/kafka/pom.xml" />
+        <option value="$PROJECT_DIR$/notification-service/pom.xml" />
       </list>
     </option>
   </component>

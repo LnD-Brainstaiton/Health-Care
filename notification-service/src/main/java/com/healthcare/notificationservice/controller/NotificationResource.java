@@ -22,7 +22,7 @@ public class NotificationResource {
 
     @PostMapping("/send-notification")
     public ApiResponse<Boolean> generateOtp(@Valid @RequestBody ReceiverDto receiverDto) {
-        return ResponseUtils.createResponseObject(ResponseMessage.OPERATION_SUCCESSFUL, notificationService.sendNotification());
+        return ResponseUtils.createResponseObject(ResponseMessage.OPERATION_SUCCESSFUL, notificationService.sendNotification(receiverDto));
     }
 
 }

@@ -6,6 +6,7 @@ import com.healthcare.tfaservice.domain.response.TfaResponse;
 import com.healthcare.tfaservice.service.interfaces.ITfaService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
+import com.healthcare.kafka.domain.EventWrapper;
 
 import java.util.UUID;
 

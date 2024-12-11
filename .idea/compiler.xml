@@ -7,19 +7,29 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="user-service" />
-        <module name="two-factor-authentication-service" />
         <module name="appointment-service" />
         <module name="discovery" />
+        <module name="kafka" />
+        <module name="user-service" />
+        <module name="two-factor-authentication-service" />
         <module name="gateway" />
+        <module name="notification-service" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="kafka (1)" target="17" />
+      <module name="kafka (2)" target="17" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="appointment-service" options="-parameters" />
       <module name="discovery" options="-parameters" />
       <module name="gateway" options="-parameters" />
+      <module name="kafka" options="-parameters" />
+      <module name="kafka (1)" options="-parameters" />
+      <module name="kafka (2)" options="-parameters" />
+      <module name="notification-service" options="-parameters" />
       <module name="two-factor-authentication-service" options="-parameters" />
       <module name="user-service" options="-parameters" />
     </option>
