@@ -224,6 +224,7 @@ public class RegistrationServiceImpl implements IRegistrationService {
                 .adminId(request.getUniqueId())
                 .lastname(request.getLastName())
                 .email(request.getEmail())
+                .isActive(Boolean.TRUE)
                 .build();
         adminRepository.save(admin);
     }
