@@ -19,6 +19,7 @@
 	<properties>
 		<java.version>17</java.version>
 		<spring-cloud.version>2022.0.3</spring-cloud.version>
+		<unique-id-generator.lib.version>0.0.1-SNAPSHOT</unique-id-generator.lib.version>
 	</properties>
 
 	<dependencies>
@@ -47,7 +48,7 @@
 		<dependency>
 			<groupId>com.health-care</groupId>
 			<artifactId>unique-id-generator</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>${unique-id-generator.lib.version}</version>
 		</dependency>
 
 		<dependency>
