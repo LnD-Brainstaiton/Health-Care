@@ -17,7 +17,7 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import java.util.Locale;
 
 @Configuration
-@ComponentScan(basePackages = {"com.health_care.user_service","com.health_care.unique_id_generator"})
+@ComponentScan(basePackages = {"com.health_care.user_service","com.health_care.id.generator"})
 public class WebConfigs implements WebMvcConfigurer {
 
     @Override

@@ -1,4 +1,4 @@
-package com.health_care.unique_id_generator.Api;
+package com.health_care.id.generator.Api;
 
 public interface UniqueIdGenerator {
     String generateUniqueIdForRequestId();
