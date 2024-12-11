@@ -43,7 +43,7 @@ public class PatientServiceImpl implements IPatientService {
 
     @Override
     public ApiResponse<Patient> getPatientById(String id) {
-        return patientRepository.getPatientByMobileAndIsActive(id, Boolean.TRUE)
+        return patientRepository.getPatientByPatientIdAndIsActive(id, Boolean.TRUE)
                 .map(patient -> ApiResponse.<Patient>builder()
                         .data(patient)
                         .responseCode(ApiResponseCode.OPERATION_SUCCESSFUL.getResponseCode())

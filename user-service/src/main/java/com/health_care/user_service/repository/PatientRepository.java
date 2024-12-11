@@ -12,6 +12,8 @@ import java.util.Optional;
 public interface PatientRepository extends JpaRepository<Patient, Long> {
     Optional<Patient> getPatientByMobileAndIsActive(String mobile, Boolean aTrue);
 
+    Optional<Patient> getPatientByPatientIdAndIsActive(String patientId, Boolean aTrue);
+
     List<Patient> findAllByIsActiveTrue();
 
     Page<Patient> findAllByIsActiveTrue(Pageable pageable);

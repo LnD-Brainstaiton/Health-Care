@@ -30,7 +30,8 @@ public class AuthConfig {
                 .requestMatchers("/api/v1/user/token","/api/v1/user/patient/register","/api/v1/user/admin/create","/api/v1/user/doctor/create",
                         "/api/v1/user/doctor/all","/api/v1/user/doctor/count","/api/v1/user/admin/count","/api/v1/user/patient/count",
                         "/api/v1/user/admin/{id}","/api/v1/user/patient/{id}","/api/v1/user/admin/all","/api/v1/user/patient/all",
-                        "/api/v1/user/admin/update").permitAll()
+                        "/api/v1/user/admin/update","/api/v1/user/doctor/{id}","/api/v1/user/blood-group-options",
+                        "/api/v1/user/designation-options","/api/v1/user/department-options","/api/v1/user/gender-options").permitAll()
                 .and()
                 .build();
     }

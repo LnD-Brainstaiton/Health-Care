@@ -43,7 +43,7 @@ public class DoctorServiceImpl implements IDoctorService {
 
     @Override
     public ApiResponse<DoctorInfoResponse> getDoctorById(String id) {
-        Optional<Doctor> doctorOptional = doctorRepository.getDoctorByMobileAndIsActive(id, Boolean.TRUE);
+        Optional<Doctor> doctorOptional = doctorRepository.getDoctorByDoctorIdAndIsActive(id, Boolean.TRUE);
 
         return doctorOptional.map(doctor -> {
             DoctorInfoResponse response = doctorMapper.toDoctorInfoResponse(doctor);

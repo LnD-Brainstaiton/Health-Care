@@ -14,6 +14,8 @@ public interface DoctorRepository extends JpaRepository<Doctor,Long> {
 
     Optional<Doctor> getDoctorByMobileAndIsActive(String mobile, Boolean aTrue);
 
+    Optional<Doctor> getDoctorByDoctorIdAndIsActive(String doctorId, Boolean aTrue);
+
     Page<Doctor> findAllByIsActiveTrue(Pageable pageable);
 
     List<Doctor> findAllByIsActiveTrue();
