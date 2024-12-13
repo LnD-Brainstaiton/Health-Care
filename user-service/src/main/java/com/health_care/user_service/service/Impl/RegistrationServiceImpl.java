@@ -26,10 +26,11 @@ import com.health_care.user_service.repository.UserRepository;
 import com.health_care.user_service.service.IRegistrationService;
 
 import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -43,7 +44,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class RegistrationServiceImpl implements IRegistrationService {
 
     private static final Logger logger = LoggerFactory.getLogger(RegistrationServiceImpl.class);
@@ -57,14 +58,14 @@ public class RegistrationServiceImpl implements IRegistrationService {
     private final RegisterMapper registerMapper;
     private final UniqueIdGeneratorImpl uniqueIdGenerator;
 
-//    @Value("${unique.id.patient.prefix}")
-//    private String patientPrefix;
-//
-//    @Value("${unique.id.admin.prefix}")
-//    private String adminPrefix;
-//
-//    @Value("${unique.id.doctor.prefix}")
-//    private String doctorPrefix;
+    @Value("${unique.id.patient.prefix}")
+    private String patientPrefix;
+
+    @Value("${unique.id.admin.prefix}")
+    private String adminPrefix;
+
+    @Value("${unique.id.doctor.prefix}")
+    private String doctorPrefix;
 
     @Override
     @Transactional
@@ -231,9 +232,9 @@ public class RegistrationServiceImpl implements IRegistrationService {
 
     private String getUniqueIdPrefixForRole(Role role) {
         return switch (role) {
-            case PATIENT -> "PT";
-            case DOCTOR -> "DR";
-            case ADMIN -> "AD";
+            case PATIENT -> patientPrefix;
+            case DOCTOR -> doctorPrefix;
+            case ADMIN -> adminPrefix;
             default -> throw new IllegalArgumentException("Invalid role");
         };
     }
