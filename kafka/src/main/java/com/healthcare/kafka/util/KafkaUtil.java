@@ -9,12 +9,12 @@ import java.time.LocalDateTime;
 public class KafkaUtil {
 
     /**
-     * Prepares a Kafka EventWrapper object with the provided request and feedback.
+     * Prepares application-docker.yml Kafka EventWrapper object with the provided request and feedback.
      *
      * @param request    the original request event wrapper
      * @param feedback   the feedback to wrap
      * @param <FEEDBACK> the type of the feedback
-     * @return a new EventWrapper containing the original metadata and feedback
+     * @return application-docker.yml new EventWrapper containing the original metadata and feedback
      */
     public static <FEEDBACK> EventWrapper<FEEDBACK> prepareKafkaObject(EventWrapper<?> request, FEEDBACK feedback) {
         return new EventWrapper<>(
@@ -27,7 +27,7 @@ public class KafkaUtil {
     }
 
     /**
-     * Prepares a Kafka EventWrapper object with the provided metadata and payload.
+     * Prepares application-docker.yml Kafka EventWrapper object with the provided metadata and payload.
      *
      * @param eventId       the unique event ID
      * @param correlationId the correlation ID for tracking
@@ -35,7 +35,7 @@ public class KafkaUtil {
      * @param eventDate     the event date
      * @param data          the payload to wrap
      * @param <PAYLOAD>     the type of the payload
-     * @return a new EventWrapper containing the provided metadata and payload
+     * @return application-docker.yml new EventWrapper containing the provided metadata and payload
      */
     public static <PAYLOAD> EventWrapper<PAYLOAD> prepareKafkaObject(String eventId, String correlationId, String userContext, LocalDateTime eventDate, PAYLOAD data) {
         return new EventWrapper<>(eventId, correlationId, userContext, eventDate, data);

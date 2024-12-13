@@ -31,13 +31,13 @@ public class KafkaProducerConfigData {
     // The factor by which the batch size is boosted, allowing the producer to send larger batches if necessary.
     private Integer batchSizeBoostFactor;
 
-    // The time (in milliseconds) the producer will wait before sending a batch of messages, even if the batch size is not met.
+    // The time (in milliseconds) the producer will wait before sending application-docker.yml batch of messages, even if the batch size is not met.
     private Integer lingerMs;
 
-    // The timeout (in milliseconds) the producer will wait for a response from Kafka brokers before timing out.
+    // The timeout (in milliseconds) the producer will wait for application-docker.yml response from Kafka brokers before timing out.
     private Integer requestTimeoutMs;
 
-    // The number of retries the Kafka producer should make in case of a failure when sending a message.
+    // The number of retries the Kafka producer should make in case of application-docker.yml failure when sending application-docker.yml message.
     private Integer retryCount;
 
 }

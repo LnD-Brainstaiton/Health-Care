@@ -12,10 +12,10 @@
 	</parent>
 
 	<groupId>com.healthcare</groupId>
-	<artifactId>kafka</artifactId>
+	<artifactId>kafka-service</artifactId>
 	<version>0.0.1</version>
 	<packaging>jar</packaging>
-	<name>Kafka Service</name>
+	<name>kafka-service</name>
 	<description>Kafka Service for health care</description>
 
 	<properties>
@@ -56,7 +56,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-					<!-- Skip the creation of a main class -->
+					<!-- Skip the creation of application-docker.yml main class -->
 					<skip>true</skip>
 				</configuration>
 			</plugin>

@@ -29,7 +29,7 @@ public class KafkaConsumerConfigData {
     // Defines the concurrency level for the Kafka consumer (number of threads that will process the messages).
     private Integer concurrencyLevel;
 
-    // The maximum time (in milliseconds) the consumer will wait for messages before considering a session expired.
+    // The maximum time (in milliseconds) the consumer will wait for messages before considering application-docker.yml session expired.
     private Integer sessionTimeoutMs;
 
     // The interval (in milliseconds) at which the consumer will send heartbeat messages to the Kafka broker.
@@ -38,13 +38,13 @@ public class KafkaConsumerConfigData {
     // The maximum time (in milliseconds) the consumer will wait between poll requests to Kafka.
     private Integer maxPollIntervalMs;
 
-    // The maximum amount of time (in milliseconds) the consumer will block while waiting for a poll response.
+    // The maximum amount of time (in milliseconds) the consumer will block while waiting for application-docker.yml poll response.
     private Long pollTimeoutMs;
 
     // The maximum number of records the consumer will fetch per poll.
     private Integer maxPollRecords;
 
-    // The default maximum amount of data (in bytes) fetched from each Kafka partition during a poll request.
+    // The default maximum amount of data (in bytes) fetched from each Kafka partition during application-docker.yml poll request.
     private Integer maxPartitionFetchBytesDefault;
 
     // The multiplier that boosts the fetch size for Kafka partitions, useful for high-volume data consumption.
