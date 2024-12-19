@@ -6,7 +6,9 @@ import com.health_care.user_service.domain.enums.ApiResponseCode;
 import com.health_care.user_service.domain.enums.ResponseMessage;
 import com.health_care.user_service.domain.mapper.DoctorMapper;
 import com.health_care.user_service.domain.request.DoctorInfoUpdateRequest;
+import com.health_care.user_service.domain.response.CountResponse;
 import com.health_care.user_service.domain.response.DoctorInfoResponse;
+import com.health_care.user_service.domain.response.PaginationResponse;
 import com.health_care.user_service.repository.DoctorRepository;
 import com.health_care.user_service.service.IDoctorService;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +43,7 @@ public class DoctorServiceImpl implements IDoctorService {
 
     @Override
     public ApiResponse<DoctorInfoResponse> getDoctorById(String id) {
-        Optional<Doctor> doctorOptional = doctorRepository.getDoctorByMobileAndIsActive(id, Boolean.TRUE);
+        Optional<Doctor> doctorOptional = doctorRepository.getDoctorByDoctorIdAndIsActive(id, Boolean.TRUE);
 
         return doctorOptional.map(doctor -> {
             DoctorInfoResponse response = doctorMapper.toDoctorInfoResponse(doctor);
@@ -57,24 +59,60 @@ public class DoctorServiceImpl implements IDoctorService {
     }
 
     @Override
-    public ApiResponse<List<DoctorInfoResponse>> getAllDoctorInfo(int page, int size, String sort) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.asc(sort)));
+    public PaginationResponse<DoctorInfoResponse> getAllDoctorInfo(int page, int size, String sort) {
+        Sort.Order sortOrder;
+        try {
+            sortOrder = Sort.Order.asc(sort);
+        } catch (IllegalArgumentException ex) {
+            return new PaginationResponse<>(
+                    Collections.emptyList(),
+                    0L
+            );
+        }
+        // Check if page = -1, fetch all active doctors without pagination
+        if (page == -1) {
+            List<Doctor> activeDoctors = doctorRepository.findAllByIsActiveTrue(Sort.by(sortOrder));
+            List<DoctorInfoResponse> doctorInfoResponses = activeDoctors.stream()
+                    .map(doctorMapper::toDoctorInfoResponse)
+                    .collect(Collectors.toList());
+            return new PaginationResponse<>(doctorInfoResponses, (long) doctorInfoResponses.size());
+        }
+
+        int validatedPage = Math.max(0, page);
+        int validatedSize = Math.max(1, size);
+
+        Pageable pageable = PageRequest.of(validatedPage, validatedSize, Sort.by(sortOrder));
         Page<Doctor> activeDoctorsPage = doctorRepository.findAllByIsActiveTrue(pageable);
 
         if (activeDoctorsPage.isEmpty()) {
-            return ApiResponse.<List<DoctorInfoResponse>>builder()
-                    .data(Collections.emptyList())
-                    .responseCode(ApiResponseCode.RECORD_NOT_FOUND.getResponseCode())
-                    .responseMessage(ResponseMessage.RECORD_NOT_FOUND.getResponseMessage())
-                    .build();
+            return new PaginationResponse<>(
+                    Collections.emptyList(),
+                    0L
+            );
         }
 
         List<DoctorInfoResponse> doctorInfoResponses = activeDoctorsPage.getContent().stream()
                 .map(doctorMapper::toDoctorInfoResponse)
                 .collect(Collectors.toList());
 
-        return ApiResponse.<List<DoctorInfoResponse>>builder()
-                .data(doctorInfoResponses)
+        return new PaginationResponse<>(
+                activeDoctorsPage.getNumber(),
+                activeDoctorsPage.getSize(),
+                activeDoctorsPage.getTotalElements(),
+                activeDoctorsPage.getTotalPages(),
+                doctorInfoResponses
+        );
+    }
+
+
+
+    @Override
+    public ApiResponse<CountResponse> getDoctorsCount() {
+        List<Doctor> doctors = doctorRepository.findAllByIsActiveTrue();
+        CountResponse countResponse = new CountResponse();
+        countResponse.setCount(doctors.size());
+        return ApiResponse.<CountResponse>builder()
+                .data(countResponse)
                 .responseCode(ApiResponseCode.OPERATION_SUCCESSFUL.getResponseCode())
                 .responseMessage(ResponseMessage.OPERATION_SUCCESSFUL.getResponseMessage())
                 .build();

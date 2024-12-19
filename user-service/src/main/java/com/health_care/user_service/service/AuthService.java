@@ -29,6 +29,7 @@ public class AuthService {
         Optional<User> getUser = userRepository.findByUserName(username);
         tokenResponse.setToken(jwtService.generateToken(username));
         tokenResponse.setUserType(String.valueOf(getUser.get().getUserType()));
+        tokenResponse.setUserId(String.valueOf(getUser.get().getUserId()));
         return new ApiResponse<>(ApiResponseCode.OPERATION_SUCCESSFUL.getResponseCode(), "Token generated successfully", tokenResponse);
     }
 

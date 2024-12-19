@@ -3,29 +3,25 @@ package com.health_care.user_service.controller;
 import com.health_care.user_service.common.utils.AppUtils;
 import com.health_care.user_service.common.utils.ResponseUtils;
 import com.health_care.user_service.domain.common.ApiResponse;
-import com.health_care.user_service.domain.dto.Demo;
 import com.health_care.user_service.domain.entity.Patient;
-import com.health_care.user_service.domain.entity.User;
 import com.health_care.user_service.domain.enums.ResponseMessage;
 import com.health_care.user_service.domain.request.PatientInfoUpdateRequest;
 import com.health_care.user_service.domain.request.RegisterRequest;
+import com.health_care.user_service.domain.response.CountResponse;
+import com.health_care.user_service.domain.response.DoctorInfoResponse;
+import com.health_care.user_service.domain.response.PatientInfoResponse;
 import com.health_care.user_service.domain.response.RegisterResponse;
-import com.health_care.user_service.repository.UserRepository;
 import com.health_care.user_service.service.IPatientService;
 import com.health_care.user_service.service.IRegistrationService;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(AppUtils.BASE_URL)
 @AllArgsConstructor
-public class RegistrationResource {
+public class PatientResource {
 
     private final IRegistrationService registrationService;
     private final IPatientService patientService;
@@ -45,6 +41,21 @@ public class RegistrationResource {
     @GetMapping("/patient/{id}")
     public ApiResponse<Patient> getPatient(@PathVariable String id) {
         ApiResponse<Patient> response = patientService.getPatientById(id);
+        return response;
+    }
+
+    @GetMapping("/patient/count")
+    public ApiResponse<CountResponse> getAPatientsCount(){
+        ApiResponse<CountResponse> response = patientService.getAPatientsCount();
+        return response;
+    }
+
+    @GetMapping("/patient/all")
+    public ApiResponse<List<PatientInfoResponse>> getAllPatientList(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "firstname") String sort) {
+        ApiResponse<List<PatientInfoResponse>> response = patientService.getAllPatientList(page,size,sort);
         return response;
     }
 }

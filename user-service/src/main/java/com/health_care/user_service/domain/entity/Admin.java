@@ -31,9 +31,15 @@ public class Admin extends BaseEntity{
     @Column(nullable = false, length = 50)
     private String lastname;
 
+    @Column(nullable = false, length = 50)
+    private String adminId;
+
     @Column(nullable = false, unique = true, length = 15)
     private String mobile;
 
     @Column(nullable = false, unique = true, length = 100)
     private String email;
+
+    @Column(nullable = false)
+    private Boolean isActive;
 }
