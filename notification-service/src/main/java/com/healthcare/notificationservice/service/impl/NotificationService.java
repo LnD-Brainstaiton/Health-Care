@@ -1,7 +1,7 @@
 package com.healthcare.notificationservice.service.impl;
 
 import com.healthcare.kafka.domain.EventWrapper;
-import com.healthcare.notificationservice.domain.dto.ReceiverDto;
+import com.healthcare.notificationservice.domain.enums.NotificationType;
 import com.healthcare.notificationservice.event.NotificationEvent;
 import com.healthcare.notificationservice.service.interfaces.IEmailService;
 import com.healthcare.notificationservice.service.interfaces.INotificationService;
@@ -20,10 +20,13 @@ public class NotificationService implements INotificationService {
     IEmailService emailService;
 
     @Override
-    public Boolean sendNotification(ReceiverDto receiverDto) {
-
-        emailService.sendHtmlEmail("fariha.bs23@gmail.com","test","Test email","Fariha");
-        return false;
+    public Boolean sendNotification(NotificationEvent notificationEvent) {
+        if (NotificationType.SMS.equals(notificationEvent.getNotificationType())) {
+            smsService.sendSms(notificationEvent.getReceiverDto().getReceiverPhone());
+        } else if (NotificationType.EMAIL.equals(notificationEvent.getNotificationType())) {
+            emailService.sendHtmlEmail(notificationEvent);
+        }
+        return true;
     }
 
     @Override

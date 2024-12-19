@@ -1,5 +1,7 @@
 package com.healthcare.notificationservice.service.interfaces;
 
+import com.healthcare.notificationservice.event.NotificationEvent;
+
 public interface IEmailService {
-    void sendHtmlEmail(String to, String subject, String title, String name);
+    void sendHtmlEmail(NotificationEvent notificationEvent);
 }

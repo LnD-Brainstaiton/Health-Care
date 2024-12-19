@@ -18,8 +18,11 @@ public class DynamicNotificationTemplate extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "code", nullable = false, unique = true)
+    @Column(name = "notification_code", nullable = false, unique = true)
     private String notificationCode;
+
+    @Column(name = "template_subject", nullable = false)
+    private String templateSubject;
 
     @Column(name = "template_name", nullable = false)
     private String templateName;

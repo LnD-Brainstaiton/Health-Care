@@ -5,6 +5,7 @@ import com.healthcare.notificationservice.common.utils.ResponseUtils;
 import com.healthcare.notificationservice.domain.common.ApiResponse;
 import com.healthcare.notificationservice.domain.dto.ReceiverDto;
 import com.healthcare.notificationservice.domain.enums.ResponseMessage;
+import com.healthcare.notificationservice.event.NotificationEvent;
 import com.healthcare.notificationservice.service.interfaces.INotificationService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +22,8 @@ public class NotificationResource {
     INotificationService notificationService;
 
     @PostMapping("/send-notification")
-    public ApiResponse<Boolean> generateOtp(@Valid @RequestBody ReceiverDto receiverDto) {
-        return ResponseUtils.createResponseObject(ResponseMessage.OPERATION_SUCCESSFUL, notificationService.sendNotification(receiverDto));
+    public ApiResponse<Boolean> sendNotification(@Valid @RequestBody NotificationEvent notificationEvent) {
+        return ResponseUtils.createResponseObject(ResponseMessage.OPERATION_SUCCESSFUL, notificationService.sendNotification(notificationEvent));
     }
 
 }

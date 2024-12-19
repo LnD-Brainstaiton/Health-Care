@@ -1,41 +1,42 @@
-version: '3.8'
-
+version: '3'
 services:
   zookeeper:
-    image: confluentinc/cp-zookeeper:7.2.2
-    container_name: zookeeper
-    ports:
-      - "2181:2181"
+    image: confluentinc/cp-zookeeper:latest
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"  # Expose Zookeeper port to the host for connectivity (optional but useful for troubleshooting)
 
   kafka:
-    image: confluentinc/cp-kafka:7.2.2
-    container_name: kafka
-    ports:
-      - "9092:9092"
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - zookeeper
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092  # Advertise the container name as Kafka address
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092          # Expose Kafka on all interfaces of the container
-      KAFKA_LISTENER_SECURITY_PROTOCOL: PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092  # Ensure Kafka advertises the correct address
+      KAFKA_LISTENER_SECURITY_PROTOCOL: PLAINTEXT  # Specify listener protocol as PLAINTEXT (default)
+      KAFKA_LISTENER_PORT: 9092  # Kafka should listen on port 9092
+      KAFKA_LISTENER_NAME: PLAINTEXT  # Set listener name to PLAINTEXT (needed for proper configuration)
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-    depends_on:
-      - zookeeper
-
-  kafka-service:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: kafka-service
     ports:
-      - "8080:8080"
-    environment:
-      SPRING_PROFILES_ACTIVE: docker
-      HEALTHCARE_KAFKA_BOOTSTRAP_SERVERS: kafka:9092  # Point to Kafka container using its service name
+      - "9092:9092"  # Expose Kafka port to the host
+    networks:
+      - kafka-network  # Add Kafka network to ensure proper communication between containers
+
+  kafdrop:
+    image: obsidiandynamics/kafdrop:latest
     depends_on:
       - kafka
-    # Optional: Wait for Kafka to be fully up before starting your service
-    entrypoint: ["sh", "-c", "while ! nc -z kafka 9092; do sleep 1; done; java -jar /app/kafka-service.jar"]
+    ports:
+      - "9000:9000"  # Expose Kafdrop UI on port 9000
+    environment:
+      KAFKA_BROKERCONNECT: kafka:9092  # Kafka service name inside Docker network
+      JVM_OPTS: "-Xms64M -Xmx128M"
+      SERVER_SERVLET_CONTEXTPATH: "/"
+    networks:
+      - kafka-network  # Ensure Kafdrop uses the same network as Kafka and Zookeeper
+
+networks:
+  kafka-network:  # Create a custom network for all services to communicate
+    driver: bridge

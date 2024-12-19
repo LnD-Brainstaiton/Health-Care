@@ -16,11 +16,11 @@ import java.util.List;
 @NoArgsConstructor
 
 public class NotificationEvent implements Serializable {
-    static final String TYPE = "NOTIFICATION";
 
     private String notificationCode;
+
     private NotificationType notificationType;
 
-    private List<ReceiverDto> receiverDtos;
+    private ReceiverDto receiverDto;
 
 }

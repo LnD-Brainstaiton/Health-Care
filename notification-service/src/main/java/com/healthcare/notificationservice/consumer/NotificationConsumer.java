@@ -34,9 +34,7 @@ public class NotificationConsumer {
 
     protected ObjectMapper objectMapper;
 
-    @Value("${healthcare.kafka.topic.dynamic-notification}")
-    private String topicName;
-    @KafkaListener(topics = "${healthcare.kafka.topic.dynamic-notification}", groupId = "${healthcare.kafka.consumer.group-id}")
+    @KafkaListener(topics = "DYNAMIC_NOTIFICATION", groupId = "health-care")
     public void intraFundTransferProcessListener(@Payload List<String> events,
                                                  @Header(KafkaHeaders.RECEIVED_KEY) List<String> keys,
                                                  @Header(KafkaHeaders.RECEIVED_PARTITION) List<Integer> partitions,
