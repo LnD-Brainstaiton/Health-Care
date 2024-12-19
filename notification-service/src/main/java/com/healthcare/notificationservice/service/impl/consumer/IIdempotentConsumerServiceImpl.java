@@ -4,7 +4,7 @@ package com.healthcare.notificationservice.service.impl.consumer;
 import com.healthcare.kafka.domain.EventWrapper;
 import com.healthcare.kafka.exception.DuplicateEventException;
 import com.healthcare.notificationservice.domain.entity.ProcessedEvent;
-import com.healthcare.notificationservice.event.NotificationEvent;
+import com.healthcare.notificationservice.presenter.rest.event.NotificationEvent;
 import com.healthcare.notificationservice.repository.ProcessedEventRepository;
 import com.healthcare.notificationservice.service.interfaces.INotificationService;
 import com.healthcare.notificationservice.service.interfaces.consumer.IIdempotentConsumerService;
@@ -13,7 +13,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor

@@ -4,7 +4,7 @@ import com.healthcare.notificationservice.common.exceptions.RecordNotFoundExcept
 import com.healthcare.notificationservice.domain.dto.ReceiverDto;
 import com.healthcare.notificationservice.domain.entity.DynamicNotificationTemplate;
 import com.healthcare.notificationservice.domain.enums.ResponseMessage;
-import com.healthcare.notificationservice.event.NotificationEvent;
+import com.healthcare.notificationservice.presenter.rest.event.NotificationEvent;
 import com.healthcare.notificationservice.repository.DynamicNotificationTemplateRepository;
 import com.healthcare.notificationservice.service.interfaces.IEmailService;
 import jakarta.mail.MessagingException;

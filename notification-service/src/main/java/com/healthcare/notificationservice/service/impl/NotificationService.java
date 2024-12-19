@@ -2,7 +2,7 @@ package com.healthcare.notificationservice.service.impl;
 
 import com.healthcare.kafka.domain.EventWrapper;
 import com.healthcare.notificationservice.domain.enums.NotificationType;
-import com.healthcare.notificationservice.event.NotificationEvent;
+import com.healthcare.notificationservice.presenter.rest.event.NotificationEvent;
 import com.healthcare.notificationservice.service.interfaces.IEmailService;
 import com.healthcare.notificationservice.service.interfaces.INotificationService;
 import com.healthcare.notificationservice.service.interfaces.ISmsService;
