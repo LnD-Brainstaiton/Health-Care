@@ -171,7 +171,7 @@ public class PatientServiceImpl implements IPatientService {
             if(!Objects.equals(request.getPassword(), "")) {
                 user.get().setPassword(authConfig.passwordEncoder().encode(request.getPassword()));
             }
-            user.get().setUserName(request.getMobile());
+            user.get().setUserName(request.getPatientId());
             userRepository.save(user.get());
         }
 

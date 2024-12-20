@@ -177,7 +177,7 @@ public class DoctorServiceImpl implements IDoctorService {
             if(!Objects.equals(request.getPassword(), "")) {
                 user.get().setPassword(authConfig.passwordEncoder().encode(request.getPassword()));
             }
-            user.get().setUserName(request.getMobile());
+            user.get().setUserName(request.getDoctorId());
             userRepository.save(user.get());
         }
 

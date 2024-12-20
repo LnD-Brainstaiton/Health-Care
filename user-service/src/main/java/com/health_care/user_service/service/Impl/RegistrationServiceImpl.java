@@ -215,7 +215,7 @@ public class RegistrationServiceImpl implements IRegistrationService {
             if(!Objects.equals(request.getPassword(), "")) {
                 user.get().setPassword(authConfig.passwordEncoder().encode(request.getPassword()));
             }
-            user.get().setUserName(request.getMobile());
+            user.get().setUserName(request.getAdminId());
             userRepository.save(user.get());
         }
 
@@ -246,7 +246,7 @@ public class RegistrationServiceImpl implements IRegistrationService {
         String uniqueId = uniqueIdGenerator.generateUniqueIdWithPrefix(uniqueIdPrefix);
 
         return User.builder()
-                .userName(request.getMobile())
+                .userName(uniqueId)
                 .userId(uniqueId)
                 .password(authConfig.passwordEncoder().encode(request.getPassword()))
                 .userType(role)
