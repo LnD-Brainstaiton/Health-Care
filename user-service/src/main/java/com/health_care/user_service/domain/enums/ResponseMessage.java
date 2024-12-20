@@ -18,7 +18,9 @@ public enum ResponseMessage {
     RECORD_NOT_MATCHED(ApiResponseCode.RECORD_NOT_FOUND.getResponseCode(), "record.not.matched"),
     RECORD_ALREADY_EXIST(ApiResponseCode.INVALID_REQUEST_DATA.getResponseCode(), "record.already.exist"),
     AUTHENTICATION_FAILED(ApiResponseCode.AUTHENTICATION_FAILED.getResponseCode(), "authentication.failed.due.to.bad.credentials"),
-    INVALID_MOBILE_NUMBER(ApiResponseCode.INVALID_REQUEST_DATA.getResponseCode(), "Mobile number is already registered");
+    INVALID_MOBILE_NUMBER(ApiResponseCode.INVALID_REQUEST_DATA.getResponseCode(), "Mobile number is already registered"),
+    REQUEST_CAN_NOT_PROCESS(ApiResponseCode.INVALID_REQUEST_DATA.getResponseCode(),"REQUEST CAN NOT PROCESS"),
+    ALREADY_REQUEST_PENDING(ApiResponseCode.INVALID_REQUEST_DATA.getResponseCode(),"ALREADY REQUEST PENDING");
     private String responseCode;
     private String responseMessage;
 }
