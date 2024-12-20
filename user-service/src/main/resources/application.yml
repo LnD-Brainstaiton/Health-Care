@@ -13,8 +13,8 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-  config:
-    import: id-generator.yml
+#  config:
+#    import: id-generator.yml
 
 management:
   endpoint:

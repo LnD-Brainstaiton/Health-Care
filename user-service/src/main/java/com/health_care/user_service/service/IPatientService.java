@@ -4,6 +4,7 @@ import com.health_care.user_service.domain.common.ApiResponse;
 import com.health_care.user_service.domain.entity.Patient;
 import com.health_care.user_service.domain.request.PatientInfoUpdateRequest;
 import com.health_care.user_service.domain.response.CountResponse;
+import com.health_care.user_service.domain.response.PaginationResponse;
 import com.health_care.user_service.domain.response.PatientInfoResponse;
 
 import java.util.List;
@@ -15,5 +16,7 @@ public interface IPatientService {
 
     ApiResponse<CountResponse> getAPatientsCount();
 
-    ApiResponse<List<PatientInfoResponse>> getAllPatientList(int page, int size, String sort);
+    PaginationResponse<PatientInfoResponse> getAllPatientList(int page, int size, String sort,String firstnameLastname, String id);
+
+    ApiResponse<String> deletePatient(String id);
 }

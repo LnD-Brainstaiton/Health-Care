@@ -26,11 +26,15 @@ public class AuthService {
     public ApiResponse<TokenResponse> generateToken(String username) {
 
         TokenResponse tokenResponse = new TokenResponse();
-        Optional<User> getUser = userRepository.findByUserName(username);
-        tokenResponse.setToken(jwtService.generateToken(username));
-        tokenResponse.setUserType(String.valueOf(getUser.get().getUserType()));
-        tokenResponse.setUserId(String.valueOf(getUser.get().getUserId()));
-        return new ApiResponse<>(ApiResponseCode.OPERATION_SUCCESSFUL.getResponseCode(), "Token generated successfully", tokenResponse);
+        Optional<User> getUser = userRepository.findByUserNameAndIsActiveTrue(username);
+        if (getUser.isPresent()) {
+            tokenResponse.setToken(jwtService.generateToken(username));
+            tokenResponse.setUserType(String.valueOf(getUser.get().getUserType()));
+            tokenResponse.setUserId(String.valueOf(getUser.get().getUserId()));
+            return new ApiResponse<>(ApiResponseCode.OPERATION_SUCCESSFUL.getResponseCode(), "Token generated successfully", tokenResponse);
+        } else {
+            return new ApiResponse<>(ApiResponseCode.NO_ACCOUNT_FOUND.getResponseCode(), "No account found", null);
+        }
     }
 
 }

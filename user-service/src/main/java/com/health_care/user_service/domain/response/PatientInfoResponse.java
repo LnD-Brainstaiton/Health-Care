@@ -25,4 +25,6 @@ public class PatientInfoResponse {
     private String nid;
 
     private String bloodGroup;
+
+    private String patientId;
 }
