@@ -11,5 +11,4 @@ public class HomeResource {
     public Mono<String> home() {
         return Mono.just("Welcome to Health Care - Service Gateway is up and running.");
     }
-
 }
