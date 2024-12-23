@@ -25,4 +25,6 @@ public interface DoctorRepository extends JpaRepository<Doctor,Long>, JpaSpecifi
     List<Doctor> findAllByIsActiveTrue(Sort sort);
 
     Doctor findByDoctorId(String id);
+
+    Optional<Doctor> findByMobileAndIsActiveTrue(String mobile);
 }

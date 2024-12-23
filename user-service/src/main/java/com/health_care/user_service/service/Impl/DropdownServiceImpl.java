@@ -1,23 +1,35 @@
 package com.health_care.user_service.service.Impl;
 
 import com.health_care.user_service.domain.common.ApiResponse;
-import com.health_care.user_service.domain.enums.BloodGroup;
-import com.health_care.user_service.domain.enums.Department;
-import com.health_care.user_service.domain.enums.Designation;
-import com.health_care.user_service.domain.enums.Gender;
+import com.health_care.user_service.domain.entity.Admin;
+import com.health_care.user_service.domain.entity.Doctor;
+import com.health_care.user_service.domain.entity.Patient;
+import com.health_care.user_service.domain.entity.User;
+import com.health_care.user_service.domain.enums.*;
+import com.health_care.user_service.domain.request.MobileCheckRequest;
 import com.health_care.user_service.domain.response.BloodGroupResponse;
 import com.health_care.user_service.domain.response.DepartmentResponse;
 import com.health_care.user_service.domain.response.DesignationResponse;
 import com.health_care.user_service.domain.response.GenderResponse;
+import com.health_care.user_service.repository.AdminRepository;
+import com.health_care.user_service.repository.DoctorRepository;
+import com.health_care.user_service.repository.PatientRepository;
+import com.health_care.user_service.repository.UserRepository;
 import com.health_care.user_service.service.IDropdownService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class DropdownServiceImpl implements IDropdownService {
 
-
+    private final AdminRepository adminRepository;
+    private final DoctorRepository doctorRepository;
+    private final PatientRepository patientRepository;
 
     @Override
     public ApiResponse<BloodGroupResponse> getBloodGroupOptions() {
@@ -49,6 +61,34 @@ public class DropdownServiceImpl implements IDropdownService {
         List<String> gender = Gender.allGender();
         genderResponse.setGender(gender);
         return new ApiResponse<>(genderResponse);
+    }
+
+    @Override
+    public ApiResponse<Boolean> checkMobile(MobileCheckRequest mobileCheckRequest) {
+        boolean response = false;
+        if(Objects.equals(mobileCheckRequest.getUserType(), "ADMIN")) {
+            Optional<Admin> admin = adminRepository.findByMobileAndIsActiveTrue(mobileCheckRequest.getMobile());
+            if(admin.isPresent()) {
+                response = true;
+            }
+        }
+        else if(Objects.equals(mobileCheckRequest.getUserType(), "PATIENT")) {
+            Optional<Patient> admin = patientRepository.findByMobileAndIsActiveTrue(mobileCheckRequest.getMobile());
+            if(admin.isPresent()) {
+                response = true;
+            }
+        }
+        else if(Objects.equals(mobileCheckRequest.getUserType(), "DOCTOR")) {
+            Optional<Doctor> admin = doctorRepository.findByMobileAndIsActiveTrue(mobileCheckRequest.getMobile());
+            if(admin.isPresent()) {
+                response = true;
+            }
+        }
+        return ApiResponse.<Boolean>builder()
+                .responseCode(ApiResponseCode.OPERATION_SUCCESSFUL.getResponseCode())
+                .responseMessage(ResponseMessage.OPERATION_SUCCESSFUL.getResponseMessage())
+                .data(response)
+                .build();
     }
 
 

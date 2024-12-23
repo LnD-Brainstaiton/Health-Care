@@ -1,6 +1,7 @@
 package com.health_care.user_service.service;
 
 import com.health_care.user_service.domain.common.ApiResponse;
+import com.health_care.user_service.domain.request.MobileCheckRequest;
 import com.health_care.user_service.domain.response.BloodGroupResponse;
 import com.health_care.user_service.domain.response.DepartmentResponse;
 import com.health_care.user_service.domain.response.DesignationResponse;
@@ -15,4 +16,6 @@ public interface IDropdownService {
     ApiResponse<DepartmentResponse> getDepartmentOptions();
 
     ApiResponse<GenderResponse> getGenderOptions();
+
+    ApiResponse<Boolean> checkMobile(MobileCheckRequest request);
 }

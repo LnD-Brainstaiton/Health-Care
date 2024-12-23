@@ -21,4 +21,6 @@ public interface PatientRepository extends JpaRepository<Patient, Long>, JpaSpec
     List<Patient> findAllByIsActiveTrue(Sort sort);
 
     Patient findByPatientIdAndIsActiveTrue(String id);
+
+    Optional<Patient> findByMobileAndIsActiveTrue(String mobile);
 }
