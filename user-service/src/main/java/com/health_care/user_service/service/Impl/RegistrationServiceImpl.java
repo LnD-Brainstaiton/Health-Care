@@ -15,6 +15,7 @@ import com.health_care.user_service.domain.enums.Role;
 import com.health_care.user_service.domain.mapper.AdminMapper;
 import com.health_care.user_service.domain.mapper.RegisterMapper;
 import com.health_care.user_service.domain.request.AdminInfoUpdateRequest;
+import com.health_care.user_service.domain.request.DoctorInfoUpdateRequest;
 import com.health_care.user_service.domain.request.RegisterRequest;
 import com.health_care.user_service.domain.response.*;
 import com.health_care.user_service.repository.AdminRepository;
@@ -273,6 +274,11 @@ public class RegistrationServiceImpl implements IRegistrationService {
                 .lastname(request.getLastName())
                 .doctorId(request.getUniqueId())
                 .email(request.getEmail())
+                .mobile(request.getMobile())
+                .department(request.getDepartment())
+                .designation(request.getDesignation())
+                .specialities(request.getSpecialities())
+                .fee(request.getFee())
                 .isActive(Boolean.TRUE)
                 .build();
         doctorRepository.save(doctor);

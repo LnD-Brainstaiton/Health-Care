@@ -9,10 +9,7 @@ import com.health_care.user_service.domain.response.DesignationResponse;
 import com.health_care.user_service.domain.response.GenderResponse;
 import com.health_care.user_service.service.IDropdownService;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(AppUtils.BASE_URL)
@@ -41,7 +38,7 @@ public class DropdownResource {
         return dropdownService.getGenderOptions();
     }
 
-    @GetMapping("/check-mobile")
+    @PostMapping("/check-mobile")
     public ApiResponse<Boolean> checkMobile(@RequestBody MobileCheckRequest mobileCheckRequest) {
         return dropdownService.checkMobile(mobileCheckRequest);
     }

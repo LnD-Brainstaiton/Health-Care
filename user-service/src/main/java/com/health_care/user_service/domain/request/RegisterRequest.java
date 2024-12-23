@@ -33,4 +33,9 @@ public class RegisterRequest {
 
     private String uniqueId;
 
+    private String designation;
+    private String department;
+    private String specialities;
+    private double fee;
+
 }

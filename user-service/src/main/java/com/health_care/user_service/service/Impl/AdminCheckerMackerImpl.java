@@ -1,7 +1,7 @@
 package com.health_care.user_service.service.Impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.health_care.id.generator.Impl.UniqueIdGeneratorImpl;
+//import com.health_care.id.generator.Impl.UniqueIdGeneratorImpl;
 import com.health_care.user_service.common.exceptions.AlreadyExistsException;
 import com.health_care.user_service.common.exceptions.RequestCanNotProcessException;
 import com.health_care.user_service.domain.common.ApiResponse;
@@ -28,7 +28,7 @@ public class AdminCheckerMackerImpl extends BaseService implements IAdminChecker
 
     private final ObjectMapper objectMapper;
     private final NotificationRepository notificationRepository;
-    private final UniqueIdGeneratorImpl uniqueIdGenerator;
+//    private final UniqueIdGeneratorImpl uniqueIdGenerator;
 
     @Value("${url.create.admin}")
     private String createAdminUrl;
@@ -63,7 +63,7 @@ public class AdminCheckerMackerImpl extends BaseService implements IAdminChecker
 
             Notification notification = Notification.builder()
                     .featureCode(temp.getFeatureCode())
-                    .requestId(uniqueIdGenerator.generateUniqueIdWithPrefix(checkerMacker))
+//                    .requestId(uniqueIdGenerator.generateUniqueIdWithPrefix(checkerMacker))
                     .requestUrl(temp.getRequestUrl())
                     .message(temp.getMessage())
                     .data(data)
