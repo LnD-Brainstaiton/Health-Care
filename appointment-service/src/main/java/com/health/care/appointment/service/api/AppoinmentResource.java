@@ -5,12 +5,10 @@ import com.health.care.appointment.service.common.utils.ResponseUtils;
 import com.health.care.appointment.service.domain.common.ApiResponse;
 import com.health.care.appointment.service.domain.enums.ResponseMessage;
 import com.health.care.appointment.service.domain.request.CreateAppointmentRequest;
+import com.health.care.appointment.service.domain.request.UpdateAppointmentRequest;
 import com.health.care.appointment.service.service.IAppointmentService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,5 +20,10 @@ public class AppoinmentResource {
     @PostMapping("/create")
     public ApiResponse<Void> createAppointment(@RequestBody CreateAppointmentRequest request) {
         return ResponseUtils.createResponseObject(ResponseMessage.OPERATION_SUCCESSFUL, appointmentService.addAppointment(request));
+    }
+
+    @PutMapping("/update")
+    public ApiResponse<Void> updateAppointment(@RequestBody UpdateAppointmentRequest request) {
+       return ResponseUtils.createResponseObject(ResponseMessage.OPERATION_SUCCESSFUL, appointmentService.updateAppointment(request));
     }
 }
