@@ -6,14 +6,12 @@ import com.health_care.user_service.domain.common.ApiResponse;
 import com.health_care.user_service.domain.enums.ApiResponseCode;
 import com.health_care.user_service.domain.enums.ResponseMessage;
 import com.health_care.user_service.domain.request.AdminInfoUpdateRequest;
-import com.health_care.user_service.domain.request.PatientInfoUpdateRequest;
 import com.health_care.user_service.domain.request.RegisterRequest;
 import com.health_care.user_service.domain.response.*;
 import com.health_care.user_service.service.IRegistrationService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping(AppUtils.BASE_URL)
