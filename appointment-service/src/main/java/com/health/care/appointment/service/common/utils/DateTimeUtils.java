@@ -52,6 +52,18 @@ public final class DateTimeUtils {
         return null;
     }
 
+    public static LocalDate convertToLocalDate(String dateStr, String dateFormat) {
+        if (StringUtils.isBlank(dateStr) || StringUtils.isBlank(dateFormat)) {
+            return null;
+        }
+        try {
+            return LocalDate.parse(dateStr, DateTimeFormatter.ofPattern(dateFormat));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     // Add hours to LocalDateTime
     public static LocalDateTime addHours(LocalDateTime dateTime, int hours) {
         return dateTime.plusHours(hours);

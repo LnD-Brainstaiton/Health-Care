@@ -2,16 +2,24 @@ package com.health.care.appointment.service.service;
 
 import com.health.care.appointment.service.common.exceptions.InvalidRequestDataException;
 import com.health.care.appointment.service.common.exceptions.RecordNotFoundException;
+import com.health.care.appointment.service.common.utils.DateTimeUtils;
+import com.health.care.appointment.service.common.utils.PageUtils;
 import com.health.care.appointment.service.domain.entity.Appointment;
 import com.health.care.appointment.service.domain.enums.ResponseMessage;
 import com.health.care.appointment.service.domain.request.CreateAppointmentRequest;
+import com.health.care.appointment.service.domain.request.PaginationRequest;
 import com.health.care.appointment.service.domain.request.UpdateAppointmentRequest;
+import com.health.care.appointment.service.domain.response.AppointmentResponse;
+import com.health.care.appointment.service.domain.response.PaginationResponse;
 import com.health.care.appointment.service.repository.AppointmentRepository;
 import com.health_care.id.generator.Api.UniqueIdGenerator;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
@@ -63,6 +71,22 @@ public class AppointmentServiceImpl implements IAppointmentService{
 
         appointmentRepository.save(appointment);
         return null;
+    }
+
+    @Override
+    public PaginationResponse<AppointmentResponse> listOfAppointments(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder, String doctorId, String patientId, String time) {
+
+        final PaginationRequest paginationRequest = PageUtils.mapToPaginationRequest(pageNumber, pageSize, sortBy, sortOrder);
+        final Pageable pageable = PageUtils.getPageable(paginationRequest);
+
+        if(StringUtils.isEmpty(time)){}
+        LocalDate convertedDate = DateTimeUtils.convertToLocalDate(time, "yyyy-MM-dd");
+
+        final Page<AppointmentResponse> page = appointmentRepository.findByParam(pageable, doctorId, patientId, convertedDate).map(AppointmentResponse::from);
+
+        return page.getContent().isEmpty() ?
+                PageUtils.mapToPaginationResponseDto(Page.empty(), paginationRequest) :
+                PageUtils.mapToPaginationResponseDto(page, paginationRequest);
     }
 
 
