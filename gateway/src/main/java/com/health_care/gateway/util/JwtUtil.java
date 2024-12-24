@@ -1,23 +1,69 @@
 package com.health_care.gateway.util;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
+import java.util.Date;
+import java.util.function.Function;
 
-@Component
 public class JwtUtil {
 
-    public static final String SECRET = "5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437";
+    private JwtUtil() {}
 
-    public void validateToken(final String token) {
-        Jwts.parserBuilder().setSigningKey(getSignKey()).build().parseClaimsJws(token);
+    @Value("${jwt.secret.key}")
+    private String jwtSecretKey;
+
+    public static boolean validateToken(String token,
+                                        String jwtSecretKey
+    ) {
+        return !isTokenExpired(token, jwtSecretKey);
+    }
+
+    private static boolean isTokenExpired(String token, String jwtSecretKey) {
+        try {
+            return extractExpiration(token, jwtSecretKey).before(new Date());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return true;
+        }
+    }
+
+    public static Date extractExpiration(String token, String jwtSecretKey) {
+        return extractClaim(token, jwtSecretKey, Claims::getExpiration);
+    }
+
+    public static <T> T extractClaimByKey(String token, String jwtSecretKey, String key, Class<T> classType) {
+        return extractClaim(token, jwtSecretKey, claims -> claims.get(key, classType));
+    }
+
+    private static <T> T extractClaim(String token,
+                                      String jwtSecretKey,
+                                      Function<Claims, T> claimsResolver) {
+        final Claims claims = extractAllClaims(token, jwtSecretKey);
+        return claimsResolver.apply(claims);
+    }
+
+    private static Claims extractAllClaims(String token, String jwtSecretKey) {
+        return Jwts.parserBuilder()
+                .setSigningKey(getSignInKey(jwtSecretKey))
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    private static Key getSignInKey(String jwtSecretKey) {
+        byte[] keyBytes = Decoders.BASE64.decode(jwtSecretKey);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 
     private Key getSignKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET);
+        byte[] keyBytes = Decoders.BASE64.decode(jwtSecretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 }

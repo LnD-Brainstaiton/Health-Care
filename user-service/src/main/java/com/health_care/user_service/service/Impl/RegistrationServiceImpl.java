@@ -23,7 +23,6 @@ import com.health_care.user_service.repository.DoctorRepository;
 import com.health_care.user_service.repository.PatientRepository;
 import com.health_care.user_service.repository.UserRepository;
 import com.health_care.user_service.repository.specification.AdminSpecification;
-import com.health_care.user_service.repository.specification.DoctorSpecification;
 import com.health_care.user_service.service.IRegistrationService;
 
 import jakarta.transaction.Transactional;
