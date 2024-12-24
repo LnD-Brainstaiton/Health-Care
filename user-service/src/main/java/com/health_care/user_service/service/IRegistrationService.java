@@ -2,6 +2,7 @@ package com.health_care.user_service.service;
 
 import com.health_care.user_service.domain.common.ApiResponse;
 import com.health_care.user_service.domain.request.AdminInfoUpdateRequest;
+import com.health_care.user_service.domain.request.DoctorInfoUpdateRequest;
 import com.health_care.user_service.domain.request.RegisterRequest;
 import com.health_care.user_service.domain.response.*;
 

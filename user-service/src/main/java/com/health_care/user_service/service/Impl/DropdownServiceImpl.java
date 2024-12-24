@@ -66,21 +66,21 @@ public class DropdownServiceImpl implements IDropdownService {
     @Override
     public ApiResponse<Boolean> checkMobile(MobileCheckRequest mobileCheckRequest) {
         boolean response = false;
-        if(Objects.equals(mobileCheckRequest.getUserType(), "ADMIN")) {
+        if(Objects.equals(mobileCheckRequest.getUserType(), "admin")) {
             Optional<Admin> admin = adminRepository.findByMobileAndIsActiveTrue(mobileCheckRequest.getMobile());
-            if(admin.isPresent()) {
+            if(admin.isPresent() && !Objects.equals(admin.get().getAdminId(), mobileCheckRequest.getUserId())) {
                 response = true;
             }
         }
-        else if(Objects.equals(mobileCheckRequest.getUserType(), "PATIENT")) {
+        else if(Objects.equals(mobileCheckRequest.getUserType(), "patient")) {
             Optional<Patient> admin = patientRepository.findByMobileAndIsActiveTrue(mobileCheckRequest.getMobile());
-            if(admin.isPresent()) {
+            if(admin.isPresent() && !Objects.equals(admin.get().getPatientId(), mobileCheckRequest.getUserId())) {
                 response = true;
             }
         }
-        else if(Objects.equals(mobileCheckRequest.getUserType(), "DOCTOR")) {
+        else if(Objects.equals(mobileCheckRequest.getUserType(), "doctor")) {
             Optional<Doctor> admin = doctorRepository.findByMobileAndIsActiveTrue(mobileCheckRequest.getMobile());
-            if(admin.isPresent()) {
+            if(admin.isPresent() && !Objects.equals(admin.get().getDoctorId(), mobileCheckRequest.getUserId())) {
                 response = true;
             }
         }

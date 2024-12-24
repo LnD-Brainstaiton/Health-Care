@@ -8,4 +8,5 @@ import lombok.Setter;
 public class MobileCheckRequest {
     private String mobile;
     private String userType;
+    private String userId;
 }
