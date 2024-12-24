@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -38,7 +39,7 @@ public class AppointmentServiceImpl implements IAppointmentService{
         Appointment appointment = new Appointment();
         appointment.setDoctorId(request.getDoctorId());
         appointment.setPatientId(request.getPatientId());
-        appointment.setAppointmentNo(uniqueIdGenerator.generateUniqueIdWithPrefix("AP"));
+        appointment.setAppointmentNo(request.getAppointmentNo());
         appointment.setAppointmentDate(request.getAppointmentDate());
         appointment.setAppointmentTime(request.getAppointmentTime());
         appointment.setPatientAge(request.getPatientAge());
@@ -79,10 +80,15 @@ public class AppointmentServiceImpl implements IAppointmentService{
         final PaginationRequest paginationRequest = PageUtils.mapToPaginationRequest(pageNumber, pageSize, sortBy, sortOrder);
         final Pageable pageable = PageUtils.getPageable(paginationRequest);
 
-        if(StringUtils.isEmpty(time)){}
-        LocalDate convertedDate = DateTimeUtils.convertToLocalDate(time, "yyyy-MM-dd");
+        LocalDate convertedDate = null;
+        LocalTime convertedTime = LocalTime.MIDNIGHT;
 
-        final Page<AppointmentResponse> page = appointmentRepository.findByParam(pageable, doctorId, patientId, convertedDate).map(AppointmentResponse::from);
+        if(!StringUtils.isEmpty(time)){
+            convertedDate = DateTimeUtils.convertToLocalDate(time, "yyyy-MM-dd");
+            convertedTime = DateTimeUtils.convertToLocalTime(time, "HH:mm:ss");
+        }
+
+        final Page<AppointmentResponse> page = appointmentRepository.findByParam(doctorId, patientId, convertedDate, convertedTime, pageable).map(AppointmentResponse::from);
 
         return page.getContent().isEmpty() ?
                 PageUtils.mapToPaginationResponseDto(Page.empty(), paginationRequest) :
