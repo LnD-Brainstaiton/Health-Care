@@ -17,4 +17,6 @@ public class RegistrationRequestTemp {
 
     private Object data;
 
+    private String requestId;
+
 }

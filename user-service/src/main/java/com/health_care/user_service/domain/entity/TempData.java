@@ -15,11 +15,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "notification")
+@Table(name = "tempdata")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Notification extends BaseEntity {
+public class TempData extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
