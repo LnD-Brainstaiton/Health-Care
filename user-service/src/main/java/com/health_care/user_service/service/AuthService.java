@@ -6,6 +6,7 @@ import com.health_care.user_service.domain.enums.ApiResponseCode;
 import com.health_care.user_service.domain.enums.Role;
 import com.health_care.user_service.domain.response.TokenResponse;
 import com.health_care.user_service.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,13 +16,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class AuthService {
 
-    @Autowired
-    private JwtService jwtService;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final JwtService jwtService;
+
+    private final UserRepository userRepository;
 
     public ApiResponse<TokenResponse> generateToken(String username) {
 

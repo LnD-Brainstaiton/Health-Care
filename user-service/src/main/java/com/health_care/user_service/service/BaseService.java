@@ -1,84 +1,85 @@
 package com.health_care.user_service.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.health_care.user_service.common.exceptions.UnauthorizedResourceException;
+import com.health_care.user_service.common.exceptions.RecordNotFoundException;
+import com.health_care.user_service.common.utils.SerializationUtils;
 import com.health_care.user_service.domain.enums.ResponseMessage;
 import com.health_care.user_service.domain.response.CurrentUserContext;
 import jakarta.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.util.Base64;
+import java.util.Date;
 import java.util.Optional;
 
-@Service
 public class BaseService {
 
+    private static final Logger logger = LoggerFactory.getLogger(BaseService.class);
+
     protected ObjectMapper objectMapper;
-    protected HttpServletRequest httpServletRequest;
+    private HttpServletRequest request;
+
+    public static final String CURRENT_USER_CONTEXT_HEADER = "CurrentContext";
 
     @Autowired
-    public void setHttpServletRequest(HttpServletRequest httpServletRequest) {
-        this.httpServletRequest = httpServletRequest;
+    public void setRequest(HttpServletRequest request) {
+        this.request = request;
     }
 
     @Autowired
-    public void setObjectMapper(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
-    }
-
-    public LocalDateTime getCurrentDateTime() {
-        return LocalDateTime.now(ZoneOffset.UTC);
+    public void setMapper(ObjectMapper mapper) {
+        this.objectMapper = mapper;
     }
 
     public Optional<String> getHeaderValue(String headerName) {
-        return Optional.ofNullable(httpServletRequest.getHeader(headerName));
+
+        ServletRequestAttributes attrs = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+
+        HttpServletRequest request = attrs.getRequest();
+
+        try {
+            return Optional.ofNullable(request.getHeader(headerName));
+        } catch (Exception ex) {
+            logger.error(ex.getLocalizedMessage(), ex);
+        }
+
+        return Optional.empty();
+    }
+
+    public Date getCurrentDate() {
+        return new Date();
+    }
+
+    private String getCurrentUserContextHeaderValue() {
+        Optional<String> userTokenOpt = getHeaderValue(CURRENT_USER_CONTEXT_HEADER);
+
+        if (userTokenOpt.isEmpty())
+            throw new RecordNotFoundException(ResponseMessage.RECORD_NOT_FOUND);
+
+        return userTokenOpt.get();
     }
 
     public CurrentUserContext getCurrentUserContext() {
-        String bearerToken = getBearerToken();
-        String[] tokenParts = bearerToken.split("\\."); // JWT structure: header.payload.signature
+        String base64Data = getCurrentUserContextHeaderValue();
+        String jsonObject = SerializationUtils.toByteArrayToString(base64Data);
+        return toObject(jsonObject, CurrentUserContext.class);
+    }
 
-        if (tokenParts.length != 3) {
-            throw new UnauthorizedResourceException(ResponseMessage.AUTHENTICATION_FAILED);
-        }
-
-        String payload = decodeBase64(tokenParts[1]); // Decode the payload (second part of the JWT).
+    public <T> T toObject(String jsonString, Class<T> clazz) {
         try {
-            JsonNode payloadJson = objectMapper.readTree(payload); // Parse the JSON payload.
-            CurrentUserContext currentUserContext = new CurrentUserContext();
-
-            // Extract the "sub" field and set it as the userId.
-            if (payloadJson.has("sub")) {
-                currentUserContext.setUserId(payloadJson.get("sub").asText());
-            }
-
-            // Optional: Extract other fields as needed.
-            if (payloadJson.has("userName")) {
-                currentUserContext.setUserName(payloadJson.get("userName").asText());
-            }
-            if (payloadJson.has("userType")) {
-                currentUserContext.setUserType(payloadJson.get("userType").asText());
-            }
-
-            return currentUserContext;
-        } catch (Exception ex) {
-            throw new UnauthorizedResourceException(ResponseMessage.AUTHENTICATION_FAILED);
+            return objectMapper.readValue(jsonString, clazz);
+        } catch (JsonProcessingException e) {
+            logger.error(e.getMessage());
         }
+        return null;
     }
 
-    private String getBearerToken() {
-        Optional<String> authHeader = getHeaderValue("Authorization");
-        if (authHeader.isEmpty() || !authHeader.get().startsWith("Bearer ")) {
-            throw new UnauthorizedResourceException(ResponseMessage.AUTHENTICATION_FAILED);
-        }
-        return authHeader.get().substring(7); // Remove "Bearer " prefix
+    public String getUserIdentity() {
+        return getCurrentUserContext().getUserIdentity();
     }
 
-    protected String decodeBase64(String encodedString) {
-        return new String(Base64.getDecoder().decode(encodedString));
-    }
 }
