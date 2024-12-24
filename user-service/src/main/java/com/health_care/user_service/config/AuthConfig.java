@@ -33,7 +33,7 @@ public class AuthConfig {
                         "/api/v1/user/admin/{id}","/api/v1/user/patient/{id}","/api/v1/user/admin/all","/api/v1/user/patient/all",
                         "/api/v1/user/admin/update","/api/v1/user/doctor/{id}","/api/v1/user/blood-group-options",
                         "/api/v1/user/designation-options","/api/v1/user/department-options","/api/v1/user/gender-options",
-                        "/api/v1/user/check-mobile","/api/v1/user/admin/temp/request").permitAll()
+                        "/api/v1/user/check-mobile","/api/v1/user/admin/temp/request","/api/v1/user/admin/tempdata").permitAll()
                 .and()
                 .build();
     }

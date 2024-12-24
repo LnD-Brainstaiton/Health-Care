@@ -1,7 +1,6 @@
 package com.health_care.user_service.service.Impl;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.health_care.id.generator.Impl.UniqueIdGeneratorImpl;
 import com.health_care.user_service.common.exceptions.AlreadyExistsException;
 import com.health_care.user_service.common.exceptions.InvalidRequestDataException;
@@ -15,11 +14,18 @@ import com.health_care.user_service.domain.enums.ResponseMessage;
 import com.health_care.user_service.domain.enums.ResponseStatusType;
 import com.health_care.user_service.domain.request.RegistrationRequestTemp;
 import com.health_care.user_service.domain.response.AdminCheckerMackerResponse;
+import com.health_care.user_service.domain.response.TempDataResponse;
 import com.health_care.user_service.repository.TempDataRepository;
+import com.health_care.user_service.repository.specification.TempDataSpecifications;
 import com.health_care.user_service.service.BaseService;
 import com.health_care.user_service.service.IAdminCheckerMacker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.MissingRequestValueException;
 
@@ -48,6 +54,45 @@ public class AdminCheckerMackerImpl extends BaseService implements IAdminChecker
             case UPDATE -> handleUpdateOperation(temp, data);
             default -> throw new MissingRequestValueException("Invalid operation type: " + temp.getOperationType());
         };
+    }
+
+    @Override
+    public ApiResponse<Page<TempDataResponse>> getTempData(
+            String featureCode, String requestId, String startDate, String endDate, Boolean operationType, int page, int size) {
+
+        ApiResponse<Page<TempDataResponse>> response = new ApiResponse<>();
+
+        Specification<TempData> spec = TempDataSpecifications.buildSpecification(featureCode, requestId, startDate, endDate, operationType, getUserIdentity(), Boolean.TRUE);
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+
+        Page<TempData> tempDataPage = tempDataRepository.findAll(spec, pageable);
+
+        if(tempDataPage.isEmpty()) {
+            response.setResponseCode(ApiResponseCode.RECORD_NOT_FOUND.getResponseCode());
+            response.setResponseMessage(ResponseMessage.RECORD_NOT_FOUND.getResponseMessage());
+            return response;
+        }
+
+        Page<TempDataResponse> tempDataResponsePage = tempDataPage.map(this::mapToTempDataResponse);
+
+        response.setData(tempDataResponsePage);
+        response.setResponseMessage(ResponseMessage.OPERATION_SUCCESSFUL.getResponseMessage());
+        response.setResponseCode(ApiResponseCode.OPERATION_SUCCESSFUL.getResponseCode());
+
+        return response;
+    }
+
+    private TempDataResponse mapToTempDataResponse(TempData tempData) {
+        return TempDataResponse.builder()
+                .featureCode(tempData.getFeatureCode())
+                .operationType(tempData.getOperationType())
+                .message(tempData.getMessage())
+                .requestUrl(tempData.getRequestUrl())
+                .data(tempData.getData())
+                .requestId(tempData.getRequestId())
+                .status(tempData.getCheckerResponse().equals(ResponseStatusType.PENDING.getCode()) ? ResponseStatusType.PENDING.getText() : ResponseStatusType.REJECTED.getText())
+                .build();
     }
 
     private void validateRequest(RegistrationRequestTemp temp) {
