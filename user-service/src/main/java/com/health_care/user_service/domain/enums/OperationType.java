@@ -2,6 +2,7 @@ package com.health_care.user_service.domain.enums;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 public enum OperationType {
     DEFAULT(-1, "Default"),
@@ -37,6 +38,13 @@ public enum OperationType {
             }
         }
         return name;
+    }
+
+    public static OperationType fromString(String value) {
+        return Stream.of(OperationType.values())
+                .filter(type -> type.name().equalsIgnoreCase(value))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Invalid OperationType: " + value));
     }
 
 }
