@@ -8,4 +8,17 @@ import lombok.Setter;
 @Setter
 @Builder
 public class TempDataResponse {
+    private String featureCode;
+
+    private String operationType;
+
+    private String message;
+
+    private String requestUrl;
+
+    private Object data;
+
+    private String requestId;
+
+    private String status;
 }

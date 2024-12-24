@@ -30,7 +30,7 @@ public class TempDataSpecifications {
 
             if (startDate != null && endDate != null) {
                 predicates.add(criteriaBuilder.between(
-                        root.get("createdDate"),
+                        root.get("createdAt"),
                         LocalDateTime.parse(startDate),
                         LocalDateTime.parse(endDate)
                 ));

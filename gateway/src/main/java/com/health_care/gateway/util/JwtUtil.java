@@ -1,6 +1,7 @@
 package com.health_care.gateway.util;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -19,10 +20,10 @@ public class JwtUtil {
     @Value("${jwt.secret.key}")
     private String jwtSecretKey;
 
-    public static boolean validateToken(String token,
-                                        String jwtSecretKey
-    ) {
-        return !isTokenExpired(token, jwtSecretKey);
+    public static void validateToken(String token, String jwtSecretKey) {
+        if (isTokenExpired(token, jwtSecretKey)) {
+            throw new ExpiredJwtException(null, null, "Token has expired. Please try again");
+        }
     }
 
     private static boolean isTokenExpired(String token, String jwtSecretKey) {
