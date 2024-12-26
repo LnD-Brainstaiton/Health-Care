@@ -55,14 +55,16 @@ public class PatientServiceImpl implements IPatientService {
     }
 
     @Override
-    public ApiResponse<Patient> getPatientById(String id) {
-        return patientRepository.getPatientByPatientIdAndIsActive(id, Boolean.TRUE)
-                .map(patient -> ApiResponse.<Patient>builder()
-                        .data(patient)
-                        .responseCode(ApiResponseCode.OPERATION_SUCCESSFUL.getResponseCode())
-                        .responseMessage(ResponseMessage.OPERATION_SUCCESSFUL.getResponseMessage())
-                        .build()
-                )
+    public ApiResponse<PatientInfoResponse> getPatientById(String id) {
+        Optional<Patient> patientResponse = patientRepository.getPatientByPatientIdAndIsActive(id, Boolean.TRUE);
+        return patientResponse.map(patient -> {
+                            PatientInfoResponse response = patientMapper.toPatientInfoResponse(patient);
+            return ApiResponse.<PatientInfoResponse>builder()
+                                    .data(response)
+                                    .responseCode(ApiResponseCode.OPERATION_SUCCESSFUL.getResponseCode())
+                                    .responseMessage(ResponseMessage.OPERATION_SUCCESSFUL.getResponseMessage())
+                                    .build();
+                })
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND,
                         ResponseMessage.RECORD_NOT_FOUND.getResponseMessage()

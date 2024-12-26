@@ -37,8 +37,8 @@ public class PatientResource {
     }
 
     @GetMapping("/patient/{id}")
-    public ApiResponse<Patient> getPatient(@PathVariable String id) {
-        ApiResponse<Patient> response = patientService.getPatientById(id);
+    public ApiResponse<PatientInfoResponse> getPatient(@PathVariable String id) {
+        ApiResponse<PatientInfoResponse> response = patientService.getPatientById(id);
         return response;
     }
 

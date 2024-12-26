@@ -25,8 +25,9 @@ public class TempDataSpecifications {
             }
 
             if (requestId != null && !requestId.isEmpty()) {
-                predicates.add(criteriaBuilder.equal(root.get("requestId"), requestId));
+                predicates.add(criteriaBuilder.like(root.get("requestId"), "%" + requestId + "%"));
             }
+
 
             if (startDate != null && endDate != null) {
                 predicates.add(criteriaBuilder.between(

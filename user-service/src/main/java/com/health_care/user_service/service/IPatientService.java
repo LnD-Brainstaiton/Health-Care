@@ -12,7 +12,7 @@ import java.util.List;
 public interface IPatientService {
     ApiResponse<Void> updatePatient(PatientInfoUpdateRequest request);
 
-    ApiResponse<Patient> getPatientById(String id);
+    ApiResponse<PatientInfoResponse> getPatientById(String id);
 
     ApiResponse<CountResponse> getAPatientsCount();
 
