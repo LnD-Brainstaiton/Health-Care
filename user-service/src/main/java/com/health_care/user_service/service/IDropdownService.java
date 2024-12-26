@@ -2,10 +2,7 @@ package com.health_care.user_service.service;
 
 import com.health_care.user_service.domain.common.ApiResponse;
 import com.health_care.user_service.domain.request.MobileCheckRequest;
-import com.health_care.user_service.domain.response.BloodGroupResponse;
-import com.health_care.user_service.domain.response.DepartmentResponse;
-import com.health_care.user_service.domain.response.DesignationResponse;
-import com.health_care.user_service.domain.response.GenderResponse;
+import com.health_care.user_service.domain.response.*;
 import org.springframework.stereotype.Service;
 
 public interface IDropdownService {
@@ -18,4 +15,10 @@ public interface IDropdownService {
     ApiResponse<GenderResponse> getGenderOptions();
 
     ApiResponse<Boolean> checkMobile(MobileCheckRequest request);
+
+    ApiResponse<CountResponse> pendingDoctorCount();
+
+    ApiResponse<CountResponse> pendingAppointmentCount();
+
+    ApiResponse<CountResponse> pendingAdminCount();
 }

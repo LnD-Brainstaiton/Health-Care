@@ -1,20 +1,11 @@
 package com.health_care.user_service.service.Impl;
 
 import com.health_care.user_service.domain.common.ApiResponse;
-import com.health_care.user_service.domain.entity.Admin;
-import com.health_care.user_service.domain.entity.Doctor;
-import com.health_care.user_service.domain.entity.Patient;
-import com.health_care.user_service.domain.entity.User;
+import com.health_care.user_service.domain.entity.*;
 import com.health_care.user_service.domain.enums.*;
 import com.health_care.user_service.domain.request.MobileCheckRequest;
-import com.health_care.user_service.domain.response.BloodGroupResponse;
-import com.health_care.user_service.domain.response.DepartmentResponse;
-import com.health_care.user_service.domain.response.DesignationResponse;
-import com.health_care.user_service.domain.response.GenderResponse;
-import com.health_care.user_service.repository.AdminRepository;
-import com.health_care.user_service.repository.DoctorRepository;
-import com.health_care.user_service.repository.PatientRepository;
-import com.health_care.user_service.repository.UserRepository;
+import com.health_care.user_service.domain.response.*;
+import com.health_care.user_service.repository.*;
 import com.health_care.user_service.service.IDropdownService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,6 +21,7 @@ public class DropdownServiceImpl implements IDropdownService {
     private final AdminRepository adminRepository;
     private final DoctorRepository doctorRepository;
     private final PatientRepository patientRepository;
+    private final TempDataRepository tempDataRepository;
 
     @Override
     public ApiResponse<BloodGroupResponse> getBloodGroupOptions() {
@@ -88,6 +80,42 @@ public class DropdownServiceImpl implements IDropdownService {
                 .responseCode(ApiResponseCode.OPERATION_SUCCESSFUL.getResponseCode())
                 .responseMessage(ResponseMessage.OPERATION_SUCCESSFUL.getResponseMessage())
                 .data(response)
+                .build();
+    }
+
+    @Override
+    public ApiResponse<CountResponse> pendingDoctorCount() {
+        List<TempData> tempData = tempDataRepository.findAllByFeatureCodeAndIsActiveTrue("DOCTOR");
+        CountResponse countResponse = new CountResponse();
+        countResponse.setCount(tempData.size());
+        return ApiResponse.<CountResponse>builder()
+                .data(countResponse)
+                .responseCode(ApiResponseCode.OPERATION_SUCCESSFUL.getResponseCode())
+                .responseMessage(ResponseMessage.OPERATION_SUCCESSFUL.getResponseMessage())
+                .build();
+    }
+
+    @Override
+    public ApiResponse<CountResponse> pendingAppointmentCount() {
+        List<TempData> tempData = tempDataRepository.findAllByFeatureCodeAndIsActiveTrue("APPOINTMENT");
+        CountResponse countResponse = new CountResponse();
+        countResponse.setCount(tempData.size());
+        return ApiResponse.<CountResponse>builder()
+                .data(countResponse)
+                .responseCode(ApiResponseCode.OPERATION_SUCCESSFUL.getResponseCode())
+                .responseMessage(ResponseMessage.OPERATION_SUCCESSFUL.getResponseMessage())
+                .build();
+    }
+
+    @Override
+    public ApiResponse<CountResponse> pendingAdminCount() {
+        List<TempData> tempData = tempDataRepository.findAllByFeatureCodeAndIsActiveTrue("ADMIN");
+        CountResponse countResponse = new CountResponse();
+        countResponse.setCount(tempData.size());
+        return ApiResponse.<CountResponse>builder()
+                .data(countResponse)
+                .responseCode(ApiResponseCode.OPERATION_SUCCESSFUL.getResponseCode())
+                .responseMessage(ResponseMessage.OPERATION_SUCCESSFUL.getResponseMessage())
                 .build();
     }
 
