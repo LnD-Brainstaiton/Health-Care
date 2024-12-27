@@ -5,6 +5,7 @@ import io.micrometer.common.util.StringUtils;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.concurrent.TimeUnit;
@@ -46,6 +47,30 @@ public final class DateTimeUtils {
         }
         try {
             return LocalDateTime.parse(dateStr, DateTimeFormatter.ofPattern(dateFormat));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static LocalDate convertToLocalDate(String dateStr, String dateFormat) {
+        if (StringUtils.isBlank(dateStr) || StringUtils.isBlank(dateFormat)) {
+            return null;
+        }
+        try {
+            return LocalDate.parse(dateStr, DateTimeFormatter.ofPattern(dateFormat));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static LocalTime convertToLocalTime(String dateStr, String dateFormat) {
+        if (StringUtils.isBlank(dateStr) || StringUtils.isBlank(dateFormat)) {
+            return null;
+        }
+        try {
+            return LocalTime.parse(dateStr, DateTimeFormatter.ofPattern(dateFormat));
         } catch (Exception e) {
             e.printStackTrace();
         }
