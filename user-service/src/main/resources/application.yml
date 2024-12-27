@@ -15,6 +15,12 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
   config:
     import: id-generator.yml
+  springdoc:
+    api-docs:
+      path: /v3/api-docs    # Path where OpenAPI documentation is available
+    swagger-ui:
+      path: /swagger-ui.html # Path for Swagger UI
+
 
 management:
   endpoint:
