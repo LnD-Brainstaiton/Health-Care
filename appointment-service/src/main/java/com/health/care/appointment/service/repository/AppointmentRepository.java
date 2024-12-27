@@ -16,9 +16,9 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 
     @Query("SELECT a FROM Appointment  a WHERE (:doctorId IS NULL OR a.doctorId LIKE %:doctorId%) and " +
             "(:patientId IS NULL OR a.patientId LIKE %:patientId%) and " +
-            "(:date IS NULL OR a.appointmentDate >= :date) and " +
-            "(:time IS NULL OR a.appointmentTime >= :time)" +
-            "ORDER BY a.appointmentDate ASC ")
+            "(a.appointmentDate >= :date) and " +
+            "(a.appointmentTime >= :time)" +
+            "ORDER BY a.appointmentDate, a.appointmentTime ASC ")
         Page<Appointment> findByParam(
                 @Param("doctorId") String doctorId,
                 @Param("patientId") String patientId,

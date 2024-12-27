@@ -20,5 +20,6 @@ public class CreateAppointmentRequest implements Serializable {
     private String patientContactNo;
     private BigDecimal fee;
     private String appointmentNo;
+    private String reason;
 
 }

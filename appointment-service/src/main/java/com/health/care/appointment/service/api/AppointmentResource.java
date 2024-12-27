@@ -38,9 +38,10 @@ public class AppointmentResource {
             @RequestParam(required = false, defaultValue = "desc") String sortOrder,
             @RequestParam(required = false) String doctorId,
             @RequestParam(required = false) String patientId,
-            @RequestParam(required = false) @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss") String time
+            @RequestParam(required = false) @JsonFormat(pattern = "yyyy-MM-dd") String date,
+            @RequestParam(required = false) @JsonFormat(pattern = "HH:mm:ss") String time
     ){
-        return ResponseUtils.createResponseObject(ResponseMessage.OPERATION_SUCCESSFUL, appointmentService.listOfAppointments(pageNumber, pageSize, sortBy, sortOrder, doctorId, patientId, time));
+        return ResponseUtils.createResponseObject(ResponseMessage.OPERATION_SUCCESSFUL, appointmentService.listOfAppointments(pageNumber, pageSize, sortBy, sortOrder, doctorId, patientId, date, time));
     }
 
 }

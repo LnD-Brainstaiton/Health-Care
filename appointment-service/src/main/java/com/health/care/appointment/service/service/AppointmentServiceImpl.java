@@ -47,6 +47,7 @@ public class AppointmentServiceImpl implements IAppointmentService{
         appointment.setPatientGender(request.getPatientGender());
         appointment.setPatientContactNo(request.getPatientContactNo());
         appointment.setFee(request.getFee());
+        appointment.setReason(request.getReason());
         appointment.setIsPaymentDone(true);
         appointment.setCreatedAt(LocalDateTime.now());
         appointment.setCreatedBy("System");
@@ -75,16 +76,16 @@ public class AppointmentServiceImpl implements IAppointmentService{
     }
 
     @Override
-    public PaginationResponse<AppointmentResponse> listOfAppointments(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder, String doctorId, String patientId, String time) {
+    public PaginationResponse<AppointmentResponse> listOfAppointments(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder, String doctorId, String patientId, String date, String time) {
 
         final PaginationRequest paginationRequest = PageUtils.mapToPaginationRequest(pageNumber, pageSize, sortBy, sortOrder);
         final Pageable pageable = PageUtils.getPageable(paginationRequest);
 
-        LocalDate convertedDate = null;
+        LocalDate convertedDate = LocalDate.of(1998,1,1);
         LocalTime convertedTime = LocalTime.MIDNIGHT;
 
         if(!StringUtils.isEmpty(time)){
-            convertedDate = DateTimeUtils.convertToLocalDate(time, "yyyy-MM-dd");
+            convertedDate = DateTimeUtils.convertToLocalDate(date, "yyyy-MM-dd");
             convertedTime = DateTimeUtils.convertToLocalTime(time, "HH:mm:ss");
         }
 
