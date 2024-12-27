@@ -31,7 +31,7 @@ public class AuthConfig {
                         "/api/v1/user/doctor/all","/api/v1/user/doctor/count","/api/v1/user/admin/count","/api/v1/user/patient/count",
                         "/api/v1/user/admin/{id}","/api/v1/user/patient/{id}","/api/v1/user/admin/all","/api/v1/user/patient/all",
                         "/api/v1/user/admin/update","/api/v1/user/doctor/{id}","/api/v1/user/blood-group-options",
-                        "/api/v1/user/designation-options","/api/v1/user/department-options","/api/v1/user/gender-options").permitAll()
+                        "/api/v1/user/designation-options","/api/v1/user/department-options","/api/v1/user/gender-options","/v3/api-docs/**","/swagger-ui/**").permitAll()
                 .and()
                 .build();
     }
