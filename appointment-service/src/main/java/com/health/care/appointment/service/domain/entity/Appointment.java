@@ -67,4 +67,7 @@ public class Appointment extends BaseEntity {
     @Column(name = "APPROVED_TIME")
     private LocalDateTime approvedTime;
 
+    @Column(name = "REASON", columnDefinition = "TEXT")
+    private String reason;
+
 }
