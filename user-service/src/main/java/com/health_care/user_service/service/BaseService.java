@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -22,6 +23,9 @@ public class BaseService {
 
     protected ObjectMapper objectMapper;
     private HttpServletRequest request;
+
+    @Value("${http.header.auth}")
+    protected String tokenHeader;
 
     public static final String CURRENT_USER_CONTEXT_HEADER = "CurrentContext";
 
@@ -61,6 +65,21 @@ public class BaseService {
             throw new RecordNotFoundException(ResponseMessage.RECORD_NOT_FOUND);
 
         return userTokenOpt.get();
+    }
+
+    public Optional<String> getHeaderValueForToken(String headerName) {
+
+        ServletRequestAttributes attrs = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+
+        HttpServletRequest request = attrs.getRequest();
+
+        try {
+            return Optional.ofNullable(request.getHeader(headerName));
+        } catch (Exception ex) {
+            logger.error(ex.getLocalizedMessage(), ex);
+        }
+
+        return Optional.empty();
     }
 
     public CurrentUserContext getCurrentUserContext() {

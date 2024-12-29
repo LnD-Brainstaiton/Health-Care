@@ -34,7 +34,8 @@ public class AuthConfig {
                         "/api/v1/user/admin/update","/api/v1/user/doctor/{id}","/api/v1/user/blood-group-options",
                         "/api/v1/user/designation-options","/api/v1/user/department-options","/api/v1/user/gender-options",
                         "/api/v1/user/check-mobile","/api/v1/user/admin/temp/request","/api/v1/user/admin/tempdata",
-                        "/api/v1/user/pending-admin-count","/api/v1/user/pending-doctor-count","/api/v1/user/pending-appointment-count").permitAll()
+                        "/api/v1/user/pending-admin-count","/api/v1/user/pending-doctor-count","/api/v1/user/pending-appointment-count",
+                         "/api/v1/user/admin/request/check").permitAll()
                 .and()
                 .build();
     }

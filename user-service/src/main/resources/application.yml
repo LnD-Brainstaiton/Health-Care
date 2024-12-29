@@ -36,3 +36,9 @@ eureka:
     hostname: localhost  # Optional: specify the hostname
     prefer-ip-address: true
 
+http:
+  header:
+    auth: Authorization
+
+host:
+  url: http://localhost:8000
