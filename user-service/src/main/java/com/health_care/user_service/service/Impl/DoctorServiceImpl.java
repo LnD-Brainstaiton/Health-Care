@@ -1,25 +1,32 @@
 package com.health_care.user_service.service.Impl;
 
+import com.health_care.user_service.common.exceptions.InvalidRequestDataException;
 import com.health_care.user_service.domain.common.ApiResponse;
 import com.health_care.user_service.domain.entity.Doctor;
 import com.health_care.user_service.domain.enums.ApiResponseCode;
 import com.health_care.user_service.domain.enums.ResponseMessage;
+import com.health_care.user_service.domain.enums.WeekDays;
 import com.health_care.user_service.domain.mapper.DoctorMapper;
 import com.health_care.user_service.domain.request.DoctorInfoUpdateRequest;
+import com.health_care.user_service.domain.request.TimeSlotRequest;
 import com.health_care.user_service.domain.response.CountResponse;
 import com.health_care.user_service.domain.response.DoctorInfoResponse;
 import com.health_care.user_service.domain.response.PaginationResponse;
+import com.health_care.user_service.domain.response.TimeSlotResponse;
 import com.health_care.user_service.repository.DoctorRepository;
 import com.health_care.user_service.service.IDoctorService;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -118,6 +125,17 @@ public class DoctorServiceImpl implements IDoctorService {
                 .build();
     }
 
+    @Override
+    public TimeSlotResponse getTimeSlotList(TimeSlotRequest request) {
+        validateTimeSlotRequest(request);
+
+        DayOfWeek dayofWeek = request.getDate().getDayOfWeek();
+        String day = WeekDays.getDay(dayofWeek.getValue());
+
+
+
+    }
+
     private ApiResponse<Void> updateDoctorDetails(Doctor doctor, DoctorInfoUpdateRequest request) {
         doctor.setDepartment(request.getDepartment());
         doctor.setDesignation(request.getDesignation());
@@ -130,5 +148,15 @@ public class DoctorServiceImpl implements IDoctorService {
                 .responseCode(ApiResponseCode.OPERATION_SUCCESSFUL.getResponseCode())
                 .responseMessage(ResponseMessage.OPERATION_SUCCESSFUL.getResponseMessage())
                 .build();
+    }
+
+    private void validateTimeSlotRequest(TimeSlotRequest request){
+
+        if(Objects.isNull(request) ||
+                StringUtils.isEmpty(request.getDoctorId()) ||
+                Objects.isNull(request.getDate())){
+
+            throw new InvalidRequestDataException(ResponseMessage.INVALID_REQUEST_DATA);
+        }
     }
 }
