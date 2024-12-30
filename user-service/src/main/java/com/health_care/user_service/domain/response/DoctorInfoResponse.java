@@ -1,12 +1,12 @@
 package com.health_care.user_service.domain.response;
 
-import jakarta.persistence.Column;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 public class DoctorInfoResponse {
+    private String doctorId;
     private String firstname;
     private String lastname;
     private String mobile;

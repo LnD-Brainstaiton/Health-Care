@@ -1,6 +1,6 @@
-package com.health_care.unique_id_generator.Impl;
+package com.health_care.id.generator.Impl;
 
-import com.health_care.unique_id_generator.Api.UniqueIdGenerator;
+import com.health_care.id.generator.Api.UniqueIdGenerator;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
