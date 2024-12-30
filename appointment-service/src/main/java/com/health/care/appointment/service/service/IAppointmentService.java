@@ -16,6 +16,7 @@ public interface IAppointmentService {
             String sortOrder,
             String doctorId,
             String patientId,
+            String appointmentId,
             String date,
             String time
     );
