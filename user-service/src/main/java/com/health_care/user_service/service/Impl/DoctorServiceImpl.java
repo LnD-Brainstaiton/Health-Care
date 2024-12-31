@@ -1,8 +1,10 @@
 package com.health_care.user_service.service.Impl;
 
 import com.health_care.user_service.common.exceptions.InvalidRequestDataException;
+import com.health_care.user_service.common.exceptions.RecordNotFoundException;
 import com.health_care.user_service.domain.common.ApiResponse;
 import com.health_care.user_service.domain.entity.Doctor;
+import com.health_care.user_service.domain.entity.DoctorTimeSlot;
 import com.health_care.user_service.domain.enums.ApiResponseCode;
 import com.health_care.user_service.domain.enums.ResponseMessage;
 import com.health_care.user_service.domain.enums.WeekDays;
@@ -14,7 +16,9 @@ import com.health_care.user_service.domain.response.DoctorInfoResponse;
 import com.health_care.user_service.domain.response.PaginationResponse;
 import com.health_care.user_service.domain.response.TimeSlotResponse;
 import com.health_care.user_service.repository.DoctorRepository;
+import com.health_care.user_service.repository.DoctorTimeSlotRepository;
 import com.health_care.user_service.service.IDoctorService;
+import com.health_care.user_service.service.IntegrationService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
@@ -24,10 +28,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.time.LocalTime;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,6 +38,8 @@ public class DoctorServiceImpl implements IDoctorService {
 
     private final DoctorRepository doctorRepository;
     private final DoctorMapper doctorMapper;
+    private final DoctorTimeSlotRepository timeSlotRepository;
+    private final IntegrationService integrationService;
 
     @Override
     public ApiResponse<Void> updateDoctor(DoctorInfoUpdateRequest request) {
@@ -132,6 +136,25 @@ public class DoctorServiceImpl implements IDoctorService {
         DayOfWeek dayofWeek = request.getDate().getDayOfWeek();
         String day = WeekDays.getDay(dayofWeek.getValue());
 
+        Optional<DoctorTimeSlot> timeSlotOpt = timeSlotRepository.findByDoctorIdAndDaysOfWeekContainingIgnoreCase(request.getDoctorId(), day);
+        if(timeSlotOpt.isEmpty()) {
+            throw new RecordNotFoundException(ResponseMessage.RECORD_NOT_FOUND);
+        }
+
+        DoctorTimeSlot timeSlot = timeSlotOpt.get();
+        List<LocalTime> appointedTimeSlots = integrationService.getTimeSlots(request);
+
+        List<LocalTime> responseSlot = new ArrayList<>();
+
+        while (timeSlot.getEndTime().isBefore(timeSlot.getStartTime())){
+
+            for(LocalTime appointedTimeSlot : appointedTimeSlots){
+                if(appointedTimeSlot.equals(timeSlot.getStartTime())){
+                    break;
+                }
+            }
+
+        }
 
 
     }
