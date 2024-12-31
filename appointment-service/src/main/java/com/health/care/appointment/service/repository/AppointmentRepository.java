@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 @Repository
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
@@ -28,6 +29,16 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
                 @Param("time") LocalTime time,
                 Pageable pageable
         );
+
+    @Query("SELECT a FROM Appointment  a WHERE (:doctorId IS NULL OR a.doctorId LIKE %:doctorId%) and " +
+            "(a.appointmentDate >= :date) and " +
+            "(a.appointmentTime >= :time)" +
+            "ORDER BY a.appointmentDate, a.appointmentTime ASC ")
+    List<Appointment> findByParamCount(
+            @Param("doctorId") String doctorId,
+            @Param("date") LocalDate date,
+            @Param("time") LocalTime time
+    );
 
     @Query(value = "SELECT * FROM appointment a WHERE " +
             "(:doctorId IS NULL OR a.doctor_id LIKE CONCAT('%', :doctorId, '%')) AND " +

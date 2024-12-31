@@ -8,6 +8,7 @@ import com.health.care.appointment.service.domain.enums.ResponseMessage;
 import com.health.care.appointment.service.domain.request.CreateAppointmentRequest;
 import com.health.care.appointment.service.domain.request.UpdateAppointmentRequest;
 import com.health.care.appointment.service.domain.response.AppointmentResponse;
+import com.health.care.appointment.service.domain.response.CountResponse;
 import com.health.care.appointment.service.domain.response.PaginationResponse;
 import com.health.care.appointment.service.service.IAppointmentService;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,16 @@ public class AppointmentResource {
     @PutMapping("/update")
     public ApiResponse<Void> updateAppointment(@RequestBody UpdateAppointmentRequest request) {
        return ResponseUtils.createResponseObject(ResponseMessage.OPERATION_SUCCESSFUL, appointmentService.updateAppointment(request));
+    }
+
+    @GetMapping("/doctor/upcoming/appointment/count")
+    public ApiResponse<CountResponse> getDoctorsUpcomingAppointmentCount(
+            @RequestParam(required = false) String doctorId,
+            @RequestParam(required = false) @JsonFormat(pattern = "yyyy-MM-dd") String date,
+            @RequestParam(required = false) @JsonFormat(pattern = "HH:mm:ss") String time
+    ){
+        ApiResponse<CountResponse> response = appointmentService.getDoctorsUpcomingAppointmentCount(doctorId,date, time);
+        return response;
     }
 
     @GetMapping("/list")

@@ -2,7 +2,7 @@ package com.health_care.user_service.service.Impl;
 
 
 
-import com.health_care.unique_id_generator.Impl.UniqueIdGeneratorImpl;
+import com.health_care.id.generator.Impl.UniqueIdGeneratorImpl;
 import com.health_care.user_service.common.exceptions.InvalidRequestDataException;
 import com.health_care.user_service.config.AuthConfig;
 import com.health_care.user_service.domain.common.ApiResponse;

@@ -79,6 +79,8 @@ public class DoctorResource {
         return response;
     }
 
+
+
     @DeleteMapping("/doctor/{id}")
     public  ApiResponse<String> deleteDoctorById(@PathVariable String id){
         ApiResponse<String> response = doctorService.deleteDoctorById(id);

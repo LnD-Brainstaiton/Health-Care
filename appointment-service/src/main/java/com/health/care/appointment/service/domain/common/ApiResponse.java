@@ -1,9 +1,7 @@
 package com.health.care.appointment.service.domain.common;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.ws.rs.sse.OutboundSseEvent;
+import lombok.*;
 
 import java.io.Serializable;
 
@@ -11,6 +9,7 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class ApiResponse<T> implements Serializable {
     private String responseCode;
     private String responseMessage;
@@ -19,5 +18,6 @@ public class ApiResponse<T> implements Serializable {
     public ApiResponse(T data) {
         this.data = data;
     }
+
 
 }

@@ -4,12 +4,15 @@ import com.health.care.appointment.service.common.exceptions.InvalidRequestDataE
 import com.health.care.appointment.service.common.exceptions.RecordNotFoundException;
 import com.health.care.appointment.service.common.utils.DateTimeUtils;
 import com.health.care.appointment.service.common.utils.PageUtils;
+import com.health.care.appointment.service.domain.common.ApiResponse;
 import com.health.care.appointment.service.domain.entity.Appointment;
+import com.health.care.appointment.service.domain.enums.ApiResponseCode;
 import com.health.care.appointment.service.domain.enums.ResponseMessage;
 import com.health.care.appointment.service.domain.request.CreateAppointmentRequest;
 import com.health.care.appointment.service.domain.request.PaginationRequest;
 import com.health.care.appointment.service.domain.request.UpdateAppointmentRequest;
 import com.health.care.appointment.service.domain.response.AppointmentResponse;
+import com.health.care.appointment.service.domain.response.CountResponse;
 import com.health.care.appointment.service.domain.response.PaginationResponse;
 import com.health.care.appointment.service.repository.AppointmentRepository;
 import com.health_care.id.generator.Api.UniqueIdGenerator;
@@ -22,6 +25,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -84,16 +88,45 @@ public class AppointmentServiceImpl implements IAppointmentService{
         LocalDate convertedDate = LocalDate.of(1998,1,1);
         LocalTime convertedTime = LocalTime.MIDNIGHT;
 
-        if(!StringUtils.isEmpty(time)){
+        if (!StringUtils.isEmpty(date)) {
             convertedDate = DateTimeUtils.convertToLocalDate(date, "yyyy-MM-dd");
-            convertedTime = DateTimeUtils.convertToLocalTime(time, "HH:mm:ss");
         }
+        if (!StringUtils.isEmpty(time)) {
+            convertedTime = DateTimeUtils.convertToLocalTime(time, "HH:mm");
+        }
+
 
         final Page<AppointmentResponse> page = appointmentRepository.findByParam(doctorId, patientId, appointmentId, convertedDate, convertedTime, pageable).map(AppointmentResponse::from);
 
         return page.getContent().isEmpty() ?
                 PageUtils.mapToPaginationResponseDto(Page.empty(), paginationRequest) :
                 PageUtils.mapToPaginationResponseDto(page, paginationRequest);
+    }
+
+    @Override
+    public ApiResponse<CountResponse> getDoctorsUpcomingAppointmentCount(String doctorId,String date, String time) {
+
+
+        LocalDate convertedDate = LocalDate.of(1998,1,1);
+        LocalTime convertedTime = LocalTime.MIDNIGHT;
+
+        if (!StringUtils.isEmpty(date)) {
+            convertedDate = DateTimeUtils.convertToLocalDate(date, "yyyy-MM-dd");
+        }
+        if (!StringUtils.isEmpty(time)) {
+            convertedTime = DateTimeUtils.convertToLocalTime(time, "HH:mm");
+        }
+
+
+        final List<Appointment> responses = appointmentRepository.findByParamCount(doctorId, convertedDate, convertedTime);
+        CountResponse countResponse = new CountResponse();
+        countResponse.setCount(responses.size());
+
+        return ApiResponse.<CountResponse>builder()
+                .data(countResponse)
+                .responseCode(ApiResponseCode.OPERATION_SUCCESSFUL.getResponseCode())
+                .responseMessage(ResponseMessage.OPERATION_SUCCESSFUL.getResponseMessage())
+                .build();
     }
 
 
