@@ -27,8 +27,8 @@ public class RegisterRequest {
     @Pattern(regexp = "^(\\+\\d{1,3}[- ]?)?\\d{10}$", message = "Mobile number should be valid")
     private String mobile;
 
-    @NotBlank(message = "Password is required")
-    @Size(min = 8, max = 20, message = "Password must be between 8 and 20 characters")
+//    @NotBlank(message = "Password is required")
+//    @Size(min = 8, max = 20, message = "Password must be between 8 and 20 characters")
     private String password;
 
     private String uniqueId;

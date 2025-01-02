@@ -4,6 +4,7 @@ package com.health_care.user_service.service.Impl;
 
 import com.health_care.id.generator.Impl.UniqueIdGeneratorImpl;
 import com.health_care.user_service.common.exceptions.InvalidRequestDataException;
+import com.health_care.user_service.common.utils.AppUtils;
 import com.health_care.user_service.config.AuthConfig;
 import com.health_care.user_service.domain.common.ApiResponse;
 import com.health_care.user_service.domain.entity.Admin;
@@ -245,6 +246,9 @@ public class RegistrationServiceImpl implements IRegistrationService {
     private User createUser(RegisterRequest request, Role role) {
         String uniqueIdPrefix = getUniqueIdPrefixForRole(role);
         String uniqueId = uniqueIdGenerator.generateUniqueIdWithPrefix(uniqueIdPrefix);
+        if(role == Role.DOCTOR) {
+            request.setPassword(AppUtils.generateRandomString(8));
+        }
 
         return User.builder()
                 .userName(uniqueId)
