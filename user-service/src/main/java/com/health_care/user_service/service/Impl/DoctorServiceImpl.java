@@ -146,17 +146,26 @@ public class DoctorServiceImpl implements IDoctorService {
 
         List<LocalTime> responseSlot = new ArrayList<>();
 
-        while (timeSlot.getEndTime().isBefore(timeSlot.getStartTime())){
-
+        while (!timeSlot.getEndTime().isAfter(timeSlot.getStartTime())){
+            int flag = 0;
             for(LocalTime appointedTimeSlot : appointedTimeSlots){
                 if(appointedTimeSlot.equals(timeSlot.getStartTime())){
+                    flag = 1;
                     break;
                 }
             }
+            if(flag == 0){
+                responseSlot.add(timeSlot.getStartTime());
+            }
 
+            timeSlot.setStartTime(timeSlot.getStartTime().plusMinutes(30));
         }
 
+        TimeSlotResponse timeSlotResponse = new TimeSlotResponse();
+        timeSlotResponse.setDoctorId(request.getDoctorId());
+        timeSlotResponse.setTimeSlotList(responseSlot);
 
+        return timeSlotResponse;
     }
 
     private ApiResponse<Void> updateDoctorDetails(Doctor doctor, DoctorInfoUpdateRequest request) {
