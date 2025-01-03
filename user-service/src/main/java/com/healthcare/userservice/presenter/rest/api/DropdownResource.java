@@ -1,16 +1,12 @@
 package com.healthcare.userservice.presenter.rest.api;
 
-import com.healthcare.userservice.domain.response.BloodGroupResponse;
-import com.healthcare.userservice.domain.response.DepartmentResponse;
-import com.healthcare.userservice.domain.response.DesignationResponse;
-import com.healthcare.userservice.domain.response.GenderResponse;
 import com.healthcare.userservice.common.utils.AppUtils;
 import com.healthcare.userservice.domain.common.ApiResponse;
+import com.healthcare.userservice.domain.request.MobileCheckRequest;
+import com.healthcare.userservice.domain.response.*;
 import com.healthcare.userservice.service.IDropdownService;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(AppUtils.BASE_URL)
@@ -37,6 +33,26 @@ public class DropdownResource {
     @GetMapping("/gender-options")
     public ApiResponse<GenderResponse> GenderOptions() {
         return dropdownService.getGenderOptions();
+    }
+
+    @PostMapping("/check-mobile")
+    public ApiResponse<Boolean> checkMobile(@RequestBody MobileCheckRequest mobileCheckRequest) {
+        return dropdownService.checkMobile(mobileCheckRequest);
+    }
+
+    @GetMapping("/pending-doctor-count")
+    public ApiResponse<CountResponse> pendingDoctorCount() {
+        return dropdownService.pendingDoctorCount();
+    }
+
+    @GetMapping("/pending-appointment-count")
+    public ApiResponse<CountResponse> pendingAppointmentCount() {
+        return dropdownService.pendingAppointmentCount();
+    }
+
+    @GetMapping("/pending-admin-count")
+    public ApiResponse<CountResponse> pendingAdminCount() {
+        return dropdownService.pendingAdminCount();
     }
 
 }
