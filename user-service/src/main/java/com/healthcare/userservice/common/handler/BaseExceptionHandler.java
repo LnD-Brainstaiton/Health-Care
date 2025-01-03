@@ -43,7 +43,7 @@ public abstract class BaseExceptionHandler extends ResponseEntityExceptionHandle
     }
 
     protected String processFeignExceptionMessage(int status, String messageContent) {
-        if(status<0)
+        if (status < 0)
             return "Service Unavailable";
         else if (status == HttpStatus.OK.value())
             return "Payload/data conversion exception";

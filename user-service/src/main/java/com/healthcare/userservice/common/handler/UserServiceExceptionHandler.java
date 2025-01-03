@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestControllerAdvice
-public class UserServiceExceptionHandler extends BaseExceptionHandler{
+public class UserServiceExceptionHandler extends BaseExceptionHandler {
 
     private final UserServiceLogger logger;
 
