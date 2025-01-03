@@ -1,0 +1,43 @@
+spring:
+  application:
+    name: appointment-service  # Service name
+
+  datasource:
+    url: jdbc:postgresql://172.16.230.59:5432/health_care?currentSchema=appointment
+    username: superadmin
+    password: admin@123
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  springdoc:
+    api-docs:
+      path: /v3/api-docs    # Path where OpenAPI documentation is available
+    swagger-ui:
+      path: /swagger-ui.html # Path for Swagger UI
+
+
+management:
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+server:
+  port: 8083
+  shutdown: graceful # Service port
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/  # Eureka server URL
+    fetch-registry: true
+    register-with-eureka: true
+  instance:
+    hostname: localhost  # Optional: specify the hostname
+    prefer-ip-address: true

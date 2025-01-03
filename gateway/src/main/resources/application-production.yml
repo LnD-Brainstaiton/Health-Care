@@ -1,0 +1,63 @@
+server:
+  port: 8000
+
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      routes:
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/api/v1/user/**
+          filters:
+            - AuthenticationFilter
+        - id: appointment-service
+          uri: lb://appointment-service
+          predicates:
+            - Path=/api/v1/appointment/**
+          filters:
+            - AuthenticationFilter
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "http://172.16.230.59:3000"
+            allowedMethods: "GET, POST, PUT, DELETE, OPTIONS"
+            allowedHeaders: "*"
+            allowCredentials: true
+
+  r2dbc:
+    url: r2dbc:postgresql://172.16.230.59:5432/health_care?currentSchema=gateway
+    username: superadmin
+    password: admin@123
+  jpa:
+    open-in-view: false
+    r2dbc-pool:
+      enabled: true
+      initial-size: 5
+      max-size: 20
+      max-idle-time: 30s
+
+management:
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+info:
+  app:
+    name: Gateway Service
+    description: This service is responsible for Authorizing client requests.
+    version: 1.0
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://172.16.230.59:8761/eureka/
+    fetch-registry: true
+    register-with-eureka: true
+
+jwt:
+  secret:
+    key: 5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437
