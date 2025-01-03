@@ -12,6 +12,7 @@ public interface RegisterMapper {
 
     @Mapping(source = "userType", target = "userType", qualifiedByName = "mapRoleToString")
     RegisterResponse toRegisterResponse(User user);
+
     @Named("mapRoleToString")
     default String mapRoleToString(Role role) {
         return role != null ? role.name() : "UNKNOWN";

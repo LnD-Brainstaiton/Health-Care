@@ -36,6 +36,7 @@ public enum Department {
     VASCULAR_SURGERY("Vascular Surgery");
 
     private final String department;
+
     Department(String s) {
         this.department = s;
     }

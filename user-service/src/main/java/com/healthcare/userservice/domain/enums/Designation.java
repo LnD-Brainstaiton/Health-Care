@@ -17,6 +17,7 @@ public enum Designation {
     DIRECTOR("Director");
 
     private final String designation;
+
     Designation(String s) {
         this.designation = s;
     }

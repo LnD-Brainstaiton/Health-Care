@@ -1,6 +1,5 @@
 package com.healthcare.userservice.domain.response;
 
-import jakarta.persistence.Column;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,11 +17,13 @@ public class PatientInfoResponse {
 
     private String address;
 
-     private String email;
+    private String email;
 
     private Integer age;
 
     private String nid;
 
     private String bloodGroup;
+
+    private String patientId;
 }

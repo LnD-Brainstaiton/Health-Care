@@ -15,6 +15,7 @@ public enum BloodGroup {
     O_NEGATIVE("O-");
 
     private final String bloodGroup;
+
     BloodGroup(String s) {
         this.bloodGroup = s;
     }

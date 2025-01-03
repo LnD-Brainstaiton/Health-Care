@@ -10,6 +10,7 @@ public enum Gender {
     OTHER("Other");
 
     private final String gender;
+
     Gender(String s) {
         this.gender = s;
     }

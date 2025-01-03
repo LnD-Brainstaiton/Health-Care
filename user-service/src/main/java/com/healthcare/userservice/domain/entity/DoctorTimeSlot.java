@@ -12,7 +12,7 @@ import java.time.LocalTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class DoctorTimeSlot{
+public class DoctorTimeSlot {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +27,7 @@ public class DoctorTimeSlot{
     @Column(name = "END_TIME")
     private LocalTime endTime;
 
-    @Column(name ="DAYS_OF_WEEK")
+    @Column(name = "DAYS_OF_WEEK")
     private String daysOfWeek;
 
 }
