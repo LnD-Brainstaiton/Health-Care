@@ -2,11 +2,11 @@ package com.healthcare.userservice.common.utils;
 
 import com.healthcare.userservice.domain.request.PaginationRequest;
 import com.healthcare.userservice.domain.response.PaginationResponse;
-import org.springframework.util.ObjectUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.util.ObjectUtils;
 
 public class PageUtils {
     public static <E> PaginationResponse<E> mapToPaginationResponse(
@@ -66,6 +66,7 @@ public class PageUtils {
         }
         return sort;
     }
+
     public static PaginationRequest mapToPaginationRequest(final Integer pageNumber, final Integer pageSize, final String sortBy, final String sortOrder) {
         final PaginationRequest paginationRequest = new PaginationRequest();
         paginationRequest.setPageNumber(pageNumber);

@@ -43,7 +43,7 @@ public class CommonUtils {
         return obj == null;
     }
 
-    public static boolean validatePasswordByRegex(String password, String regex){
+    public static boolean validatePasswordByRegex(String password, String regex) {
         return password.matches(regex);
     }
 
