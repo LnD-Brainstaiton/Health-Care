@@ -1,4 +1,4 @@
-package com.health_care.gateway.domain.common;
+package com.health_care.gateway.domain.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

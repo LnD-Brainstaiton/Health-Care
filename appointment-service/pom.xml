@@ -29,6 +29,7 @@
 	<properties>
 		<java.version>17</java.version>
 		<spring-cloud.version>2024.0.0</spring-cloud.version>
+		<unique-id-generator.lib.version>0.0.1-SNAPSHOT</unique-id-generator.lib.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -49,6 +50,12 @@
 		</dependency>
 
 		<dependency>
+			<groupId>com.health-care</groupId>
+			<artifactId>unique-id-generator</artifactId>
+			<version>${unique-id-generator.lib.version}</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<version>42.7.2</version> <!-- Use the latest compatible version -->
@@ -58,6 +65,11 @@
 			<groupId>org.hibernate.validator</groupId>
 			<artifactId>hibernate-validator</artifactId>
 			<version>8.0.1.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.12.0</version> <!-- Use the latest version -->
 		</dependency>
 
 		<dependency>
@@ -75,6 +87,13 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>2.7.0</version>
+		</dependency>
+
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>
