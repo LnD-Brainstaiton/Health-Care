@@ -27,4 +27,8 @@ public interface DoctorRepository extends JpaRepository<Doctor,Long>, JpaSpecifi
     Doctor findByDoctorId(String id);
 
     Optional<Doctor> findByMobileAndIsActiveTrue(String mobile);
+
+    boolean existsByEmail(String email);
+
+    boolean existsByMobile(String mobile);
 }

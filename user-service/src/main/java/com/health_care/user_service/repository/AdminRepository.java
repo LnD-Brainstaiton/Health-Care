@@ -23,4 +23,8 @@ public interface AdminRepository extends JpaRepository<Admin, Long>, JpaSpecific
     Admin findByAdminId(String id);
 
     Optional<Admin> findByMobileAndIsActiveTrue(String mobile);
+
+    boolean existsByEmail(String email);
+
+    boolean existsByMobile(String mobile);
 }

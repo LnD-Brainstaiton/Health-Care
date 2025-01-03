@@ -17,7 +17,6 @@ import com.health_care.user_service.domain.enums.Role;
 import com.health_care.user_service.domain.mapper.AdminMapper;
 import com.health_care.user_service.domain.mapper.RegisterMapper;
 import com.health_care.user_service.domain.request.AdminInfoUpdateRequest;
-import com.health_care.user_service.domain.request.DoctorInfoUpdateRequest;
 import com.health_care.user_service.domain.request.RegisterRequest;
 import com.health_care.user_service.domain.response.*;
 import com.health_care.user_service.repository.AdminRepository;
@@ -260,6 +259,12 @@ public class RegistrationServiceImpl implements IRegistrationService {
     }
 
     private void savePatient(RegisterRequest request) {
+        if (patientRepository.existsByEmail(request.getEmail())) {
+            throw new InvalidRequestDataException(ResponseMessage.EMAIL_ALREADY_EXISTS);
+        }
+        if (patientRepository.existsByMobile(request.getMobile())) {
+            throw new InvalidRequestDataException(ResponseMessage.MOBILE_ALREADY_EXISTS);
+        }
         Patient patient = Patient.builder()
                 .mobile(request.getMobile())
                 .firstname(request.getFirstName())
@@ -272,6 +277,12 @@ public class RegistrationServiceImpl implements IRegistrationService {
     }
 
     private void saveDoctor(RegisterRequest request) {
+        if (doctorRepository.existsByEmail(request.getEmail())) {
+            throw new InvalidRequestDataException(ResponseMessage.EMAIL_ALREADY_EXISTS);
+        }
+        if (doctorRepository.existsByMobile(request.getMobile())) {
+            throw new InvalidRequestDataException(ResponseMessage.MOBILE_ALREADY_EXISTS);
+        }
         Doctor doctor = Doctor.builder()
                 .mobile(request.getMobile())
                 .firstname(request.getFirstName())
@@ -289,6 +300,12 @@ public class RegistrationServiceImpl implements IRegistrationService {
     }
 
     private void saveAdmin(RegisterRequest request) {
+        if (adminRepository.existsByEmail(request.getEmail())) {
+            throw new InvalidRequestDataException(ResponseMessage.EMAIL_ALREADY_EXISTS);
+        }
+        if (adminRepository.existsByMobile(request.getMobile())) {
+            throw new InvalidRequestDataException(ResponseMessage.MOBILE_ALREADY_EXISTS);
+        }
         Admin admin = Admin.builder()
                 .mobile(request.getMobile())
                 .firstname(request.getFirstName())
