@@ -18,27 +18,29 @@ import com.healthcare.userservice.domain.request.AdminInfoUpdateRequest;
 import com.healthcare.userservice.domain.request.RegisterRequest;
 import com.healthcare.userservice.domain.response.AdminInfoResponse;
 import com.healthcare.userservice.domain.response.CountResponse;
+import com.healthcare.userservice.domain.response.PaginationResponse;
 import com.healthcare.userservice.domain.response.RegisterResponse;
 import com.healthcare.userservice.repository.AdminRepository;
 import com.healthcare.userservice.repository.DoctorRepository;
 import com.healthcare.userservice.repository.PatientRepository;
 import com.healthcare.userservice.repository.UserRepository;
+import com.healthcare.userservice.repository.specification.AdminSpecification;
 import com.healthcare.userservice.service.IRegistrationService;
-
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -86,27 +88,52 @@ public class RegistrationServiceImpl implements IRegistrationService {
     }
 
     @Override
-    public ApiResponse<List<AdminInfoResponse>> getAllAdminList(int page, int size, String sort) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.asc(sort)));
-        Page<Admin> activeDoctorsPage = adminRepository.findAllByIsActiveTrue(pageable);
-
-        if (activeDoctorsPage.isEmpty()) {
-            return ApiResponse.<List<AdminInfoResponse>>builder()
-                    .data(Collections.emptyList())
-                    .responseCode(ApiResponseCode.RECORD_NOT_FOUND.getResponseCode())
-                    .responseMessage(ResponseMessage.RECORD_NOT_FOUND.getResponseMessage())
-                    .build();
+    public PaginationResponse<AdminInfoResponse> getAllAdminList(int page, int size, String sort, String firstnameLastname, String id) {
+        Sort.Order sortOrder;
+        try {
+            sortOrder = Sort.Order.asc(sort);
+        } catch (IllegalArgumentException ex) {
+            return new PaginationResponse<>(
+                    Collections.emptyList(),
+                    0L
+            );
+        }
+        // Check if page = -1, fetch all active doctors without pagination
+        if (page == -1) {
+            List<Admin> activeAdmins = adminRepository.findAllByIsActiveTrue(Sort.by(sortOrder));
+            List<AdminInfoResponse> adminInfoResponses = activeAdmins.stream()
+                    .map(adminMapper::toAdminInfoResponse)
+                    .collect(Collectors.toList());
+            return new PaginationResponse<>(adminInfoResponses, (long) adminInfoResponses.size());
         }
 
-        List<AdminInfoResponse> adminInfoResponses = activeDoctorsPage.getContent().stream()
+        int validatedPage = Math.max(0, page);
+        int validatedSize = Math.max(1, size);
+
+        Pageable pageable = PageRequest.of(validatedPage, validatedSize, Sort.by(sortOrder));
+        Specification<Admin> spec = Specification.where(AdminSpecification.hasFirstnameLastname(firstnameLastname))
+                .and(AdminSpecification.hasId(id))
+                .and(AdminSpecification.isActive());
+        Page<Admin> activeAdminsPage = adminRepository.findAll(spec, pageable);
+
+        if (activeAdminsPage.isEmpty()) {
+            return new PaginationResponse<>(
+                    Collections.emptyList(),
+                    0L
+            );
+        }
+
+        List<AdminInfoResponse> adminInfoResponses = activeAdminsPage.getContent().stream()
                 .map(adminMapper::toAdminInfoResponse)
                 .collect(Collectors.toList());
 
-        return ApiResponse.<List<AdminInfoResponse>>builder()
-                .data(adminInfoResponses)
-                .responseCode(ApiResponseCode.OPERATION_SUCCESSFUL.getResponseCode())
-                .responseMessage(ResponseMessage.OPERATION_SUCCESSFUL.getResponseMessage())
-                .build();
+        return new PaginationResponse<>(
+                activeAdminsPage.getNumber(),
+                activeAdminsPage.getSize(),
+                activeAdminsPage.getTotalElements(),
+                activeAdminsPage.getTotalPages(),
+                adminInfoResponses
+        );
     }
 
     @Override
@@ -149,6 +176,33 @@ public class RegistrationServiceImpl implements IRegistrationService {
                 );
     }
 
+    @Override
+    public ApiResponse<String> deleteDAdminById(String id) {
+        Admin admin = adminRepository.findByAdminId(id);
+        if (admin == null) {
+            return ApiResponse.<String>builder()
+                    .responseCode(ApiResponseCode.RECORD_NOT_FOUND.getResponseCode())
+                    .responseMessage(ResponseMessage.RECORD_NOT_FOUND.getResponseMessage())
+                    .build();
+        }
+        admin.setIsActive(false);
+        adminRepository.save(admin);
+        Optional<User> user = userRepository.findByUserId(id);
+        if (user.isPresent()) {
+            user.get().setIsActive(false);
+            userRepository.save(user.get());
+        } else {
+            return ApiResponse.<String>builder()
+                    .responseMessage(ResponseMessage.RECORD_NOT_FOUND.getResponseMessage())
+                    .responseCode(ApiResponseCode.RECORD_NOT_FOUND.getResponseCode())
+                    .build();
+        }
+        return ApiResponse.<String>builder()
+                .responseCode(ApiResponseCode.OPERATION_SUCCESSFUL.getResponseCode())
+                .responseMessage(ResponseMessage.OPERATION_SUCCESSFUL.getResponseMessage())
+                .build();
+    }
+
     private ApiResponse<Void> updateAdminDetails(Admin admin, AdminInfoUpdateRequest request) {
         admin.setFirstname(request.getFirstname());
         admin.setLastname(request.getLastname());
@@ -157,8 +211,13 @@ public class RegistrationServiceImpl implements IRegistrationService {
         adminRepository.save(admin);
 
         Optional<User> user = userRepository.findByUserId(request.getAdminId());
-        user.get().setPassword(authConfig.passwordEncoder().encode(request.getPassword()));
-        userRepository.save(user.get());
+        if (user.isPresent()) {
+            if (!Objects.equals(request.getPassword(), "")) {
+                user.get().setPassword(authConfig.passwordEncoder().encode(request.getPassword()));
+            }
+            user.get().setUserName(request.getAdminId());
+            userRepository.save(user.get());
+        }
 
         return ApiResponse.<Void>builder()
                 .responseCode(ApiResponseCode.OPERATION_SUCCESSFUL.getResponseCode())
@@ -187,10 +246,11 @@ public class RegistrationServiceImpl implements IRegistrationService {
         String uniqueId = uniqueIdGenerator.generateUniqueIdWithPrefix(uniqueIdPrefix);
 
         return User.builder()
-                .userName(request.getMobile())
+                .userName(uniqueId)
                 .userId(uniqueId)
                 .password(authConfig.passwordEncoder().encode(request.getPassword()))
                 .userType(role)
+                .isActive(Boolean.TRUE)
                 .build();
     }
 
@@ -213,6 +273,11 @@ public class RegistrationServiceImpl implements IRegistrationService {
                 .lastname(request.getLastName())
                 .doctorId(request.getUniqueId())
                 .email(request.getEmail())
+                .mobile(request.getMobile())
+                .department(request.getDepartment())
+                .designation(request.getDesignation())
+                .specialities(request.getSpecialities())
+                .fee(request.getFee())
                 .isActive(Boolean.TRUE)
                 .build();
         doctorRepository.save(doctor);

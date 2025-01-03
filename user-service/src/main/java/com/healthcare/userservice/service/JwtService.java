@@ -22,6 +22,7 @@ public class JwtService {
     }
 
     private String createToken(Map<String, Object> claims, String userName) {
+        claims.put("userIdentity", userName);
         String token = Jwts.builder()
                 .setClaims(claims)
                 .setSubject(userName)

@@ -11,7 +11,10 @@ public interface IDoctorService {
 
     ApiResponse<DoctorInfoResponse> getDoctorById(String id);
 
-    PaginationResponse<DoctorInfoResponse> getAllDoctorInfo(int page, int size, String sort);
+    PaginationResponse<DoctorInfoResponse> getAllDoctorInfo(int page, int size, String sort, String firstnameLastname, String id,
+                                                            String department, String designation, String gender);
 
     ApiResponse<CountResponse> getDoctorsCount();
+
+    ApiResponse<String> deleteDoctorById(String id);
 }

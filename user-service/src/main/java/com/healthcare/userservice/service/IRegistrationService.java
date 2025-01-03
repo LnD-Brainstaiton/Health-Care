@@ -5,9 +5,8 @@ import com.healthcare.userservice.domain.request.AdminInfoUpdateRequest;
 import com.healthcare.userservice.domain.request.RegisterRequest;
 import com.healthcare.userservice.domain.response.AdminInfoResponse;
 import com.healthcare.userservice.domain.response.CountResponse;
+import com.healthcare.userservice.domain.response.PaginationResponse;
 import com.healthcare.userservice.domain.response.RegisterResponse;
-
-import java.util.List;
 
 public interface IRegistrationService {
 
@@ -17,11 +16,13 @@ public interface IRegistrationService {
 
     RegisterResponse registerAdmin(RegisterRequest admin);
 
-    ApiResponse<List<AdminInfoResponse>> getAllAdminList(int page, int size, String sort);
+    PaginationResponse<AdminInfoResponse> getAllAdminList(int page, int size, String sort, String firstnameLastname, String id);
 
     ApiResponse<CountResponse> getAdminsCount();
 
     ApiResponse<AdminInfoResponse> getAdminByUniqueId(String id);
 
     ApiResponse<Void> updateAdmin(AdminInfoUpdateRequest request);
+
+    ApiResponse<String> deleteDAdminById(String id);
 }
