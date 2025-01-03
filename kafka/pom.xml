@@ -55,10 +55,12 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<!-- Skip the creation of application-docker.yml main class -->
-					<skip>true</skip>
-				</configuration>
+				<executions>
+					<execution>
+						<id>repackage</id>
+						<phase>none</phase>
+					</execution>
+				</executions>
 			</plugin>
 
 			<!-- Maven Compiler Plugin -->

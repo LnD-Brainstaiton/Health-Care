@@ -39,7 +39,7 @@
       <module name="kafka" options="-parameters" />
       <module name="kafka (1)" options="-parameters" />
       <module name="kafka (2)" options="-parameters" />
-      <module name="kafka-service" options="" />
+      <module name="kafka-service" options="-parameters" />
       <module name="notification-service" options="-parameters" />
       <module name="two-factor-authentication-service" options="-parameters" />
       <module name="unique-id-generator" options="-parameters" />
