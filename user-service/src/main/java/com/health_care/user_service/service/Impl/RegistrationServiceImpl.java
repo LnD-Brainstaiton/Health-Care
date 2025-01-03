@@ -227,8 +227,6 @@ public class RegistrationServiceImpl implements IRegistrationService {
     }
 
     private RegisterResponse register(RegisterRequest request, Role role, Consumer<RegisterRequest> saveEntityFunction) {
-        checkForDuplicate(request);
-
         // Create and save the User
         User user = createUser(request, role);
         User savedUser = userRepository.save(user);
@@ -238,7 +236,7 @@ public class RegistrationServiceImpl implements IRegistrationService {
         // Save the corresponding entity (Patient, Doctor, or Admin)
         saveEntityFunction.accept(request);
 
-        logRegistration(role.name(), request.getMobile());
+        logger.info("{} registration successful for mobile: {}", role.name(), user.getUserId());
         return registerMapper.toRegisterResponse(savedUser);
     }
 
@@ -326,13 +324,4 @@ public class RegistrationServiceImpl implements IRegistrationService {
         };
     }
 
-    private void checkForDuplicate(RegisterRequest request) {
-        if (userRepository.existsByUserName(request.getMobile())) {
-            throw new InvalidRequestDataException(ResponseMessage.INVALID_MOBILE_NUMBER);
-        }
-    }
-
-    private void logRegistration(String userType, String mobile) {
-        logger.info("{} registration successful for mobile: {}", userType, mobile);
-    }
 }

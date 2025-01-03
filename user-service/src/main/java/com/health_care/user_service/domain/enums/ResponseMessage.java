@@ -22,7 +22,8 @@ public enum ResponseMessage {
     REQUEST_CAN_NOT_PROCESS(ApiResponseCode.INVALID_REQUEST_DATA.getResponseCode(),"REQUEST CAN NOT PROCESS"),
     ALREADY_REQUEST_PENDING(ApiResponseCode.INVALID_REQUEST_DATA.getResponseCode(),"ALREADY REQUEST PENDING"),
     EMAIL_ALREADY_EXISTS(ApiResponseCode.INVALID_REQUEST_DATA.getResponseCode(), "EMAIL ALREADY EXISTS"),
-    MOBILE_ALREADY_EXISTS(ApiResponseCode.INVALID_REQUEST_DATA.getResponseCode(), "MOBILE ALREADY EXISTS");
+    MOBILE_ALREADY_EXISTS(ApiResponseCode.INVALID_REQUEST_DATA.getResponseCode(), "MOBILE ALREADY EXISTS"),
+    INVALID_JSON_BODY(ApiResponseCode.INVALID_REQUEST_DATA.getResponseCode(), "Invalid JSON structure: not an object");
     private String responseCode;
     private String responseMessage;
 }

@@ -154,7 +154,7 @@ public class AdminCheckerMackerImpl extends BaseService implements IAdminChecker
                     object = objectMapper.treeToValue(objectNode, Object.class); // Convert to your desired object class
                 } else {
                     logger.error("Expected JSON object, but got: {}", rootNode.getNodeType());
-                    throw new IllegalArgumentException("Invalid JSON structure: not an object");
+                    throw new IllegalArgumentException(ResponseMessage.INVALID_JSON_BODY.getResponseMessage());
                 }
             }
         } catch (Exception e) {
