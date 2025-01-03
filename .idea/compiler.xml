@@ -8,6 +8,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="appointment-service" />
+        <module name="kafka-service" />
         <module name="discovery" />
         <module name="user-service" />
         <module name="two-factor-authentication-service" />
@@ -28,7 +29,6 @@
       <module name="kafka" target="17" />
       <module name="kafka (1)" target="17" />
       <module name="kafka (2)" target="17" />
-      <module name="kafka-service" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
@@ -39,7 +39,7 @@
       <module name="kafka" options="-parameters" />
       <module name="kafka (1)" options="-parameters" />
       <module name="kafka (2)" options="-parameters" />
-      <module name="kafka-service" options="-parameters" />
+      <module name="kafka-service" options="" />
       <module name="notification-service" options="-parameters" />
       <module name="two-factor-authentication-service" options="-parameters" />
       <module name="unique-id-generator" options="-parameters" />
