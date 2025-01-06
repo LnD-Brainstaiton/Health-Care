@@ -54,4 +54,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
             @Param("time") LocalTime time,
             Pageable pageable
     );
+   @Query("SELECT a.appointmentTime FROM Appointment a WHERE a.doctorId = :doctorId AND a.appointmentDate = :date")
+    List<LocalTime> getAppointedTime(@Param("doctorId") String doctorId,
+                                     @Param("date") LocalDate date);
 }

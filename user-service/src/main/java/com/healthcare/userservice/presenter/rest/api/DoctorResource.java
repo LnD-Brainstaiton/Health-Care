@@ -7,10 +7,8 @@ import com.healthcare.userservice.domain.enums.ApiResponseCode;
 import com.healthcare.userservice.domain.enums.ResponseMessage;
 import com.healthcare.userservice.domain.request.DoctorInfoUpdateRequest;
 import com.healthcare.userservice.domain.request.RegisterRequest;
-import com.healthcare.userservice.domain.response.CountResponse;
-import com.healthcare.userservice.domain.response.DoctorInfoResponse;
-import com.healthcare.userservice.domain.response.PaginationResponse;
-import com.healthcare.userservice.domain.response.RegisterResponse;
+import com.healthcare.userservice.domain.request.TimeSlotRequest;
+import com.healthcare.userservice.domain.response.*;
 import com.healthcare.userservice.service.IDoctorService;
 import com.healthcare.userservice.service.IRegistrationService;
 import lombok.AllArgsConstructor;
@@ -85,5 +83,9 @@ public class DoctorResource {
         return response;
     }
 
+    @PostMapping("/doctor/time-slot")
+    public ApiResponse<TimeSlotResponse> getDoctorTimeSlot(@RequestBody TimeSlotRequest request) {
+        return ResponseUtils.createResponseObject(ResponseMessage.OPERATION_SUCCESSFUL, doctorService.getTimeSlotList(request));
+    }
 
 }

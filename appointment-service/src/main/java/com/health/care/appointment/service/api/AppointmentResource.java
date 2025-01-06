@@ -6,6 +6,7 @@ import com.health.care.appointment.service.common.utils.ResponseUtils;
 import com.health.care.appointment.service.domain.common.ApiResponse;
 import com.health.care.appointment.service.domain.enums.ResponseMessage;
 import com.health.care.appointment.service.domain.request.CreateAppointmentRequest;
+import com.health.care.appointment.service.domain.request.TimeSlotRequest;
 import com.health.care.appointment.service.domain.request.UpdateAppointmentRequest;
 import com.health.care.appointment.service.domain.response.AppointmentResponse;
 import com.health.care.appointment.service.domain.response.CountResponse;
@@ -13,6 +14,9 @@ import com.health.care.appointment.service.domain.response.PaginationResponse;
 import com.health.care.appointment.service.service.IAppointmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalTime;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -54,6 +58,11 @@ public class AppointmentResource {
             @RequestParam(required = false) @JsonFormat(pattern = "HH:mm:ss") String time
     ){
         return ResponseUtils.createResponseObject(ResponseMessage.OPERATION_SUCCESSFUL, appointmentService.listOfAppointments(pageNumber, pageSize, sortBy, sortOrder, doctorId, patientId, appointmentId, date, time));
+    }
+
+    @PostMapping("/time-slot")
+    public ApiResponse<List<LocalTime>> getAppointmentTimeSlot(@RequestBody TimeSlotRequest request) {
+        return ResponseUtils.createResponseObject(ResponseMessage.OPERATION_SUCCESSFUL, appointmentService.getAppointedTimeSlot(request));
     }
 
 }

@@ -20,10 +20,14 @@ public class OtpService implements IOtpService {
     NotificationMapper notificationMapper;
 
     @Override
-    public Boolean generateAndSendOtp(OtpVerificationRequest otpVerificationRequest) {
+    public TfaResponse generateAndSendOtp(OtpVerificationRequest otpVerificationRequest) {
         TfaResponse tfaResponse = integrationService.generateOtp(new TfaRequest(otpVerificationRequest.getUserId()));
 
         NotificationEvent notificationEvent = notificationMapper.prepareNotificationEventForSignup(tfaResponse, otpVerificationRequest);
-        return integrationService.sendNotification(notificationEvent);
+        if (integrationService.sendNotification(notificationEvent)) {
+            return tfaResponse;
+        }
+
+        return null;
     }
 }

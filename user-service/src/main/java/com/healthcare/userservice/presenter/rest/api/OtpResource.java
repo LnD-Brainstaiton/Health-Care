@@ -5,6 +5,7 @@ import com.healthcare.userservice.common.utils.ResponseUtils;
 import com.healthcare.userservice.domain.common.ApiResponse;
 import com.healthcare.userservice.domain.enums.ResponseMessage;
 import com.healthcare.userservice.domain.request.OtpVerificationRequest;
+import com.healthcare.userservice.domain.response.TfaResponse;
 import com.healthcare.userservice.service.interfaces.IOtpService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -22,8 +23,8 @@ public class OtpResource {
 
     @PostMapping("/generate-otp")
     public ApiResponse<?> generateAndSendOtp(@RequestBody @Valid OtpVerificationRequest otpVerificationRequest) {
-        otpService.generateAndSendOtp(otpVerificationRequest);
-        return ResponseUtils.createResponseObject(ResponseMessage.OPERATION_SUCCESSFUL);
+        TfaResponse tfaResponse = otpService.generateAndSendOtp(otpVerificationRequest);
+        return ResponseUtils.createResponseObject(ResponseMessage.OPERATION_SUCCESSFUL, tfaResponse);
     }
 
 }
