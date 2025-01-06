@@ -1,0 +1,42 @@
+version: '3'
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+    ports:
+      - "2181:2181"  # Expose Zookeeper port to the host for connectivity (optional but useful for troubleshooting)
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092  # Ensure Kafka advertises the correct address
+      KAFKA_LISTENER_SECURITY_PROTOCOL: PLAINTEXT  # Specify listener protocol as PLAINTEXT (default)
+      KAFKA_LISTENER_PORT: 9092  # Kafka should listen on port 9092
+      KAFKA_LISTENER_NAME: PLAINTEXT  # Set listener name to PLAINTEXT (needed for proper configuration)
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    ports:
+      - "9092:9092"  # Expose Kafka port to the host
+    networks:
+      - kafka-network  # Add Kafka network to ensure proper communication between containers
+
+  kafdrop:
+    image: obsidiandynamics/kafdrop:latest
+    depends_on:
+      - kafka
+    ports:
+      - "9000:9000"  # Expose Kafdrop UI on port 9000
+    environment:
+      KAFKA_BROKERCONNECT: kafka:9092  # Kafka service name inside Docker network
+      JVM_OPTS: "-Xms64M -Xmx128M"
+      SERVER_SERVLET_CONTEXTPATH: "/"
+    networks:
+      - kafka-network  # Ensure Kafdrop uses the same network as Kafka and Zookeeper
+
+networks:
+  kafka-network:  # Create a custom network for all services to communicate
+    driver: bridge

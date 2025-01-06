@@ -16,7 +16,7 @@ import static java.math.BigInteger.ONE;
 public class DummyTfaService implements ITfaService {
     @Override
     public TfaResponse generateOtp(TfaRequest tfaRequest) {
-        return new TfaResponse(UUID.randomUUID().toString(),String.valueOf(ONE).repeat(4),10);
+        return new TfaResponse(String.valueOf(ONE).repeat(4), UUID.randomUUID().toString(), 10);
     }
 
     @Override
