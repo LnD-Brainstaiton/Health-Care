@@ -1,4 +1,4 @@
-package com.health_care.user_service.domain.enums;
+package com.healthcare.userservice.domain.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
