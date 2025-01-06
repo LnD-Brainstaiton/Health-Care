@@ -13,7 +13,7 @@ import com.health.care.appointment.service.domain.request.UpdateAppointmentReque
 import com.health.care.appointment.service.domain.response.AppointmentResponse;
 import com.health.care.appointment.service.domain.response.PaginationResponse;
 import com.health.care.appointment.service.repository.AppointmentRepository;
-import com.health_care.unique_id_generator.Api.UniqueIdGenerator;
+import com.health_care.id.generator.Api.UniqueIdGenerator;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;

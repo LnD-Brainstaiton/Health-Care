@@ -1,23 +1,41 @@
 package com.health_care.gateway.filter;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.health_care.gateway.config.GatewayDataConfiguration;
+import com.health_care.gateway.domain.enums.JwtClaimsEnum;
+import com.health_care.gateway.domain.response.CurrentUserContext;
 import com.health_care.gateway.exceptions.MissingAuthorizationHeaderException;
 import com.health_care.gateway.util.JwtUtil;
+import com.health_care.gateway.util.SerializationUtils;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.security.SignatureException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
+
+import java.nio.charset.StandardCharsets;
 
 @Component
 public class AuthenticationFilter extends AbstractGatewayFilterFactory<AuthenticationFilter.Config> {
+
+    private static final Logger logger = LoggerFactory.getLogger(AuthenticationFilter.class);
 
     @Autowired
     private RouteValidator validator;
 
     @Autowired
-    private JwtUtil jwtUtil;
+    private ObjectMapper objectMapper;
+
+    @Value("${jwt.secret.key}")
+    private String jwtSecretKey;
 
     public AuthenticationFilter() {
         super(Config.class);
@@ -25,26 +43,61 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
 
     @Override
     public GatewayFilter apply(Config config) {
-        return ((exchange, chain) -> {
+        return (exchange, chain) -> {
             if (validator.isSecured.test(exchange.getRequest())) {
-                if (!exchange.getRequest().getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
-                    throw new MissingAuthorizationHeaderException("Missing Authorization header");
+                String authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
+                if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+                    throw new MissingAuthorizationHeaderException("Missing or invalid Authorization header");
                 }
 
-                String authHeader = exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
-                if (authHeader != null && authHeader.startsWith("Bearer ")) {
-                    authHeader = authHeader.substring(7);
-                }
+                authHeader = authHeader.substring(7);
+
                 try {
-                    jwtUtil.validateToken(authHeader);
-
+                    JwtUtil.validateToken(authHeader, jwtSecretKey);
+                    CurrentUserContext currentUserContext = prepareCurrentContext(authHeader);
+                    String jsonCurrentUserContext = toJson(currentUserContext);
+                    String base64UserCurrentContext = SerializationUtils.toBase64(
+                            jsonCurrentUserContext.getBytes(StandardCharsets.UTF_8)
+                    );
+                    ServerHttpRequest request = exchange.getRequest().mutate()
+                            .headers(h -> h.set(GatewayDataConfiguration.CURRENT_USER_CONTEXT_HEADER, base64UserCurrentContext))
+                            .build();
+                    exchange = exchange.mutate().request(request).build();
+                } catch (ExpiredJwtException e) {
+                    throw new RuntimeException("Token has expired", e);
+                } catch (SignatureException e) {
+                    throw new RuntimeException("Invalid token signature", e);
                 } catch (Exception e) {
-                    System.out.println("invalid access...!");
-                    throw new RuntimeException("un authorized access to application");
+                    logger.warn("Unauthorized access detected: {}", e.getMessage());
+                    throw new RuntimeException("Unauthorized access to the application", e);
                 }
             }
             return chain.filter(exchange);
-        });
+        };
+    }
+
+
+    private CurrentUserContext prepareCurrentContext(String token) {
+        try {
+            String userIdentity = JwtUtil.extractClaimByKey(token, jwtSecretKey, JwtClaimsEnum.USER_IDENTITY.getClaim(), String.class);
+            CurrentUserContext currentUserContext = new CurrentUserContext();
+            currentUserContext.setUserIdentity(userIdentity);
+            return currentUserContext;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return null;
+    }
+
+    private String toJson(CurrentUserContext currentUserContext) {
+        String jsonCurrentUserContext = null;
+        try {
+            jsonCurrentUserContext = objectMapper.writeValueAsString(currentUserContext);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return jsonCurrentUserContext;
     }
 
     public static class Config {

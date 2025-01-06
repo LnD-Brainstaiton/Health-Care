@@ -12,6 +12,13 @@ spring:
   main:
     allow-bean-definition-overriding: true
 
+  springdoc:
+    api-docs:
+      path: /v3/api-docs      # Path for OpenAPI documentation
+    swagger-ui:
+      path: /swagger-ui.html  # Path for Swagger UI
+      url: /v3/api-docs       # Ensure Swagger UI is fetching from this path
+
 management:
   endpoint:
     health:
