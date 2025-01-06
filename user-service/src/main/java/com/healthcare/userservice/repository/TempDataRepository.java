@@ -17,4 +17,6 @@ public interface TempDataRepository extends JpaRepository<TempData, Long>, JpaSp
     boolean existsByFeatureCodeAndDataAndCheckerResponseAndOperationTypeAndRequestUrl(String featureCode, String data, int code, String operationType, String requestUrl);
 
     Optional<TempData> findByRequestIdAndCheckerResponse(String requestId, int code);
+
+    Optional<TempData> findByRequestIdAndIsActive(String requestId, Boolean aTrue);
 }

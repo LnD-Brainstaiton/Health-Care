@@ -127,6 +127,20 @@ public class AdminCheckerMackerImpl extends BaseService implements IAdminChecker
         }
     }
 
+    @Override
+    public void close(String requestId) {
+
+        Optional<TempData> tempData = tempDataRepository.findByRequestIdAndIsActive(requestId, Boolean.TRUE);
+        if (tempData.isEmpty()) {
+            throw new RecordNotFoundException(ResponseMessage.RECORD_NOT_FOUND);
+        }
+        TempData updatedTempData= tempData.get();
+        updatedTempData.setIsActive(Boolean.FALSE);
+        updatedTempData.setUpdatedBy(getUserIdentity());
+        updatedTempData.setCheckerId(getUserIdentity());
+        tempDataRepository.save(updatedTempData);
+    }
+
     private void processData(TempData tempData) {
 
         if (getHeaderValueForToken(tokenHeader).isEmpty())

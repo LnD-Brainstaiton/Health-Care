@@ -14,4 +14,6 @@ public interface IAdminCheckerMacker {
     ApiResponse<Page<TempDataResponse>> getTempData(String featureCode, String requestId, String startDate, String endDate, Boolean operationType, int page, int size);
 
     void requestCheck(ApproveRejectRequest request);
+
+    void close(String requestId);
 }

@@ -24,8 +24,7 @@ public class AdminCheckerMackerResource {
 
     @PostMapping("/admin/temp/request")
     public ApiResponse<AdminCheckerMackerResponse> saveTemp(@RequestBody RegistrationRequestTemp temp) throws MissingRequestValueException {
-        ApiResponse<AdminCheckerMackerResponse> response = iAdminCheckerMacker.saveTemp(temp);
-        return response;
+        return iAdminCheckerMacker.saveTemp(temp);
     }
 
     @PostMapping("admin/request/check")
@@ -47,4 +46,9 @@ public class AdminCheckerMackerResource {
         return iAdminCheckerMacker.getTempData(featureCode, requestId, startDate, endDate, operationType, page, size);
     }
 
+    @PostMapping("admin/close/request")
+    public ApiResponse<Void> close(@RequestParam String requestId){
+        iAdminCheckerMacker.close(requestId);
+        return ResponseUtils.createResponseObject(ApiResponseCode.OPERATION_SUCCESSFUL.getResponseCode(), ResponseMessage.OPERATION_SUCCESSFUL.getResponseMessage());
+    }
 }
