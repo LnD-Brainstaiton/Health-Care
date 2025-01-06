@@ -43,15 +43,15 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class AdminCheckerMackerImpl extends BaseService implements IAdminCheckerMacker {
+public class AdminCheckerMakerImpl extends BaseService implements IAdminCheckerMacker {
 
     private final TempDataRepository tempDataRepository;
     private final UniqueIdGeneratorImpl uniqueIdGenerator;
 
-    private static final Logger logger = LoggerFactory.getLogger(AdminCheckerMackerImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(AdminCheckerMakerImpl.class);
 
     @Value("${unique.id.checker.macker}")
-    private String checkerMacker;
+    private String checkerMaker;
 
     @Value("${unique.id.appointment.prefix}")
     private String appointmentPrefix;
@@ -268,7 +268,7 @@ public class AdminCheckerMackerImpl extends BaseService implements IAdminChecker
     private void assignRequestId(RegistrationRequestTemp temp, TempData tempData) {
         String prefix = temp.getFeatureCode().equals(GlobalFeatureCode.APPOINTMENT.getText())
                 ? appointmentPrefix
-                : checkerMacker;
+                : checkerMaker;
         tempData.setRequestId(uniqueIdGenerator.generateUniqueIdWithPrefix(prefix));
     }
 
