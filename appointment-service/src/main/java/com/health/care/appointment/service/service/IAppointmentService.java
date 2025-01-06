@@ -1,9 +1,13 @@
 package com.health.care.appointment.service.service;
 
 import com.health.care.appointment.service.domain.request.CreateAppointmentRequest;
+import com.health.care.appointment.service.domain.request.TimeSlotRequest;
 import com.health.care.appointment.service.domain.request.UpdateAppointmentRequest;
 import com.health.care.appointment.service.domain.response.AppointmentResponse;
 import com.health.care.appointment.service.domain.response.PaginationResponse;
+
+import java.time.LocalTime;
+import java.util.List;
 
 public interface IAppointmentService {
 
@@ -19,4 +23,5 @@ public interface IAppointmentService {
             String date,
             String time
     );
+    List<LocalTime> getAppointedTimeSlot(TimeSlotRequest request);
 }

@@ -146,7 +146,7 @@ public class DoctorServiceImpl implements IDoctorService {
 
         List<LocalTime> responseSlot = new ArrayList<>();
 
-        while (!timeSlot.getEndTime().isAfter(timeSlot.getStartTime())){
+        while (!timeSlot.getStartTime().isAfter(timeSlot.getEndTime())){
             int flag = 0;
             for(LocalTime appointedTimeSlot : appointedTimeSlots){
                 if(appointedTimeSlot.equals(timeSlot.getStartTime())){

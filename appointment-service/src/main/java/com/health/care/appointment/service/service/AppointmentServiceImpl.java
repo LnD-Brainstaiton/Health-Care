@@ -8,11 +8,12 @@ import com.health.care.appointment.service.domain.entity.Appointment;
 import com.health.care.appointment.service.domain.enums.ResponseMessage;
 import com.health.care.appointment.service.domain.request.CreateAppointmentRequest;
 import com.health.care.appointment.service.domain.request.PaginationRequest;
+import com.health.care.appointment.service.domain.request.TimeSlotRequest;
 import com.health.care.appointment.service.domain.request.UpdateAppointmentRequest;
 import com.health.care.appointment.service.domain.response.AppointmentResponse;
 import com.health.care.appointment.service.domain.response.PaginationResponse;
 import com.health.care.appointment.service.repository.AppointmentRepository;
-import com.health_care.id.generator.Api.UniqueIdGenerator;
+import com.health_care.unique_id_generator.Api.UniqueIdGenerator;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -96,6 +98,13 @@ public class AppointmentServiceImpl implements IAppointmentService{
                 PageUtils.mapToPaginationResponseDto(page, paginationRequest);
     }
 
+    @Override
+    public List<LocalTime> getAppointedTimeSlot(TimeSlotRequest request) {
+        validateTimeSlotRequest(request);
+
+        return appointmentRepository.getAppointedTime(request.getDoctorId(), request.getDate());
+    }
+
 
     private void validateAppointmentRequest(CreateAppointmentRequest request) {
         if(Objects.isNull(request) ||
@@ -120,6 +129,16 @@ public class AppointmentServiceImpl implements IAppointmentService{
             StringUtils.isBlank(request.getPatientContactNo()) ||
             Objects.isNull(request.getPatientGender()) ||
             Objects.isNull(request.getPatientAge())){
+            throw new InvalidRequestDataException(ResponseMessage.INVALID_REQUEST_DATA);
+        }
+    }
+
+    private void validateTimeSlotRequest(TimeSlotRequest request){
+
+        if(Objects.isNull(request) ||
+                StringUtils.isEmpty(request.getDoctorId()) ||
+                Objects.isNull(request.getDate())){
+
             throw new InvalidRequestDataException(ResponseMessage.INVALID_REQUEST_DATA);
         }
     }
