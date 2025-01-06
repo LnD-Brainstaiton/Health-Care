@@ -11,11 +11,20 @@ import com.healthcare.userservice.domain.request.DoctorInfoUpdateRequest;
 import com.healthcare.userservice.domain.response.CountResponse;
 import com.healthcare.userservice.domain.response.DoctorInfoResponse;
 import com.healthcare.userservice.domain.response.PaginationResponse;
+import com.healthcare.userservice.presenter.service.IntegrationService;
 import com.healthcare.userservice.repository.DoctorRepository;
 import com.healthcare.userservice.repository.UserRepository;
 import com.healthcare.userservice.repository.specification.DoctorSpecification;
 import com.healthcare.userservice.service.IDoctorService;
+import com.healthcare.userservice.common.exceptions.InvalidRequestDataException;
+import com.healthcare.userservice.common.exceptions.RecordNotFoundException;
+import com.healthcare.userservice.domain.entity.DoctorTimeSlot;
+import com.healthcare.userservice.domain.enums.WeekDays;
+import com.healthcare.userservice.domain.request.TimeSlotRequest;
+import com.healthcare.userservice.domain.response.TimeSlotResponse;
+import com.healthcare.userservice.repository.DoctorTimeSlotRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +32,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
+import java.time.LocalTime;
+import java.util.*;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -35,6 +47,8 @@ public class DoctorServiceImpl implements IDoctorService {
 
     private final DoctorRepository doctorRepository;
     private final DoctorMapper doctorMapper;
+    private final DoctorTimeSlotRepository timeSlotRepository;
+    private final IntegrationService integrationService;
     private final UserRepository userRepository;
     private final AuthConfig authConfig;
 
@@ -160,6 +174,45 @@ public class DoctorServiceImpl implements IDoctorService {
                 .build();
     }
 
+    @Override
+    public TimeSlotResponse getTimeSlotList(TimeSlotRequest request) {
+        validateTimeSlotRequest(request);
+
+        DayOfWeek dayofWeek = request.getDate().getDayOfWeek();
+        String day = WeekDays.getDay(dayofWeek.getValue());
+
+        Optional<DoctorTimeSlot> timeSlotOpt = timeSlotRepository.findByDoctorIdAndDaysOfWeekContainingIgnoreCase(request.getDoctorId(), day);
+        if(timeSlotOpt.isEmpty()) {
+            throw new RecordNotFoundException(ResponseMessage.RECORD_NOT_FOUND);
+        }
+
+        DoctorTimeSlot timeSlot = timeSlotOpt.get();
+        List<LocalTime> appointedTimeSlots = integrationService.getTimeSlots(request);
+
+        List<LocalTime> responseSlot = new ArrayList<>();
+
+        while (!timeSlot.getStartTime().isAfter(timeSlot.getEndTime())){
+            int flag = 0;
+            for(LocalTime appointedTimeSlot : appointedTimeSlots){
+                if(appointedTimeSlot.equals(timeSlot.getStartTime())){
+                    flag = 1;
+                    break;
+                }
+            }
+            if(flag == 0){
+                responseSlot.add(timeSlot.getStartTime());
+            }
+
+            timeSlot.setStartTime(timeSlot.getStartTime().plusMinutes(30));
+        }
+
+        TimeSlotResponse timeSlotResponse = new TimeSlotResponse();
+        timeSlotResponse.setDoctorId(request.getDoctorId());
+        timeSlotResponse.setTimeSlotList(responseSlot);
+
+        return timeSlotResponse;
+    }
+
     private ApiResponse<Void> updateDoctorDetails(Doctor doctor, DoctorInfoUpdateRequest request) {
         doctor.setFirstname(request.getFirstname());
         doctor.setLastname(request.getLastname());
@@ -184,5 +237,15 @@ public class DoctorServiceImpl implements IDoctorService {
                 .responseCode(ApiResponseCode.OPERATION_SUCCESSFUL.getResponseCode())
                 .responseMessage(ResponseMessage.OPERATION_SUCCESSFUL.getResponseMessage())
                 .build();
+    }
+
+    private void validateTimeSlotRequest(TimeSlotRequest request){
+
+        if(Objects.isNull(request) ||
+                StringUtils.isEmpty(request.getDoctorId()) ||
+                Objects.isNull(request.getDate())){
+
+            throw new InvalidRequestDataException(ResponseMessage.INVALID_REQUEST_DATA);
+        }
     }
 }

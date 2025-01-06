@@ -17,4 +17,7 @@ public interface IDoctorService {
     ApiResponse<CountResponse> getDoctorsCount();
 
     ApiResponse<String> deleteDoctorById(String id);
+
+    
+    com.healthcare.userservice.domain.response.TimeSlotResponse getTimeSlotList(com.healthcare.userservice.domain.request.TimeSlotRequest request);
 }
