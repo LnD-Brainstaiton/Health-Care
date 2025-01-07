@@ -6,10 +6,8 @@ import com.healthcare.userservice.common.exceptions.InvalidRequestDataException;
 import com.healthcare.userservice.common.utils.AppUtils;
 import com.healthcare.userservice.config.AuthConfig;
 import com.healthcare.userservice.domain.common.ApiResponse;
-import com.healthcare.userservice.domain.entity.Admin;
-import com.healthcare.userservice.domain.entity.Doctor;
-import com.healthcare.userservice.domain.entity.Patient;
-import com.healthcare.userservice.domain.entity.User;
+import com.healthcare.userservice.domain.dto.TimeSlotDto;
+import com.healthcare.userservice.domain.entity.*;
 import com.healthcare.userservice.domain.enums.ApiResponseCode;
 import com.healthcare.userservice.domain.enums.ResponseMessage;
 import com.healthcare.userservice.domain.enums.Role;
@@ -21,10 +19,7 @@ import com.healthcare.userservice.domain.response.AdminInfoResponse;
 import com.healthcare.userservice.domain.response.CountResponse;
 import com.healthcare.userservice.domain.response.PaginationResponse;
 import com.healthcare.userservice.domain.response.RegisterResponse;
-import com.healthcare.userservice.repository.AdminRepository;
-import com.healthcare.userservice.repository.DoctorRepository;
-import com.healthcare.userservice.repository.PatientRepository;
-import com.healthcare.userservice.repository.UserRepository;
+import com.healthcare.userservice.repository.*;
 import com.healthcare.userservice.repository.specification.AdminSpecification;
 import com.healthcare.userservice.service.IRegistrationService;
 import jakarta.transaction.Transactional;
@@ -60,6 +55,8 @@ public class RegistrationServiceImpl implements IRegistrationService {
     private final AdminMapper adminMapper;
     private final RegisterMapper registerMapper;
     private final UniqueIdGeneratorImpl uniqueIdGenerator;
+    private final DoctorTimeSlotRepository timeSlotRepository;
+
 
     @Value("${unique.id.patient.prefix}")
     private String patientPrefix;
@@ -233,6 +230,10 @@ public class RegistrationServiceImpl implements IRegistrationService {
 
         request.setUniqueId(user.getUserId());
 
+        for(TimeSlotDto dto: request.getTimeslots()){
+            saveTimeSlot(dto, user.getUserId());
+        }
+
         // Save the corresponding entity (Patient, Doctor, or Admin)
         saveEntityFunction.accept(request);
 
@@ -295,6 +296,27 @@ public class RegistrationServiceImpl implements IRegistrationService {
                 .isActive(Boolean.TRUE)
                 .build();
         doctorRepository.save(doctor);
+    }
+
+    private void saveTimeSlot(TimeSlotDto dto, String doctorId){
+        if(Objects.isNull(dto)){
+            return;
+        }
+
+        DoctorTimeSlot timeSlot = new DoctorTimeSlot();
+        timeSlot.setDoctorId(doctorId);
+        timeSlot.setStartTime(dto.getStartTime());
+        timeSlot.setEndTime(dto.getEndTime());
+        timeSlot.setDaysOfWeek(convertListToSingleString(dto.getWeekdays()));
+
+        timeSlotRepository.save(timeSlot);
+    }
+
+    private String convertListToSingleString(List<String> stringList){
+        if(!stringList.isEmpty()){
+            return String.join(",", stringList);
+        }
+        return null;
     }
 
     private void saveAdmin(RegisterRequest request) {

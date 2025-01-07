@@ -1,11 +1,15 @@
 package com.healthcare.userservice.domain.request;
 
+import com.healthcare.userservice.domain.dto.TimeSlotDto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -37,5 +41,7 @@ public class RegisterRequest {
     private String department;
     private String specialities;
     private double fee;
+
+    List<TimeSlotDto> timeslots;
 
 }
