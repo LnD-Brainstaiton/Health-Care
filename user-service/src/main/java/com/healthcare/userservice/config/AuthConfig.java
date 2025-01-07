@@ -59,10 +59,4 @@ public class AuthConfig {
         return config.getAuthenticationManager();
     }
 
-    @Bean
-    public ObjectMapper objectMapper() {
-        return new ObjectMapper();
-    }
-
-
 }
