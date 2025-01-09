@@ -230,7 +230,7 @@ public class RegistrationServiceImpl implements IRegistrationService {
 
         request.setUniqueId(user.getUserId());
 
-        for(TimeSlotDto dto: request.getTimeslots()){
+        for(TimeSlotDto dto: request.getTimeSlots()){
             saveTimeSlot(dto, user.getUserId());
         }
 
@@ -249,7 +249,7 @@ public class RegistrationServiceImpl implements IRegistrationService {
         }
 
         return User.builder()
-                .userName(uniqueId)
+                .userName(request.getMobile())
                 .userId(uniqueId)
                 .password(authConfig.passwordEncoder().encode(request.getPassword()))
                 .userType(role)

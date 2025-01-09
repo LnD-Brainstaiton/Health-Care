@@ -161,7 +161,7 @@ public class AdminCheckerMackerImpl extends BaseService implements IAdminChecker
                 if (rootNode.isObject()) { // Ensure the root node is an object
                     ObjectNode objectNode = (ObjectNode) rootNode;
                     if (GlobalFeatureCode.APPOINTMENT.getText().equals(tempData.getFeatureCode())) {
-                        objectNode.put("requestId", tempData.getRequestId());
+                        objectNode.put("appointmentNo", tempData.getRequestId());
                     }
                     object = objectMapper.treeToValue(objectNode, Object.class); // Convert to your desired object class
                 } else {
@@ -246,6 +246,7 @@ public class AdminCheckerMackerImpl extends BaseService implements IAdminChecker
 
         existingData.setMakerId(getUserIdentity());
         existingData.setData(data);
+        existingData.setCheckerResponse(ResponseStatusType.PENDING.getCode());
         existingData.setMessage(temp.getMessage());
 
         tempDataRepository.save(existingData);

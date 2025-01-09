@@ -42,6 +42,6 @@ public class RegisterRequest {
     private String specialities;
     private double fee;
 
-    List<TimeSlotDto> timeslots;
+    List<TimeSlotDto> timeSlots;
 
 }
