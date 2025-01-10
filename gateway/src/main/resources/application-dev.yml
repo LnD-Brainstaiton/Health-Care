@@ -19,12 +19,7 @@ spring:
             - Path=/api/v1/appointment/**  # Route all requests to /api/v1/appointment/** to the appointment service
           filters:
             - AuthenticationFilter
-        - id: two-factor-authentication-service
-          uri: lb://two-factor-authentication-service  # Load balanced URI for the appointment service
-          predicates:
-            - Path=/api/v1/tfa/**  # Route all requests to /api/v1/appointment/** to the appointment service
-          filters:
-            - AuthenticationFilter
+
       globalcors:
         corsConfigurations:
           '[/**]':

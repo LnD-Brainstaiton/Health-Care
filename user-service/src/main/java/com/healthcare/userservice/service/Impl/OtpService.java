@@ -3,6 +3,7 @@ package com.healthcare.userservice.service.Impl;
 import com.healthcare.userservice.domain.mapper.NotificationMapper;
 import com.healthcare.userservice.domain.request.OtpVerificationRequest;
 import com.healthcare.userservice.domain.request.TfaRequest;
+import com.healthcare.userservice.domain.request.TfaVerifyRequest;
 import com.healthcare.userservice.domain.response.TfaResponse;
 import com.healthcare.userservice.presenter.rest.event.NotificationEvent;
 import com.healthcare.userservice.presenter.service.IntegrationService;
@@ -29,5 +30,10 @@ public class OtpService implements IOtpService {
         }
 
         return null;
+    }
+
+    @Override
+    public Boolean verifyOtp(TfaVerifyRequest tfaVerifyRequest) {
+        return integrationService.verifyOtp(tfaVerifyRequest);
     }
 }

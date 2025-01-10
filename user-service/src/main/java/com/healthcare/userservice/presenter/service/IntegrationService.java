@@ -5,6 +5,7 @@ import com.healthcare.userservice.domain.common.ApiResponse;
 import com.healthcare.userservice.domain.enums.ApiResponseCode;
 import com.healthcare.userservice.domain.enums.ResponseMessage;
 import com.healthcare.userservice.domain.request.TfaRequest;
+import com.healthcare.userservice.domain.request.TfaVerifyRequest;
 import com.healthcare.userservice.domain.request.TimeSlotRequest;
 import com.healthcare.userservice.domain.response.TfaResponse;
 import com.healthcare.userservice.presenter.rest.event.NotificationEvent;
@@ -42,16 +43,21 @@ public class IntegrationService {
 
     }
 
+    public Boolean verifyOtp(TfaVerifyRequest request) {
+        ApiResponse<Boolean> tfaResponse = tfaFeignClient.validateOtp(request);
+        if (ApiResponseCode.isNotOperationSuccessful(tfaResponse)
+                || Objects.isNull(tfaResponse.getData())) {
+            throw new FeignClientException(ResponseMessage.INTERNAL_SERVICE_EXCEPTION);
+        }
+
+        return tfaResponse.getData();
+    }
+
     public Boolean sendNotification(NotificationEvent request) {
         ApiResponse<Boolean> notificationResponse
                 = notificationFeignClient.sendNotification(request);
 
-        if (ApiResponseCode.isNotOperationSuccessful(notificationResponse)
-                || Objects.isNull(notificationResponse.getData())) {
-            throw new FeignClientException(ResponseMessage.INTERNAL_SERVICE_EXCEPTION);
-        }
-
-        return notificationResponse.getData();
+        return Boolean.TRUE;
 
     }
 

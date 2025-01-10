@@ -14,7 +14,7 @@ public class RouteValidator {
             "/api/v1/user/patient/register",
             "/eureka",
             "/api/v1/user/generate-otp",
-            "/api/v1/tfa/validate-otp",
+            "/api/v1/user/validate-otp",
             "/api/v1/user/check-mobile"
     );
     public Predicate<ServerHttpRequest> isSecured =

@@ -42,7 +42,7 @@ eureka:
     prefer-ip-address: true
 
 service:
-  mode: dummy
+  mode: real
 
 otp:
   bad-odt-limit: 10

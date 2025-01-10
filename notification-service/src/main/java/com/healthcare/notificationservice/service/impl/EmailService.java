@@ -19,6 +19,8 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Map;
@@ -60,7 +62,9 @@ public class EmailService implements IEmailService {
 
     private String loadEmailTemplate(String templateName) throws IOException {
         ClassPathResource resource = new ClassPathResource("templates/" + templateName);
-        return new String(Files.readAllBytes(Paths.get(resource.getURI())));
+        try (InputStream inputStream = resource.getInputStream()) {
+            return new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+        }
     }
 
     private String mapTheValue(String htmlContent, Map<String, String> templateData) {
