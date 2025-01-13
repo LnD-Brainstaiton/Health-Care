@@ -19,6 +19,8 @@ import com.healthcare.userservice.domain.response.AdminInfoResponse;
 import com.healthcare.userservice.domain.response.CountResponse;
 import com.healthcare.userservice.domain.response.PaginationResponse;
 import com.healthcare.userservice.domain.response.RegisterResponse;
+import com.healthcare.userservice.presenter.rest.event.NotificationEvent;
+import com.healthcare.userservice.presenter.service.IntegrationService;
 import com.healthcare.userservice.repository.*;
 import com.healthcare.userservice.repository.specification.AdminSpecification;
 import com.healthcare.userservice.service.IRegistrationService;
@@ -56,6 +58,8 @@ public class RegistrationServiceImpl implements IRegistrationService {
     private final RegisterMapper registerMapper;
     private final UniqueIdGeneratorImpl uniqueIdGenerator;
     private final DoctorTimeSlotRepository timeSlotRepository;
+    private final NotificationService notificationService;
+    private final IntegrationService integrationService;
 
 
     @Value("${unique.id.patient.prefix}")
@@ -230,7 +234,7 @@ public class RegistrationServiceImpl implements IRegistrationService {
 
         request.setUniqueId(user.getUserId());
 
-        for(TimeSlotDto dto: request.getTimeSlots()){
+        for (TimeSlotDto dto : request.getTimeSlots()) {
             saveTimeSlot(dto, user.getUserId());
         }
 
@@ -238,13 +242,21 @@ public class RegistrationServiceImpl implements IRegistrationService {
         saveEntityFunction.accept(request);
 
         logger.info("{} registration successful for mobile: {}", role.name(), user.getUserId());
+
+        sendEmail(request);
+
         return registerMapper.toRegisterResponse(savedUser);
+    }
+
+    private void sendEmail(RegisterRequest request) {
+        NotificationEvent notificationEvent = notificationService.prepareNotificationEventForSignup(request);
+        integrationService.sendNotification(notificationEvent);
     }
 
     private User createUser(RegisterRequest request, Role role) {
         String uniqueIdPrefix = getUniqueIdPrefixForRole(role);
         String uniqueId = uniqueIdGenerator.generateUniqueIdWithPrefix(uniqueIdPrefix);
-        if(role == Role.DOCTOR) {
+        if (role == Role.DOCTOR) {
             request.setPassword(AppUtils.generateRandomString(8));
         }
 
@@ -298,8 +310,8 @@ public class RegistrationServiceImpl implements IRegistrationService {
         doctorRepository.save(doctor);
     }
 
-    private void saveTimeSlot(TimeSlotDto dto, String doctorId){
-        if(Objects.isNull(dto)){
+    private void saveTimeSlot(TimeSlotDto dto, String doctorId) {
+        if (Objects.isNull(dto)) {
             return;
         }
 
@@ -312,8 +324,8 @@ public class RegistrationServiceImpl implements IRegistrationService {
         timeSlotRepository.save(timeSlot);
     }
 
-    private String convertListToSingleString(List<String> stringList){
-        if(!stringList.isEmpty()){
+    private String convertListToSingleString(List<String> stringList) {
+        if (!stringList.isEmpty()) {
             return String.join(",", stringList);
         }
         return null;

@@ -1,6 +1,5 @@
 package com.healthcare.userservice.service.Impl;
 
-import com.healthcare.userservice.domain.mapper.NotificationMapper;
 import com.healthcare.userservice.domain.request.OtpVerificationRequest;
 import com.healthcare.userservice.domain.request.TfaRequest;
 import com.healthcare.userservice.domain.request.TfaVerifyRequest;
@@ -18,13 +17,13 @@ public class OtpService implements IOtpService {
     IntegrationService integrationService;
 
     @Autowired
-    NotificationMapper notificationMapper;
+    NotificationService notificationService;
 
     @Override
     public TfaResponse generateAndSendOtp(OtpVerificationRequest otpVerificationRequest) {
         TfaResponse tfaResponse = integrationService.generateOtp(new TfaRequest(otpVerificationRequest.getUserId()));
 
-        NotificationEvent notificationEvent = notificationMapper.prepareNotificationEventForSignup(tfaResponse, otpVerificationRequest);
+        NotificationEvent notificationEvent = notificationService.prepareNotificationEventForOtp(tfaResponse, otpVerificationRequest);
         if (integrationService.sendNotification(notificationEvent)) {
             return tfaResponse;
         }
