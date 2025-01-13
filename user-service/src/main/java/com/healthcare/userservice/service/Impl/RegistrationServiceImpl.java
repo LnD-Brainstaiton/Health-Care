@@ -234,8 +234,10 @@ public class RegistrationServiceImpl implements IRegistrationService {
 
         request.setUniqueId(user.getUserId());
 
-        for (TimeSlotDto dto : request.getTimeSlots()) {
-            saveTimeSlot(dto, user.getUserId());
+        if (request.getTimeSlots() != null) {
+            for (TimeSlotDto dto : request.getTimeSlots()) {
+                saveTimeSlot(dto, user.getUserId());
+            }
         }
 
         // Save the corresponding entity (Patient, Doctor, or Admin)
