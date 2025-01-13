@@ -1,4 +1,4 @@
-package com.health.care.appointment.service.api;
+package com.health.care.appointment.service.presenter.rest.api;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.health.care.appointment.service.common.utils.AppUtils;
