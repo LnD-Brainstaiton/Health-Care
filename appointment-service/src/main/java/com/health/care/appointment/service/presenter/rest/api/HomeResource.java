@@ -1,4 +1,4 @@
-package com.health.care.appointment.service.api;
+package com.health.care.appointment.service.presenter.rest.api;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
