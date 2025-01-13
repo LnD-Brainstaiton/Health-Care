@@ -23,8 +23,6 @@ spring:
   config:
     import: id-generator.yml
 
-
-
 management:
   endpoint:
     health:

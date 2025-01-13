@@ -36,13 +36,16 @@
             color: #333;
         }
 
-        .credentials-box {
-            margin-top: 20px;
+        .otp-box {
+            display: inline-block;
             padding: 20px;
-            background-color: #bbdefb; /* Light blue for credentials box */
+            background-color: #bbdefb; /* Light blue for OTP box */
             border-radius: 5px;
-            font-size: 16px;
-            color: #0d47a1; /* Darker blue for text */
+            font-size: 24px;
+            font-weight: bold;
+            color: #0d47a1; /* Darker blue for OTP text */
+            text-align: center;
+            margin-top: 20px;
             border: 2px solid #2196f3; /* Matching border color */
         }
 
@@ -64,17 +67,17 @@
     <div class="email-header">{{title}}</div>
     <div class="email-body">
         <p>Hello {{name}},</p>
-        <p>Welcome to <strong>Health Care</strong>! Your account has been successfully created.</p>
-        <p>Here are your login details:</p>
-        <div class="credentials-box">
-            <p><strong>User ID:</strong> {{userId}}</p>
-            <p><strong>Password:</strong> {{password}}</p>
+        <p>Welcome to <strong>Health Care</strong>! We have received a request to verify your identity.</p>
+        <p>Your One-Time Password (OTP) is:</p>
+        <div class="otp-box">
+            <strong>{{otp}}</strong>
         </div>
-        <p>Please keep this information secure and do not share it with anyone.</p>
-        <p>If you have any issues logging in, feel free to contact us.</p>
+        <p>This OTP is valid for {{minutes}} minutes and will help you complete your verification process. Please do not
+            share it with anyone.</p>
+        <p>If you did not request this, please disregard this email.</p>
     </div>
     <div class="footer">
-        <p>Thank you for choosing <strong>Health Care</strong>!</p>
+        <p>Thank you for using <strong>Health Care</strong>!</p>
         <p><small>If you have any questions, please contact us at <a href="mailto:support@healthcare.com">support@healthcare.com</a></small>
         </p>
     </div>

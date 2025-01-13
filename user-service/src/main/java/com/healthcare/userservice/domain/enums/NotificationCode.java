@@ -7,6 +7,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum NotificationCode {
 
+    OTP_FOR_SIGNUP("OTPSIGNUP101"),
+
     SIGNUP("SIGNUP101");
 
     String notificationCode;
