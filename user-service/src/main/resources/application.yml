@@ -27,7 +27,8 @@ spring:
       url: /v3/api-docs       # Ensure Swagger UI is fetching from this path
 
   config:
-    import: id-generator.yml
+    import: id-generator.yml, kafka.yml
+
 
 management:
   endpoint:
