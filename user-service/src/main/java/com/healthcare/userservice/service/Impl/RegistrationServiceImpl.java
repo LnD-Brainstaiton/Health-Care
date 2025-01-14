@@ -9,6 +9,7 @@ import com.healthcare.userservice.domain.common.ApiResponse;
 import com.healthcare.userservice.domain.dto.TimeSlotDto;
 import com.healthcare.userservice.domain.entity.*;
 import com.healthcare.userservice.domain.enums.ApiResponseCode;
+import com.healthcare.userservice.domain.enums.KafkaTopicEnum;
 import com.healthcare.userservice.domain.enums.ResponseMessage;
 import com.healthcare.userservice.domain.enums.Role;
 import com.healthcare.userservice.domain.mapper.AdminMapper;
@@ -21,6 +22,7 @@ import com.healthcare.userservice.domain.response.PaginationResponse;
 import com.healthcare.userservice.domain.response.RegisterResponse;
 import com.healthcare.userservice.presenter.rest.event.NotificationEvent;
 import com.healthcare.userservice.presenter.service.IntegrationService;
+import com.healthcare.userservice.presenter.service.KafkaProducerService;
 import com.healthcare.userservice.repository.*;
 import com.healthcare.userservice.repository.specification.AdminSpecification;
 import com.healthcare.userservice.service.IRegistrationService;
@@ -60,6 +62,7 @@ public class RegistrationServiceImpl implements IRegistrationService {
     private final DoctorTimeSlotRepository timeSlotRepository;
     private final NotificationService notificationService;
     private final IntegrationService integrationService;
+    private final KafkaProducerService kafkaProducerService;
 
 
     @Value("${unique.id.patient.prefix}")
@@ -252,7 +255,7 @@ public class RegistrationServiceImpl implements IRegistrationService {
 
     private void sendEmail(RegisterRequest request) {
         NotificationEvent notificationEvent = notificationService.prepareNotificationEventForSignup(request);
-        integrationService.sendNotification(notificationEvent);
+        kafkaProducerService.publishEvent(KafkaTopicEnum.DYNAMIC_NOTIFICATION.getTopic(), notificationEvent);
     }
 
     private User createUser(RegisterRequest request, Role role) {

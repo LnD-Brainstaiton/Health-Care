@@ -3,7 +3,6 @@ package com.healthcare.kafka.config;
 import com.healthcare.kafka.config.data.KafkaProducerConfigData;
 import com.healthcare.kafka.interceptor.KafkaProducerInterceptor;
 import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.common.config.SslConfigs;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,7 +44,7 @@ public class KafkaProducerConfig {
         configProps.put(ProducerConfig.ACKS_CONFIG, kafkaProducerConfigData.getAcks());
         configProps.put(ProducerConfig.REQUEST_TIMEOUT_MS_CONFIG, kafkaProducerConfigData.getRequestTimeoutMs());
         configProps.put(ProducerConfig.RETRIES_CONFIG, kafkaProducerConfigData.getRetryCount());
-        
+
         return new DefaultKafkaProducerFactory<>(configProps);
     }
 

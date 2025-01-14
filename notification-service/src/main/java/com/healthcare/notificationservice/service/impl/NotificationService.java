@@ -31,6 +31,11 @@ public class NotificationService implements INotificationService {
 
     @Override
     public void processDynamicNotification(EventWrapper<NotificationEvent> event) throws IOException {
-
+        NotificationEvent notificationEvent = event.getData();
+        if (NotificationType.SMS.equals(notificationEvent.getNotificationType())) {
+            smsService.sendSms(notificationEvent.getReceiverDto().getReceiverPhone());
+        } else if (NotificationType.EMAIL.equals(notificationEvent.getNotificationType())) {
+            emailService.sendHtmlEmail(notificationEvent);
+        }
     }
 }
