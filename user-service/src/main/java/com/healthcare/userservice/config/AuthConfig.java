@@ -1,6 +1,7 @@
 package com.healthcare.userservice.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.healthcare.userservice.repository.PublicApiRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,9 +15,17 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import java.util.List;
+
 @Configuration
 @EnableWebSecurity
 public class AuthConfig {
+
+    private final PublicApiRepository apiRepository;
+
+    public AuthConfig(PublicApiRepository apiRepository) {
+        this.apiRepository = apiRepository;
+    }
 
     @Bean
     public UserDetailsService userDetailsService() {
@@ -25,18 +34,14 @@ public class AuthConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        // TODO Need To add url in DB or Properties
+        List<String> activeUrls = apiRepository.findActiveUrls();
+
+        String[] urlPatterns = activeUrls.toArray(new String[0]);
+
         return http.csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/v1/user/token", "/api/v1/user/patient/register", "/api/v1/user/admin/create", "/api/v1/user/doctor/create",
-                        "/api/v1/user/doctor/all", "/api/v1/user/doctor/count", "/api/v1/user/admin/count", "/api/v1/user/patient/count",
-                        "/api/v1/user/admin/{id}", "/api/v1/user/patient/{id}", "/api/v1/user/admin/all", "/api/v1/user/patient/all",
-                        "/api/v1/user/admin/update", "/api/v1/user/doctor/{id}", "/api/v1/user/blood-group-options",
-                        "/api/v1/user/designation-options", "/api/v1/user/department-options", "/api/v1/user/gender-options", "/v3/api-docs/**", "/swagger-ui/**",
-                        "/api/v1/user/designation-options", "/api/v1/user/department-options", "/api/v1/user/gender-options",
-                        "/api/v1/user/check-mobile", "/api/v1/user/admin/temp/request", "/api/v1/user/admin/tempdata",
-                        "/api/v1/user/pending-admin-count", "/api/v1/user/pending-doctor-count", "/api/v1/user/pending-appointment-count",
-                        "/api/v1/user/admin/request/check","/api/v1/user/generate-otp","/api/v1/user/validate-otp").permitAll()
+                .requestMatchers(urlPatterns).permitAll()
+                .anyRequest().authenticated()
                 .and()
                 .build();
     }
