@@ -13,6 +13,7 @@
         <option value="$PROJECT_DIR$/appointment-service/appointment-service/pom.xml" />
         <option value="$PROJECT_DIR$/notification-service/pom.xml" />
         <option value="$PROJECT_DIR$/kafka/pom.xml" />
+        <option value="$PROJECT_DIR$/meta-service/pom.xml" />
       </list>
     </option>
   </component>

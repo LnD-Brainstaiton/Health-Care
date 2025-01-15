@@ -33,6 +33,15 @@
         </processorPath>
         <module name="kafka-service" />
       </profile>
+      <profile name="Annotation profile for meta-service" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/unknown/lombok-unknown.jar" />
+        </processorPath>
+        <module name="meta-service" />
+      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="kafka" target="17" />
@@ -49,6 +58,7 @@
       <module name="kafka (1)" options="-parameters" />
       <module name="kafka (2)" options="-parameters" />
       <module name="kafka-service" options="-parameters -Amapstruct.defaultComponentModel=spring" />
+      <module name="meta-service" options="-parameters" />
       <module name="notification-service" options="-parameters" />
       <module name="two-factor-authentication-service" options="-parameters" />
       <module name="unique-id-generator" options="-parameters" />
