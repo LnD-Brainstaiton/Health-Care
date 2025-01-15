@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.healthcare.userservice.common.exceptions.RecordNotFoundException;
 import com.healthcare.userservice.common.utils.SerializationUtils;
 import com.healthcare.userservice.domain.enums.ResponseMessage;
-import com.healthcare.userservice.domain.response.CurrentUserContext;
+import com.healthcare.userservice.domain.dto.CurrentUserContext;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
