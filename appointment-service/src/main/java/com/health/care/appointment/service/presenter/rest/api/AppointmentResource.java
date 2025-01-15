@@ -45,6 +45,21 @@ public class AppointmentResource {
         return response;
     }
 
+//    @GetMapping("/list")
+//    ApiResponse<PaginationResponse<AppointmentResponse>> listAppointments(
+//            @RequestParam(required = false, defaultValue = "0") Integer pageNumber,
+//            @RequestParam(required = false, defaultValue = "10") Integer pageSize,
+//            @RequestParam(required = false, defaultValue = "id") String sortBy,
+//            @RequestParam(required = false, defaultValue = "desc") String sortOrder,
+//            @RequestParam(required = false) String doctorId,
+//            @RequestParam(required = false) String patientId,
+//            @RequestParam(required = false) String appointmentId,
+//            @RequestParam(required = false) @JsonFormat(pattern = "yyyy-MM-dd") String date,
+//            @RequestParam(required = false) @JsonFormat(pattern = "HH:mm:ss") String time
+//    ){
+//        return ResponseUtils.createResponseObject(ResponseMessage.OPERATION_SUCCESSFUL, appointmentService.listOfAppointments(pageNumber, pageSize, sortBy, sortOrder, doctorId, patientId, appointmentId, date, time));
+//    }
+
     @GetMapping("/list")
     ApiResponse<PaginationResponse<AppointmentResponse>> listAppointments(
             @RequestParam(required = false, defaultValue = "0") Integer pageNumber,
@@ -55,10 +70,16 @@ public class AppointmentResource {
             @RequestParam(required = false) String patientId,
             @RequestParam(required = false) String appointmentId,
             @RequestParam(required = false) @JsonFormat(pattern = "yyyy-MM-dd") String date,
-            @RequestParam(required = false) @JsonFormat(pattern = "HH:mm:ss") String time
-    ){
-        return ResponseUtils.createResponseObject(ResponseMessage.OPERATION_SUCCESSFUL, appointmentService.listOfAppointments(pageNumber, pageSize, sortBy, sortOrder, doctorId, patientId, appointmentId, date, time));
+            @RequestParam(required = false) @JsonFormat(pattern = "HH:mm:ss") String time,
+            @RequestParam(required = false) @JsonFormat(pattern = "yyyy-MM-dd") String fromDate,
+            @RequestParam(required = false) @JsonFormat(pattern = "yyyy-MM-dd") String toDate
+    ) {
+        return ResponseUtils.createResponseObject(
+                ResponseMessage.OPERATION_SUCCESSFUL,
+                appointmentService.listOfAppointments(pageNumber, pageSize, sortBy, sortOrder, doctorId, patientId, appointmentId, date, time, fromDate, toDate)
+        );
     }
+
 
     @PostMapping("/time-slot")
     public ApiResponse<List<LocalTime>> getAppointmentTimeSlot(@RequestBody TimeSlotRequest request) {

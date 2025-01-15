@@ -80,13 +80,44 @@ public class AppointmentServiceImpl implements IAppointmentService{
         return null;
     }
 
+//    @Override
+//    public PaginationResponse<AppointmentResponse> listOfAppointments(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder, String doctorId, String patientId, String appointmentId, String date, String time, String fromDate, String toDate) {
+//
+//            final PaginationRequest paginationRequest = PageUtils.mapToPaginationRequest(pageNumber, pageSize, sortBy, sortOrder);
+//            final Pageable pageable = PageUtils.getPageable(paginationRequest);
+//
+//            LocalTime convertedTime = LocalTime.MIDNIGHT;
+//            LocalDate convertedFromDate = null;
+//            LocalDate convertedToDate = null;
+//
+//            if (!StringUtils.isEmpty(time)) {
+//                convertedTime = DateTimeUtils.convertToLocalTime(time, "HH:mm");
+//            }
+//            if (!StringUtils.isEmpty(fromDate)) {
+//                convertedFromDate = DateTimeUtils.convertToLocalDate(fromDate, "yyyy-MM-dd");
+//            }
+//            if (!StringUtils.isEmpty(toDate)) {
+//                convertedToDate = DateTimeUtils.convertToLocalDate(toDate, "yyyy-MM-dd");
+//            }
+//
+//            final Page<AppointmentResponse> page = appointmentRepository.findByParam(
+//                            doctorId, patientId, appointmentId, convertedFromDate, convertedToDate, convertedTime, pageable)
+//                    .map(AppointmentResponse::from);
+//
+//            return page.getContent().isEmpty() ?
+//                    PageUtils.mapToPaginationResponseDto(Page.empty(), paginationRequest) :
+//                    PageUtils.mapToPaginationResponseDto(page, paginationRequest);
+//    }
+
     @Override
-    public PaginationResponse<AppointmentResponse> listOfAppointments(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder, String doctorId, String patientId, String appointmentId, String date, String time) {
+    public PaginationResponse<AppointmentResponse> listOfAppointments(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder, String doctorId, String patientId, String appointmentId, String date, String time, String fromDate, String toDate) {
 
         final PaginationRequest paginationRequest = PageUtils.mapToPaginationRequest(pageNumber, pageSize, sortBy, sortOrder);
         final Pageable pageable = PageUtils.getPageable(paginationRequest);
 
-        LocalDate convertedDate = LocalDate.of(1998,1,1);
+        LocalDate convertedDate = LocalDate.of(2023,1,1);
+        LocalDate convertedFromDate = LocalDate.of(2023,1,1);
+        LocalDate convertedToDate = LocalDate.of(2050,1,1);
         LocalTime convertedTime = LocalTime.MIDNIGHT;
 
         if (!StringUtils.isEmpty(date)) {
@@ -96,13 +127,23 @@ public class AppointmentServiceImpl implements IAppointmentService{
             convertedTime = DateTimeUtils.convertToLocalTime(time, "HH:mm");
         }
 
+        if (!StringUtils.isEmpty(fromDate)) {
+            convertedFromDate = DateTimeUtils.convertToLocalDate(fromDate, "yyyy-MM-dd");
+        }
+        if (!StringUtils.isEmpty(toDate)) {
+            convertedToDate = DateTimeUtils.convertToLocalDate(toDate, "yyyy-MM-dd");
+        }
 
-        final Page<AppointmentResponse> page = appointmentRepository.findByParam(doctorId, patientId, appointmentId, convertedDate, convertedTime, pageable).map(AppointmentResponse::from);
+
+        final Page<AppointmentResponse> page = appointmentRepository.findByParam(doctorId, patientId, appointmentId, convertedDate, convertedTime, convertedFromDate, convertedToDate,  pageable).map(AppointmentResponse::from);
 
         return page.getContent().isEmpty() ?
                 PageUtils.mapToPaginationResponseDto(Page.empty(), paginationRequest) :
                 PageUtils.mapToPaginationResponseDto(page, paginationRequest);
     }
+
+
+
 
     @Override
     public ApiResponse<CountResponse> getDoctorsUpcomingAppointmentCount(String doctorId,String date, String time) {

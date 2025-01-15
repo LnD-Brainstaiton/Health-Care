@@ -19,7 +19,9 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
             "(:patientId IS NULL OR a.patientId LIKE %:patientId%) and " +
             "(:appointmentId IS NULL OR a.appointmentNo LIKE %:appointmentId%) and " +
             "(a.appointmentDate >= :date) and " +
-            "(a.appointmentTime >= :time)" +
+            "(a.appointmentTime >= :time) and "  +
+            "(a.appointmentDate >= :fromDate) and " +
+            "(a.appointmentDate <= :toDate) " +
             "ORDER BY a.appointmentDate, a.appointmentTime ASC ")
         Page<Appointment> findByParam(
                 @Param("doctorId") String doctorId,
@@ -27,6 +29,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
                 @Param("appointmentId") String appointmentId,
                 @Param("date") LocalDate date,
                 @Param("time") LocalTime time,
+                @Param("fromDate") LocalDate fromDate,
+                @Param("toDate") LocalDate toDate,
                 Pageable pageable
         );
 

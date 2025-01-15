@@ -24,7 +24,9 @@ public interface IAppointmentService {
             String patientId,
             String appointmentId,
             String date,
-            String time
+            String time,
+            String fromDate,
+            String toDate
     );
 
     ApiResponse<CountResponse> getDoctorsUpcomingAppointmentCount(String doctorId,String date, String time);
