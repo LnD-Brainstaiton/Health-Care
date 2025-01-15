@@ -23,7 +23,11 @@ public enum ResponseMessage {
     ALREADY_REQUEST_PENDING(ApiResponseCode.INVALID_REQUEST_DATA.getResponseCode(),"ALREADY REQUEST PENDING"),
     EMAIL_ALREADY_EXISTS(ApiResponseCode.INVALID_REQUEST_DATA.getResponseCode(), "EMAIL ALREADY EXISTS"),
     MOBILE_ALREADY_EXISTS(ApiResponseCode.INVALID_REQUEST_DATA.getResponseCode(), "MOBILE ALREADY EXISTS"),
-    INVALID_JSON_BODY(ApiResponseCode.INVALID_REQUEST_DATA.getResponseCode(), "Invalid JSON structure: not an object");
+    INVALID_JSON_BODY(ApiResponseCode.INVALID_REQUEST_DATA.getResponseCode(), "Invalid JSON structure: not an object"),
+    OLD_PASSWORD_NOT_VALID(ApiResponseCode.INVALID_PASSWORD.getResponseCode(), "old.password.does.not.match"),
+    NEW_PASSWORD_MISMATCH(ApiResponseCode.INVALID_PASSWORD.getResponseCode(), "new.password.mismatch")
+    ;
+
     private String responseCode;
     private String responseMessage;
 }
