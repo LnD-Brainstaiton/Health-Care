@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class RegisterResponse {
 
-    private String userName;
+    private String userId;
     private String userType;
 
 }
