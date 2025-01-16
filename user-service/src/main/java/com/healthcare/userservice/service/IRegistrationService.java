@@ -2,6 +2,7 @@ package com.healthcare.userservice.service;
 
 import com.healthcare.userservice.domain.common.ApiResponse;
 import com.healthcare.userservice.domain.request.AdminInfoUpdateRequest;
+import com.healthcare.userservice.domain.request.DoctorProfessionalInfoRequest;
 import com.healthcare.userservice.domain.request.RegisterRequest;
 import com.healthcare.userservice.domain.response.AdminInfoResponse;
 import com.healthcare.userservice.domain.response.CountResponse;
@@ -12,7 +13,7 @@ public interface IRegistrationService {
 
     RegisterResponse registerUser(RegisterRequest user);
 
-    RegisterResponse registerDoctor(RegisterRequest doctor);
+    RegisterResponse registerDoctorLeve1(RegisterRequest doctor);
 
     RegisterResponse registerAdmin(RegisterRequest admin);
 
@@ -25,4 +26,6 @@ public interface IRegistrationService {
     ApiResponse<Void> updateAdmin(AdminInfoUpdateRequest request);
 
     ApiResponse<String> deleteDAdminById(String id);
+
+    RegisterResponse registerDoctor(DoctorProfessionalInfoRequest doctor);
 }

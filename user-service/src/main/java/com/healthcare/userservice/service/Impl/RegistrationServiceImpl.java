@@ -10,12 +10,14 @@ import com.healthcare.userservice.domain.dto.TimeSlotDto;
 import com.healthcare.userservice.domain.entity.*;
 import com.healthcare.userservice.domain.enums.ApiResponseCode;
 import com.healthcare.userservice.domain.enums.DoctorAuthLevel;
+import com.healthcare.userservice.domain.enums.GlobalFeatureCode;
 import com.healthcare.userservice.domain.enums.KafkaTopicEnum;
 import com.healthcare.userservice.domain.enums.ResponseMessage;
 import com.healthcare.userservice.domain.enums.Role;
 import com.healthcare.userservice.domain.mapper.AdminMapper;
 import com.healthcare.userservice.domain.mapper.RegisterMapper;
 import com.healthcare.userservice.domain.request.AdminInfoUpdateRequest;
+import com.healthcare.userservice.domain.request.DoctorProfessionalInfoRequest;
 import com.healthcare.userservice.domain.request.RegisterRequest;
 import com.healthcare.userservice.domain.response.AdminInfoResponse;
 import com.healthcare.userservice.domain.response.CountResponse;
@@ -39,6 +41,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.beans.FeatureDescriptor;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -82,7 +85,7 @@ public class RegistrationServiceImpl implements IRegistrationService {
 
     @Override
     @Transactional
-    public RegisterResponse registerDoctor(RegisterRequest request) {
+    public RegisterResponse registerDoctorLeve1(RegisterRequest request) {
         return register(request, Role.DOCTOR, this::saveDoctor);
     }
 
@@ -206,6 +209,31 @@ public class RegistrationServiceImpl implements IRegistrationService {
                 .responseCode(ApiResponseCode.OPERATION_SUCCESSFUL.getResponseCode())
                 .responseMessage(ResponseMessage.OPERATION_SUCCESSFUL.getResponseMessage())
                 .build();
+    }
+
+    @Override
+    public RegisterResponse registerDoctor(DoctorProfessionalInfoRequest infoRequest) {
+        RegisterResponse response = new RegisterResponse();
+        Optional<Doctor> doctor = doctorRepository.getDoctorByDoctorIdAndIsActive(infoRequest.getUserId(), Boolean.TRUE);
+        if(doctor.isPresent()){
+            Doctor updateRequest = doctor.get();
+            updateRequest.setDesignation(infoRequest.getDesignation());
+            updateRequest.setDepartment(infoRequest.getDepartment());
+            updateRequest.setSpecialities(infoRequest.getSpecialities());
+            updateRequest.setBloodGroup(infoRequest.getBloodGroup());
+            updateRequest.setRegistrationNo(infoRequest.getRegistrationNo());
+            updateRequest.setFee(infoRequest.getFee());
+            updateRequest.setDob(infoRequest.getDob());
+            updateRequest.setDoctorAuthLevel(DoctorAuthLevel.LEVEL2.getAuthLevel());
+
+            response.setUserId(infoRequest.getUserId());
+            response.setUserType(GlobalFeatureCode.DOCTOR.getText());
+
+            doctorRepository.save(updateRequest);
+        } else{
+            throw new InvalidRequestDataException(ResponseMessage.RECORD_NOT_FOUND);
+        }
+        return response;
     }
 
     private ApiResponse<Void> updateAdminDetails(Admin admin, AdminInfoUpdateRequest request) {

@@ -51,4 +51,14 @@ public class Doctor extends BaseEntity {
 
     @Column(nullable = false,name = "doctor_auth_level")
     private Integer doctorAuthLevel;
+
+    @Column(nullable = false)
+    private Integer registrationNo;
+
+    @Column(nullable = false)
+    private String bloodGroup;
+
+    @Column(nullable = false)
+    private String dob;
+
 }
