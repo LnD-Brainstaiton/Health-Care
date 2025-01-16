@@ -164,15 +164,6 @@ public class PatientServiceImpl implements IPatientService {
         patient.setBloodGroup(request.getBloodGroup());
         patientRepository.save(patient);
 
-        Optional<User> user = userRepository.findByUserId(request.getPatientId());
-        if (user.isPresent()) {
-            if (!Objects.equals(request.getPassword(), "")) {
-                user.get().setPassword(authConfig.passwordEncoder().encode(request.getPassword()));
-            }
-            user.get().setUserName(request.getPatientId());
-            userRepository.save(user.get());
-        }
-
         return ApiResponse.<Void>builder()
                 .responseCode(ApiResponseCode.OPERATION_SUCCESSFUL.getResponseCode())
                 .responseMessage(ResponseMessage.OPERATION_SUCCESSFUL.getResponseMessage())

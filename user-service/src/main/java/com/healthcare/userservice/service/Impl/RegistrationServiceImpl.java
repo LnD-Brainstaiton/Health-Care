@@ -9,6 +9,7 @@ import com.healthcare.userservice.domain.common.ApiResponse;
 import com.healthcare.userservice.domain.dto.TimeSlotDto;
 import com.healthcare.userservice.domain.entity.*;
 import com.healthcare.userservice.domain.enums.ApiResponseCode;
+import com.healthcare.userservice.domain.enums.DoctorAuthLevel;
 import com.healthcare.userservice.domain.enums.ResponseMessage;
 import com.healthcare.userservice.domain.enums.Role;
 import com.healthcare.userservice.domain.mapper.AdminMapper;
@@ -212,15 +213,6 @@ public class RegistrationServiceImpl implements IRegistrationService {
         admin.setEmail(request.getEmail());
         adminRepository.save(admin);
 
-        Optional<User> user = userRepository.findByUserId(request.getAdminId());
-        if (user.isPresent()) {
-            if (!Objects.equals(request.getPassword(), "")) {
-                user.get().setPassword(authConfig.passwordEncoder().encode(request.getPassword()));
-            }
-            user.get().setUserName(request.getAdminId());
-            userRepository.save(user.get());
-        }
-
         return ApiResponse.<Void>builder()
                 .responseCode(ApiResponseCode.OPERATION_SUCCESSFUL.getResponseCode())
                 .responseMessage(ResponseMessage.OPERATION_SUCCESSFUL.getResponseMessage())
@@ -233,12 +225,11 @@ public class RegistrationServiceImpl implements IRegistrationService {
         User savedUser = userRepository.save(user);
 
         request.setUniqueId(user.getUserId());
-
-        if (request.getTimeSlots() != null) {
-            for (TimeSlotDto dto : request.getTimeSlots()) {
-                saveTimeSlot(dto, user.getUserId());
-            }
-        }
+//        if (request.getTimeSlots() != null) {
+//            for (TimeSlotDto dto : request.getTimeSlots()) {
+//                saveTimeSlot(dto, user.getUserId());
+//            }
+//        }
 
         // Save the corresponding entity (Patient, Doctor, or Admin)
         saveEntityFunction.accept(request);
@@ -258,12 +249,8 @@ public class RegistrationServiceImpl implements IRegistrationService {
     private User createUser(RegisterRequest request, Role role) {
         String uniqueIdPrefix = getUniqueIdPrefixForRole(role);
         String uniqueId = uniqueIdGenerator.generateUniqueIdWithPrefix(uniqueIdPrefix);
-        if (role == Role.DOCTOR) {
-            request.setPassword(AppUtils.generateRandomString(8));
-        }
-
         return User.builder()
-                .userName(request.getMobile())
+                .mobileNumber(request.getMobile())
                 .userId(uniqueId)
                 .password(authConfig.passwordEncoder().encode(request.getPassword()))
                 .userType(role)
@@ -303,11 +290,8 @@ public class RegistrationServiceImpl implements IRegistrationService {
                 .doctorId(request.getUniqueId())
                 .email(request.getEmail())
                 .mobile(request.getMobile())
-                .department(request.getDepartment())
-                .designation(request.getDesignation())
-                .specialities(request.getSpecialities())
-                .fee(request.getFee())
                 .isActive(Boolean.TRUE)
+                .doctorAuthLevel(DoctorAuthLevel.LEVEL1.getAuthLevel())
                 .build();
         doctorRepository.save(doctor);
     }
