@@ -104,7 +104,7 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.healthcare</groupId>
+			<groupId>com.health-care</groupId>
 			<artifactId>kafka-service</artifactId>
 			<version>0.0.1</version>
 			<scope>compile</scope>

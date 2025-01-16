@@ -1,4 +1,4 @@
-package com.healthcare.userservice.domain.response;
+package com.healthcare.userservice.domain.dto;
 
 import lombok.*;
 

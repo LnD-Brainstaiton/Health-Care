@@ -1,6 +1,6 @@
 healthcare:
   kafka:
-    bootstrap-servers: kafka:9092
+    bootstrap-servers: 172.16.230.59:9092
     producer:
       compressionType: gzip
       acks: all

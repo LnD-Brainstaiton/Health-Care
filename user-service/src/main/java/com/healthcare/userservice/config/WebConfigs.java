@@ -22,7 +22,7 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import java.util.Locale;
 
 @Configuration
-@ComponentScan(basePackages = {"com.healthcare.userservice", "com.health_care.id.generator"})
+@ComponentScan(basePackages = {"com.healthcare.userservice", "com.health_care.id.generator","com.healthcare.kafka"})
 public class WebConfigs implements WebMvcConfigurer {
 
     @Override

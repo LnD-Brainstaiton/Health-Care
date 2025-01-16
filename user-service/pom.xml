@@ -171,6 +171,14 @@
             <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.health-care</groupId>
+            <artifactId>kafka-service</artifactId>
+            <version>0.0.1</version>
+            <scope>compile</scope>
+        </dependency>
+
+
     </dependencies>
 
     <dependencyManagement>
