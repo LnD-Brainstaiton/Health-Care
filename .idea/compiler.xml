@@ -7,10 +7,10 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="appointment-service" />
-        <module name="discovery" />
         <module name="user-service" />
+        <module name="appointment-service" />
         <module name="two-factor-authentication-service" />
+        <module name="discovery" />
         <module name="gateway" />
         <module name="notification-service" />
       </profile>
