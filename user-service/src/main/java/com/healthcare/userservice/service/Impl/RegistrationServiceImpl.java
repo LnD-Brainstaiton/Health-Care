@@ -62,7 +62,6 @@ public class RegistrationServiceImpl implements IRegistrationService {
     private final UniqueIdGeneratorImpl uniqueIdGenerator;
     private final DoctorTimeSlotRepository timeSlotRepository;
     private final NotificationService notificationService;
-    private final IntegrationService integrationService;
     private final KafkaProducerService kafkaProducerService;
 
 
