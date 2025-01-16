@@ -48,4 +48,7 @@ public class Doctor extends BaseEntity {
 
     @Column(precision = 10) // Specify only precision
     private double fee;// Add validation for non-negative values at the service level
+
+    @Column(nullable = false,name = "doctor_auth_level")
+    private Integer doctorAuthLevel;
 }
