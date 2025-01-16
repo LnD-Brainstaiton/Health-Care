@@ -35,6 +35,9 @@ public class User extends BaseEntity {
     @Column(name = "last_logged_in")
     private LocalDateTime lastLoggedIn;
 
+    @Column(name = "email", nullable = false)
+    private String email;
+
     @Column(nullable = false)
     private Boolean isActive; // Default value is true
 

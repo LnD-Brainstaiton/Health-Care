@@ -256,6 +256,7 @@ public class RegistrationServiceImpl implements IRegistrationService {
                 .userId(uniqueId)
                 .password(authConfig.passwordEncoder().encode(request.getPassword()))
                 .userType(role)
+                .email(request.getEmail())
                 .isActive(Boolean.TRUE)
                 .build();
     }
