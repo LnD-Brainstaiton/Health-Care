@@ -10,4 +10,5 @@ public class TokenResponse {
     private String token;
     private String userType;
     private String userId;
+    private int doctorAuthLevel;
 }

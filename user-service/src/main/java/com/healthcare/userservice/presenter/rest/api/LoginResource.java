@@ -26,9 +26,9 @@ public class LoginResource {
 
     @PostMapping("/token")
     public ApiResponse<TokenResponse> getToken(@RequestBody LoginRequest loginRequest) {
-        Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUserName(), loginRequest.getPassword()));
+        Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUserId(), loginRequest.getPassword()));
         if (authenticate.isAuthenticated()) {
-            return service.generateToken(loginRequest.getUserName());
+            return service.generateToken(loginRequest.getUserId());
         } else {
             return new ApiResponse<>(ApiResponseCode.INVALID_REQUEST_DATA.getResponseCode(), "Invalid Access, Please Provide Valid credential", new TokenResponse());
         }

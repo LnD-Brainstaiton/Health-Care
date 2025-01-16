@@ -20,6 +20,7 @@ public enum ApiResponseCode {
     INTER_SERVICE_COMMUNICATION_ERROR("E000111"),
     REQUEST_PROCESSING_FAILED("E000106"),
     AUTHENTICATION_FAILED("E000401"),
+    INVALID_PASSWORD("E000107"),
     ;
     private String responseCode;
 

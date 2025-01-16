@@ -75,7 +75,7 @@ public class DropdownServiceImpl implements IDropdownService {
             if (admin.isPresent() && !Objects.equals(admin.get().getDoctorId(), mobileCheckRequest.getUserId())) {
                 response = true;
             }
-        } else if (Objects.equals(mobileCheckRequest.getUserType(), null) && Objects.equals(mobileCheckRequest.getUserId(), null)) {Optional<User> user = userRepository.findByUserName(mobileCheckRequest.getMobile());
+        } else if (Objects.equals(mobileCheckRequest.getUserType(), null) && Objects.equals(mobileCheckRequest.getUserId(), null)) {Optional<User> user = userRepository.findByMobileNumber(mobileCheckRequest.getMobile());
             if(user.isPresent()) {
                 response = true;
             }

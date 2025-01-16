@@ -224,15 +224,6 @@ public class DoctorServiceImpl implements IDoctorService {
         doctor.setSpecialities(request.getSpecialities());
         doctorRepository.save(doctor);
 
-        Optional<User> user = userRepository.findByUserId(request.getDoctorId());
-        if (user.isPresent()) {
-            if (!Objects.equals(request.getPassword(), "")) {
-                user.get().setPassword(authConfig.passwordEncoder().encode(request.getPassword()));
-            }
-            user.get().setUserName(request.getDoctorId());
-            userRepository.save(user.get());
-        }
-
         return ApiResponse.<Void>builder()
                 .responseCode(ApiResponseCode.OPERATION_SUCCESSFUL.getResponseCode())
                 .responseMessage(ResponseMessage.OPERATION_SUCCESSFUL.getResponseMessage())

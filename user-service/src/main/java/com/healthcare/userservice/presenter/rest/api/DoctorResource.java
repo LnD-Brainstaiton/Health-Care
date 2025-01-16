@@ -22,7 +22,7 @@ public class DoctorResource {
     private final IRegistrationService registrationService;
     private final IDoctorService doctorService;
 
-    @PostMapping("/doctor/create")
+    @PostMapping("/doctor/init/request")
     public ApiResponse<RegisterResponse> registerDoctor(@RequestBody RegisterRequest doctor) {
         RegisterResponse response = registrationService.registerDoctor(doctor);
         return ResponseUtils.createResponseObject(ResponseMessage.OPERATION_SUCCESSFUL, response);
@@ -30,14 +30,12 @@ public class DoctorResource {
 
     @PutMapping("/doctor/update")
     public ApiResponse<Void> updateDoctor(@RequestBody DoctorInfoUpdateRequest request) {
-        ApiResponse<Void> response = doctorService.updateDoctor(request);
-        return response;
+        return doctorService.updateDoctor(request);
     }
 
     @GetMapping("/doctor/{id}")
     public ApiResponse<DoctorInfoResponse> getDoctorByMobile(@PathVariable String id) {
-        ApiResponse<DoctorInfoResponse> response = doctorService.getDoctorById(id);
-        return response;
+        return doctorService.getDoctorById(id);
     }
 
 
@@ -68,19 +66,14 @@ public class DoctorResource {
                 .build();
     }
 
-
     @GetMapping("/doctor/count")
     public ApiResponse<CountResponse> getDoctorsCount() {
-        ApiResponse<CountResponse> response = doctorService.getDoctorsCount();
-        return response;
+        return doctorService.getDoctorsCount();
     }
-
-
 
     @DeleteMapping("/doctor/{id}")
     public ApiResponse<String> deleteDoctorById(@PathVariable String id) {
-        ApiResponse<String> response = doctorService.deleteDoctorById(id);
-        return response;
+        return doctorService.deleteDoctorById(id);
     }
 
     @PostMapping("/doctor/time-slot")
