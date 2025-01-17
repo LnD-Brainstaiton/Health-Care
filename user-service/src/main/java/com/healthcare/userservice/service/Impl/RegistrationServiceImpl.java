@@ -226,6 +226,12 @@ public class RegistrationServiceImpl implements IRegistrationService {
             updateRequest.setDob(infoRequest.getDob());
             updateRequest.setDoctorAuthLevel(DoctorAuthLevel.LEVEL2.getAuthLevel());
 
+            if (infoRequest.getTimeSlots() != null) {
+                for (TimeSlotDto dto : infoRequest.getTimeSlots()) {
+                  saveTimeSlot(dto, infoRequest.getUserId());
+                }
+            }
+
             response.setUserId(infoRequest.getUserId());
             response.setUserType(GlobalFeatureCode.DOCTOR.getText());
 
@@ -255,12 +261,6 @@ public class RegistrationServiceImpl implements IRegistrationService {
         User savedUser = userRepository.save(user);
 
         request.setUniqueId(user.getUserId());
-//        if (request.getTimeSlots() != null) {
-//            for (TimeSlotDto dto : request.getTimeSlots()) {
-//                saveTimeSlot(dto, user.getUserId());
-//            }
-//        }
-
         // Save the corresponding entity (Patient, Doctor, or Admin)
         saveEntityFunction.accept(request);
 
