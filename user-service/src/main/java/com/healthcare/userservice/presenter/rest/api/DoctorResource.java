@@ -6,6 +6,7 @@ import com.healthcare.userservice.domain.common.ApiResponse;
 import com.healthcare.userservice.domain.enums.ApiResponseCode;
 import com.healthcare.userservice.domain.enums.ResponseMessage;
 import com.healthcare.userservice.domain.request.DoctorInfoUpdateRequest;
+import com.healthcare.userservice.domain.request.DoctorProfessionalInfoRequest;
 import com.healthcare.userservice.domain.request.RegisterRequest;
 import com.healthcare.userservice.domain.request.TimeSlotRequest;
 import com.healthcare.userservice.domain.response.*;
@@ -23,7 +24,13 @@ public class DoctorResource {
     private final IDoctorService doctorService;
 
     @PostMapping("/doctor/init/request")
-    public ApiResponse<RegisterResponse> registerDoctor(@RequestBody RegisterRequest doctor) {
+    public ApiResponse<RegisterResponse> registerDoctorLeve1(@RequestBody RegisterRequest doctor) {
+        RegisterResponse response = registrationService.registerDoctorLeve1(doctor);
+        return ResponseUtils.createResponseObject(ResponseMessage.OPERATION_SUCCESSFUL, response);
+    }
+
+    @PostMapping("/doctor/create/request")
+    public ApiResponse<RegisterResponse> registerDoctor(@RequestBody DoctorProfessionalInfoRequest doctor) {
         RegisterResponse response = registrationService.registerDoctor(doctor);
         return ResponseUtils.createResponseObject(ResponseMessage.OPERATION_SUCCESSFUL, response);
     }
