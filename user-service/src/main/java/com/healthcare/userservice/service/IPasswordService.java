@@ -5,4 +5,6 @@ import com.healthcare.userservice.domain.request.ChangePasswordRequest;
 public interface IPasswordService {
 
     Void changePassword(ChangePasswordRequest request);
+
+    Void requestPasswordReset(String email);
 }

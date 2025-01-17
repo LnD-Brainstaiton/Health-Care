@@ -32,7 +32,7 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Role userType;
 
-    @Column(name = "last_logged_in")
+    @Column(name = "LAST_LOGGED_IN")
     private LocalDateTime lastLoggedIn;
 
     @Column(nullable = false)
