@@ -1,6 +1,7 @@
 package com.healthcare.userservice.service;
 
 import com.healthcare.userservice.domain.common.ApiResponse;
+import com.healthcare.userservice.domain.request.BmdcValidationRequest;
 import com.healthcare.userservice.domain.request.DoctorInfoUpdateRequest;
 import com.healthcare.userservice.domain.request.TimeSlotRequest;
 import com.healthcare.userservice.domain.response.CountResponse;
@@ -23,4 +24,6 @@ public interface IDoctorService {
     TimeSlotResponse getTimeSlotList(TimeSlotRequest request);
 
     ApiResponse<String> getCaptcha();
+
+    ApiResponse<String> validateRegistration(BmdcValidationRequest request);
 }

@@ -7,6 +7,7 @@ import com.healthcare.userservice.domain.entity.User;
 import com.healthcare.userservice.domain.enums.ApiResponseCode;
 import com.healthcare.userservice.domain.enums.ResponseMessage;
 import com.healthcare.userservice.domain.mapper.DoctorMapper;
+import com.healthcare.userservice.domain.request.BmdcValidationRequest;
 import com.healthcare.userservice.domain.request.DoctorInfoUpdateRequest;
 import com.healthcare.userservice.domain.response.CountResponse;
 import com.healthcare.userservice.domain.response.DoctorInfoResponse;
@@ -226,6 +227,22 @@ public class DoctorServiceImpl implements IDoctorService {
         response.setResponseCode(ApiResponseCode.OPERATION_SUCCESSFUL.getResponseCode());
         response.setResponseMessage(ResponseMessage.OPERATION_SUCCESSFUL.getResponseMessage());
         response.setData(captcha);
+        return response;
+    }
+
+    @Override
+    public ApiResponse<String> validateRegistration(BmdcValidationRequest request) {
+        ApiResponse<String> response = new ApiResponse<>();
+        String data = integrationService.validateRegistration(request);
+        if(data == null || data.isEmpty()) {
+            response.setResponseCode(ApiResponseCode.RECORD_NOT_FOUND.getResponseCode());
+            response.setResponseMessage(ResponseMessage.RECORD_NOT_FOUND.getResponseMessage());
+
+            return response;
+        }
+        response.setResponseCode(ApiResponseCode.OPERATION_SUCCESSFUL.getResponseCode());
+        response.setResponseMessage(ResponseMessage.OPERATION_SUCCESSFUL.getResponseMessage());
+        response.setData(data);
         return response;
     }
 
