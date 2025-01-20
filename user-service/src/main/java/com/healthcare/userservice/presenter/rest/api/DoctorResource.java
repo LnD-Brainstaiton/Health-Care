@@ -88,4 +88,9 @@ public class DoctorResource {
         return ResponseUtils.createResponseObject(ResponseMessage.OPERATION_SUCCESSFUL, doctorService.getTimeSlotList(request));
     }
 
+    @GetMapping("/doctor/get/captcha")
+    public ApiResponse<String> getCaptcha() {
+        return doctorService.getCaptcha();
+    }
+
 }

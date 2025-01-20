@@ -213,6 +213,22 @@ public class DoctorServiceImpl implements IDoctorService {
         return timeSlotResponse;
     }
 
+    @Override
+    public ApiResponse<String> getCaptcha() {
+       ApiResponse<String> response = new ApiResponse<>();
+       String captcha = integrationService.fetchCaptcha();
+       if(captcha == null || captcha.isEmpty()) {
+           response.setResponseCode(ApiResponseCode.RECORD_NOT_FOUND.getResponseCode());
+           response.setResponseMessage(ResponseMessage.RECORD_NOT_FOUND.getResponseMessage());
+
+           return response;
+       }
+        response.setResponseCode(ApiResponseCode.OPERATION_SUCCESSFUL.getResponseCode());
+        response.setResponseMessage(ResponseMessage.OPERATION_SUCCESSFUL.getResponseMessage());
+        response.setData(captcha);
+        return response;
+    }
+
     private ApiResponse<Void> updateDoctorDetails(Doctor doctor, DoctorInfoUpdateRequest request) {
         doctor.setFirstname(request.getFirstname());
         doctor.setLastname(request.getLastname());
