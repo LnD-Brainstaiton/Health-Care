@@ -5,6 +5,7 @@ import com.healthcare.userservice.common.utils.ResponseUtils;
 import com.healthcare.userservice.domain.common.ApiResponse;
 import com.healthcare.userservice.domain.enums.ApiResponseCode;
 import com.healthcare.userservice.domain.enums.ResponseMessage;
+import com.healthcare.userservice.domain.request.BmdcValidationRequest;
 import com.healthcare.userservice.domain.request.DoctorInfoUpdateRequest;
 import com.healthcare.userservice.domain.request.DoctorProfessionalInfoRequest;
 import com.healthcare.userservice.domain.request.RegisterRequest;
@@ -86,6 +87,16 @@ public class DoctorResource {
     @PostMapping("/doctor/time-slot")
     public ApiResponse<TimeSlotResponse> getDoctorTimeSlot(@RequestBody TimeSlotRequest request) {
         return ResponseUtils.createResponseObject(ResponseMessage.OPERATION_SUCCESSFUL, doctorService.getTimeSlotList(request));
+    }
+
+    @GetMapping("/doctor/get/captcha")
+    public ApiResponse<String> getCaptcha() {
+        return doctorService.getCaptcha();
+    }
+
+    @PostMapping("/doctor/validate/registration")
+    public ApiResponse<String> validateRegistration(@RequestBody BmdcValidationRequest request){
+        return doctorService.validateRegistration(request);
     }
 
 }
