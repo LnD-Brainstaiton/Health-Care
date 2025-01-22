@@ -1,6 +1,7 @@
 package com.healthcare.userservice.service;
 
 import com.healthcare.userservice.common.utils.DateTimeUtils;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -14,11 +15,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class JwtService extends BaseService{
+public class JwtService extends BaseService {
 
     public static final String SECRET = "5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437";
 
-    public String   generateToken(String userName) {
+    public String generateToken(String userName) {
         Map<String, Object> claims = new HashMap<>();
         return createToken(claims, userName);
     }
@@ -75,7 +76,50 @@ public class JwtService extends BaseService{
 
     public String generateRefreshToken(String userId) {
         Map<String, Object> claims = new HashMap<>();
+        claims.put("userIdentity", userId);
+
         return generateToken(claims, userId, jwtRefreshExpiryTime, jwtRefreshSecretKey);
     }
+
+    public Claims validateToken(String token) {
+        try {
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(generateHmacKeyFromCustomSecret())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+
+            if (claims.getExpiration().before(new Date())) {
+                /*throw new SignatureException("Token has expired");*/
+            }
+
+            return claims;
+        } catch (Exception e) {
+            //throw new SignatureException("Invalid or expired token", e);
+        }
+
+        return null;
+    }
+
+    private Key generateSecureHmacKeyForHS512() {
+        // This generates a secure 512-bit key for HS512
+        return Keys.secretKeyFor(SignatureAlgorithm.HS512);
+    }
+
+
+    private Key generateHmacKeyFromCustomSecret() {
+        byte[] keyBytes = Decoders.BASE64.decode(SECRET);
+
+        // If the key size is less than 512 bits (64 bytes), pad it
+        if (keyBytes.length < 64) {
+            byte[] paddedKeyBytes = new byte[64];
+            System.arraycopy(keyBytes, 0, paddedKeyBytes, 0, keyBytes.length);
+            keyBytes = paddedKeyBytes;
+        }
+
+        // Return a secure HMAC key
+        return Keys.hmacShaKeyFor(keyBytes);
+    }
+
 
 }

@@ -1,9 +1,12 @@
 package com.healthcare.userservice.presenter.rest.api;
 
 import com.healthcare.userservice.common.utils.AppUtils;
+import com.healthcare.userservice.common.utils.ResponseUtils;
 import com.healthcare.userservice.domain.common.ApiResponse;
 import com.healthcare.userservice.domain.enums.ApiResponseCode;
+import com.healthcare.userservice.domain.enums.ResponseMessage;
 import com.healthcare.userservice.domain.request.LoginRequest;
+import com.healthcare.userservice.domain.request.RefreshTokenRequest;
 import com.healthcare.userservice.domain.response.TokenResponse;
 import com.healthcare.userservice.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,5 +36,12 @@ public class LoginResource {
             return new ApiResponse<>(ApiResponseCode.INVALID_REQUEST_DATA.getResponseCode(), "Invalid Access, Please Provide Valid credential", new TokenResponse());
         }
     }
+
+    @PostMapping("/refresh-token")
+    public ApiResponse<TokenResponse> refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest) {
+        TokenResponse tokenResponse = service.validateRefreshToken(refreshTokenRequest).getData();
+        return ResponseUtils.createResponseObject(ResponseMessage.OPERATION_SUCCESSFUL, tokenResponse);
+    }
+
 
 }

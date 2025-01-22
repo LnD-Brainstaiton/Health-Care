@@ -7,10 +7,13 @@ import com.healthcare.userservice.domain.entity.Doctor;
 import com.healthcare.userservice.domain.entity.User;
 import com.healthcare.userservice.domain.enums.ApiResponseCode;
 import com.healthcare.userservice.domain.enums.Role;
+import com.healthcare.userservice.domain.request.RefreshTokenRequest;
 import com.healthcare.userservice.domain.response.TokenResponse;
 import com.healthcare.userservice.repository.DoctorRepository;
 import com.healthcare.userservice.repository.UserRepository;
 import com.healthcare.userservice.service.redis.RedisService;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -62,6 +65,39 @@ public class AuthService extends BaseService {
             return new ApiResponse<>(ApiResponseCode.NO_ACCOUNT_FOUND.getResponseCode(), "No account found", null);
         }
     }
+
+    public ApiResponse<TokenResponse> validateRefreshToken(RefreshTokenRequest refreshTokenRequest) {
+        TokenResponse tokenResponse = new TokenResponse();
+
+        String refreshToken = refreshTokenRequest.getRefreshToken();
+
+        try {
+            Claims claims = jwtService.validateToken(refreshToken);
+
+            String userId = claims.getSubject();
+
+            String redisKey = "refresh-token:" + userId;
+            IdTokenDto storedRefreshToken = redisService.getTokenFromRedis(redisKey);
+
+            if (storedRefreshToken == null || !storedRefreshToken.equals(refreshToken)) {
+                return new ApiResponse<>(ApiResponseCode.INVALID_REQUEST_DATA.getResponseCode(), "Invalid refresh token", null);
+            }
+
+            String newAccessToken = jwtService.generateToken(userId);
+            String newRefreshToken = jwtService.generateRefreshToken(userId);
+
+            tokenResponse.setToken(newAccessToken);
+            tokenResponse.setRefreshToken(newRefreshToken);
+
+            redisService.pushTokenToRedis(redisKey, newRefreshToken);
+
+            return new ApiResponse<>(ApiResponseCode.OPERATION_SUCCESSFUL.getResponseCode(), "Tokens refreshed successfully", tokenResponse);
+
+        } catch (JwtException | IllegalArgumentException e) {
+            return new ApiResponse<>(ApiResponseCode.INVALID_REQUEST_DATA.getResponseCode(), "Invalid or expired refresh token", null);
+        }
+    }
+
 
     private void saveIdTokenToRedis(User user, String sessionId) {
         redisService.deleteAllByPrefix(user.getUserId());
