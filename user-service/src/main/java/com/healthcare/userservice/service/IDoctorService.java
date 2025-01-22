@@ -1,10 +1,13 @@
 package com.healthcare.userservice.service;
 
 import com.healthcare.userservice.domain.common.ApiResponse;
+import com.healthcare.userservice.domain.request.BmdcValidationRequest;
 import com.healthcare.userservice.domain.request.DoctorInfoUpdateRequest;
+import com.healthcare.userservice.domain.request.TimeSlotRequest;
 import com.healthcare.userservice.domain.response.CountResponse;
 import com.healthcare.userservice.domain.response.DoctorInfoResponse;
 import com.healthcare.userservice.domain.response.PaginationResponse;
+import com.healthcare.userservice.domain.response.TimeSlotResponse;
 
 public interface IDoctorService {
     ApiResponse<Void> updateDoctor(DoctorInfoUpdateRequest request);
@@ -18,6 +21,9 @@ public interface IDoctorService {
 
     ApiResponse<String> deleteDoctorById(String id);
 
-    
-    com.healthcare.userservice.domain.response.TimeSlotResponse getTimeSlotList(com.healthcare.userservice.domain.request.TimeSlotRequest request);
+    TimeSlotResponse getTimeSlotList(TimeSlotRequest request);
+
+    ApiResponse<String> getCaptcha();
+
+    ApiResponse<String> validateRegistration(BmdcValidationRequest request);
 }

@@ -25,7 +25,10 @@ public enum ResponseMessage {
     MOBILE_ALREADY_EXISTS(ApiResponseCode.INVALID_REQUEST_DATA.getResponseCode(), "MOBILE ALREADY EXISTS"),
     INVALID_JSON_BODY(ApiResponseCode.INVALID_REQUEST_DATA.getResponseCode(), "Invalid JSON structure: not an object"),
     OLD_PASSWORD_NOT_VALID(ApiResponseCode.INVALID_PASSWORD.getResponseCode(), "old.password.does.not.match"),
-    NEW_PASSWORD_MISMATCH(ApiResponseCode.INVALID_PASSWORD.getResponseCode(), "new.password.mismatch")
+    NEW_PASSWORD_MISMATCH(ApiResponseCode.INVALID_PASSWORD.getResponseCode(), "new.password.mismatch"),
+    COOKIE_NOT_FOUND(ApiResponseCode.RECORD_NOT_FOUND.getResponseCode(), "cookie 'bmdckyc_csrf_cookie' not found"),
+    FAIL_BMDC_API_CALL(ApiResponseCode.INTER_SERVICE_COMMUNICATION_ERROR.getResponseCode() , "failed to connect to BMDC API server"),
+    BMDC_Authentication_Failure(ApiResponseCode.AUTHENTICATION_FAILED.getResponseCode(), "Authentication failed due to invalid Cookie"),
     ;
 
     private String responseCode;
