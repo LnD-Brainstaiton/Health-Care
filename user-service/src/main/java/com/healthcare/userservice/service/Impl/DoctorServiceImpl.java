@@ -12,6 +12,7 @@ import com.healthcare.userservice.domain.request.DoctorInfoUpdateRequest;
 import com.healthcare.userservice.domain.response.CountResponse;
 import com.healthcare.userservice.domain.response.DoctorInfoResponse;
 import com.healthcare.userservice.domain.response.PaginationResponse;
+import com.healthcare.userservice.presenter.service.BmdcClientService;
 import com.healthcare.userservice.presenter.service.IntegrationService;
 import com.healthcare.userservice.repository.DoctorRepository;
 import com.healthcare.userservice.repository.UserRepository;
@@ -52,6 +53,7 @@ public class DoctorServiceImpl implements IDoctorService {
     private final IntegrationService integrationService;
     private final UserRepository userRepository;
     private final AuthConfig authConfig;
+    private final BmdcClientService bmdcClientService;
 
     @Override
     public ApiResponse<Void> updateDoctor(DoctorInfoUpdateRequest request) {
@@ -217,7 +219,7 @@ public class DoctorServiceImpl implements IDoctorService {
     @Override
     public ApiResponse<String> getCaptcha() {
        ApiResponse<String> response = new ApiResponse<>();
-       String captcha = integrationService.fetchCaptcha();
+       String captcha = bmdcClientService.fetchCaptcha();
        if(captcha == null || captcha.isEmpty()) {
            response.setResponseCode(ApiResponseCode.RECORD_NOT_FOUND.getResponseCode());
            response.setResponseMessage(ResponseMessage.RECORD_NOT_FOUND.getResponseMessage());
@@ -233,7 +235,7 @@ public class DoctorServiceImpl implements IDoctorService {
     @Override
     public ApiResponse<String> validateRegistration(BmdcValidationRequest request) {
         ApiResponse<String> response = new ApiResponse<>();
-        String data = integrationService.validateRegistration(request);
+        String data = bmdcClientService.validateRegistration(request);
         if(data == null || data.isEmpty()) {
             response.setResponseCode(ApiResponseCode.RECORD_NOT_FOUND.getResponseCode());
             response.setResponseMessage(ResponseMessage.RECORD_NOT_FOUND.getResponseMessage());
