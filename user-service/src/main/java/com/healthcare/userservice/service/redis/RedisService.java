@@ -11,7 +11,7 @@ public class RedisService extends BaseService {
 
     private final IdTokenRedisService idTokenRedisService;
 
-    public void pushIdTokenToRedis(final String sessionId,final String idTokenDto) {
+    public void pushTokenToRedis(final String sessionId, final String idTokenDto) {
         idTokenRedisService.saveToRedis(sessionId, idTokenDto);
     }
 

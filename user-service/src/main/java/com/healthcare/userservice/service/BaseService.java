@@ -36,10 +36,14 @@ public class BaseService {
     @Value("${jwt.id-token.secret.key}")
     protected String jwtIdTokenSecretKey;
 
-
     @Value("${payload.encryption.secret.key}")
     protected String encryptionSecretKey;
 
+    @Value("${jwt.refresh-token.expiry.minute}")
+    protected String jwtRefreshExpiryTime;
+
+    @Value("${jwt.refresh-token.secret.key}")
+    protected String jwtRefreshSecretKey;
 
     public static final String CURRENT_USER_CONTEXT_HEADER = "CurrentContext";
 

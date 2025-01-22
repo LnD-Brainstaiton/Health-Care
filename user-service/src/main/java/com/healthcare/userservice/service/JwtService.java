@@ -72,4 +72,10 @@ public class JwtService extends BaseService{
         byte[] keyBytes = Decoders.BASE64.decode(jwtSecretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
+
+    public String generateRefreshToken(String userId) {
+        Map<String, Object> claims = new HashMap<>();
+        return generateToken(claims, userId, jwtRefreshExpiryTime, jwtRefreshSecretKey);
+    }
+
 }

@@ -82,11 +82,15 @@ jwt:
     expiry:
       minute: 30
   secret:
-    key: SzdmR3R5eTlOd1NnVzU0QUFiaFhSUk1rNEJtcXd6U3Z5ckgyOHl6M1NqWWF5Ymp4cXZ0RzNyVzc0WldXNHVoZFB2UGVTRVJjeHpWUjd2RHVKelA5emFSSHBCOFQ1cFBydnJwN1ZRVUZEeGtNU20yOHEyY05Wa0U1bmFxcmhld20=
+    key: Y4N8JrKdG9w7HquZE2FpVcLxQi35sTmRjAw8BXeL7kZoP1QTY3EfUwR2pJVs8oGh89rKFyWzAoN6LCTE9vJuFg
   id-token:
     secret:
-      key: Y3k0U0I1Mnd2YkZLY1I0OXB2VW1NN0dyUjNFcWFuQTdxeTJ3Tjh3ejVQUFp4OXFWa2R2V0p5VFN6cHhqckRtTTh0anJXemt0dTdnUXpTdjJicXlQOFZ2bURCclc0YWVBTlJIWXJraEc0U2hwYVZXM2U1eFBYSFJFN1N5ZlJ6dWg=
-
+      key: uA3Np7Xw4YQFzG9VrLBo8TcJF6RqPw2KT1EyL7ZRmHd8oX5MNFqVzYWp3Q8JLuTCoR9B4Z7JFX1oK5mGTC84zR
+  refresh-token:
+    expiry:
+      minute: 14400
+    secret:
+      key: SPNxTlg8PlqEve1GuzgF1yV774H7rmYTjFI9Ruo7pcISFLpy7H5G5538RzD4xkWRXr4BAnFyL9aujkgQQi4uYcA
 id-token:
   redis:
     expiry-in-seconds: 1800

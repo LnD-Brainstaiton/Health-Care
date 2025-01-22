@@ -46,12 +46,16 @@ public class AuthService extends BaseService {
             tokenResponse.setUserId(String.valueOf(user.get().getUserId()));
             tokenResponse.setSessionId(getCorrelationIdFromRequest());
 
+            String refreshToken = jwtService.generateRefreshToken(userId);
+            tokenResponse.setRefreshToken(refreshToken);
+
             if (user.get().getUserType() == Role.DOCTOR) {
                 Optional<Doctor> doctor = doctorRepository.getDoctorByDoctorIdAndIsActive(userId, Boolean.TRUE);
                 doctor.ifPresent(value -> tokenResponse.setDoctorAuthLevel(value.getDoctorAuthLevel()));
             }
 
             saveIdTokenToRedis(user.get(), tokenResponse.getSessionId());
+            saveRefreshTokenToRedis(userId, refreshToken);
 
             return new ApiResponse<>(ApiResponseCode.OPERATION_SUCCESSFUL.getResponseCode(), "Token generated successfully", tokenResponse);
         } else {
@@ -66,7 +70,7 @@ public class AuthService extends BaseService {
         final String idToken = generateIdToken(idTokenDto);
 
         final String redisSessionId = user.getUserId() + ":" + sessionId;
-        redisService.pushIdTokenToRedis(redisSessionId, idToken);
+        redisService.pushTokenToRedis(redisSessionId, idToken);
 
     }
 
@@ -94,6 +98,11 @@ public class AuthService extends BaseService {
 
     public String generateCorrelationId() {
         return UUID.randomUUID().toString().replace("-", "");
+    }
+
+    private void saveRefreshTokenToRedis(String userId, String refreshToken) {
+        String redisKey = "refresh-token:" + userId;
+        redisService.pushTokenToRedis(redisKey, refreshToken);
     }
 
 

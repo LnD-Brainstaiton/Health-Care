@@ -8,6 +8,7 @@ import lombok.Setter;
 public class TokenResponse {
 
     private String token;
+    private String refreshToken;
     private String userType;
     private String userId;
     private int doctorAuthLevel;
