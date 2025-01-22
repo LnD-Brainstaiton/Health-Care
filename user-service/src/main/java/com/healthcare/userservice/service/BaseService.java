@@ -27,6 +27,20 @@ public class BaseService {
     @Value("${http.header.auth}")
     protected String tokenHeader;
 
+    @Value("${jwt.token.expiry.minute}")
+    protected String jwtExpiryTime;
+
+    @Value("${jwt.secret.key}")
+    protected String jwtSecretKey;
+
+    @Value("${jwt.id-token.secret.key}")
+    protected String jwtIdTokenSecretKey;
+
+
+    @Value("${payload.encryption.secret.key}")
+    protected String encryptionSecretKey;
+
+
     public static final String CURRENT_USER_CONTEXT_HEADER = "CurrentContext";
 
     @Autowired

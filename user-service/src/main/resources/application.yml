@@ -56,3 +56,37 @@ http:
 
 host:
   url: http://localhost:8000
+
+redis:
+  host: 172.16.230.59
+  port: 10000
+  password: l&d@123
+  database:
+    index: 1
+  pool:
+    max:
+      connection: 30
+      idle:
+        connection: 10
+    min:
+      idle:
+        connection: 0
+
+payload:
+  encryption:
+    secret:
+      key: H3@LTH_C@R3_P@YL0@D_S3CR3T
+
+jwt:
+  token:
+    expiry:
+      minute: 30
+  secret:
+    key: SzdmR3R5eTlOd1NnVzU0QUFiaFhSUk1rNEJtcXd6U3Z5ckgyOHl6M1NqWWF5Ymp4cXZ0RzNyVzc0WldXNHVoZFB2UGVTRVJjeHpWUjd2RHVKelA5emFSSHBCOFQ1cFBydnJwN1ZRVUZEeGtNU20yOHEyY05Wa0U1bmFxcmhld20=
+  id-token:
+    secret:
+      key: Y3k0U0I1Mnd2YkZLY1I0OXB2VW1NN0dyUjNFcWFuQTdxeTJ3Tjh3ejVQUFp4OXFWa2R2V0p5VFN6cHhqckRtTTh0anJXemt0dTdnUXpTdjJicXlQOFZ2bURCclc0YWVBTlJIWXJraEc0U2hwYVZXM2U1eFBYSFJFN1N5ZlJ6dWg=
+
+id-token:
+  redis:
+    expiry-in-seconds: 1800

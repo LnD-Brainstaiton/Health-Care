@@ -25,7 +25,9 @@ public enum ResponseMessage {
     MOBILE_ALREADY_EXISTS(ApiResponseCode.INVALID_REQUEST_DATA.getResponseCode(), "MOBILE ALREADY EXISTS"),
     INVALID_JSON_BODY(ApiResponseCode.INVALID_REQUEST_DATA.getResponseCode(), "Invalid JSON structure: not an object"),
     OLD_PASSWORD_NOT_VALID(ApiResponseCode.INVALID_PASSWORD.getResponseCode(), "old.password.does.not.match"),
-    NEW_PASSWORD_MISMATCH(ApiResponseCode.INVALID_PASSWORD.getResponseCode(), "new.password.mismatch")
+    NEW_PASSWORD_MISMATCH(ApiResponseCode.INVALID_PASSWORD.getResponseCode(), "new.password.mismatch"),
+    REDIS_PUSH_EXCEPTION(ApiResponseCode.REQUEST_PROCESSING_FAILED.getResponseCode(), "redis.push.exception"),
+    ID_TOKEN_FETCH_ERROR(ApiResponseCode.REQUEST_PROCESSING_FAILED.getResponseCode(), "id.token.fetch.error")
     ;
 
     private String responseCode;
