@@ -23,6 +23,7 @@ public class RatingServiceImpl implements IRatingService {
 
     private final RatingRepository ratingRepository;
     private final UniqueIdGeneratorImpl uniqueIdGenerator;
+    private final RatingMapper ratingMapper;
 
     @Value("${unique.id.comment.prefix}")
     private String commentPrefix;
@@ -33,16 +34,9 @@ public class RatingServiceImpl implements IRatingService {
 
     @Override
     public ApiResponse<Void> addRating(RatingRequest ratingRequest) {
-        Rating rating = new Rating();
-        rating.setDoctorId(ratingRequest.getDoctorId());
-        rating.setRating(ratingRequest.getRating());
-        rating.setComment(ratingRequest.getComment());
-        rating.setUserId(ratingRequest.getUserId());
-        rating.setCommentParentId(ratingRequest.getCommentParentId());
-        rating.setCommentId(uniqueIdGenerator.generateUniqueIdWithPrefix(commentPrefix));
-        rating.setRatingId(uniqueIdGenerator.generateUniqueIdWithPrefix(ratingPrefix));
-        rating.setCommentTime(LocalDateTime.now());
-        ratingRepository.save(rating);
+
+        ratingRepository.save(ratingMapper.mapToRating(ratingRequest,uniqueIdGenerator,commentPrefix,ratingPrefix));
+
         return ApiResponse.<Void>builder()
                 .responseCode(ApiResponseCode.OPERATION_SUCCESSFUL.getResponseCode())
                 .responseMessage(ResponseMessage.OPERATION_SUCCESSFUL.getResponseMessage())

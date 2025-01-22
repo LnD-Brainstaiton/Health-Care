@@ -79,15 +79,7 @@ public class DoctorServiceImpl implements IDoctorService {
         Optional<Doctor> doctorOptional = doctorRepository.getDoctorByDoctorIdAndIsActive(id, Boolean.TRUE);
         List<Rating> ratingList = ratingRepository.findAllByDoctorId(id);
 
-        List<RatingResponse> parentCommentList = ratingMapper.toRatingResponse(ratingList.stream()
-                .filter(comment -> comment.getCommentParentId().equals("parent"))
-                .toList());
-
-        parentCommentList.forEach(parentComment -> {parentComment
-                .setRatingReplyList(ratingMapper.toRatingReplies(ratingList.stream()
-                        .filter(rating -> rating.getCommentParentId().equals(parentComment.getRatingId()))
-                        .toList())
-        );});
+        List<RatingResponse> parentCommentList = ratingMapper.mapToRatingResponse(ratingList);
 
         return doctorOptional.map(doctor -> {
             DoctorInfoResponse response = doctorMapper.toDoctorInfoResponse(doctor);
