@@ -3,6 +3,7 @@ package com.healthcare.userservice.common.handler;
 import com.healthcare.userservice.common.exceptions.CustomRootException;
 import com.healthcare.userservice.common.exceptions.FeignClientException;
 import com.healthcare.userservice.common.exceptions.PreValidationException;
+import com.healthcare.userservice.common.logger.UserServiceLogger;
 import com.healthcare.userservice.domain.common.ApiResponse;
 import com.healthcare.userservice.domain.enums.ResponseMessage;
 import lombok.RequiredArgsConstructor;

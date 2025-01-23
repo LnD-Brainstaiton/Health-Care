@@ -2,6 +2,7 @@ package com.healthcare.userservice.common.aspect;
 
 import com.healthcare.userservice.common.logger.UserServiceLogger;
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +16,7 @@ public class UserServiceTracingAspect {
         this.userServiceLogger = userServiceLogger;
     }
 
+    @Around("execution(* com.healthcare.userservice.*.*(..))")
     public void log(ProceedingJoinPoint joinPoint) throws Throwable {
         userServiceLogger.trace(joinPoint.getSignature().toString());
         joinPoint.proceed();
