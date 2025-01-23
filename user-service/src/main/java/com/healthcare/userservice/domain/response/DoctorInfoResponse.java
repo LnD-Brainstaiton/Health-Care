@@ -3,6 +3,9 @@ package com.healthcare.userservice.domain.response;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 @Getter
 @Setter
 public class DoctorInfoResponse {
@@ -16,4 +19,6 @@ public class DoctorInfoResponse {
     private String department;
     private String specialities;
     private double fee;
+    private BigDecimal rating;
+    private List<RatingResponse> ratingResponseList;
 }
