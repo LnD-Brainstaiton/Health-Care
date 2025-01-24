@@ -8,6 +8,7 @@ import com.healthcare.userservice.domain.enums.ResponseMessage;
 import com.healthcare.userservice.domain.request.BmdcValidationRequest;
 import com.healthcare.userservice.domain.request.DoctorInfoUpdateRequest;
 import com.healthcare.userservice.domain.request.DoctorProfessionalInfoRequest;
+import com.healthcare.userservice.domain.request.DoctorVacationRequest;
 import com.healthcare.userservice.domain.request.RegisterRequest;
 import com.healthcare.userservice.domain.request.TimeSlotRequest;
 import com.healthcare.userservice.domain.response.*;
@@ -42,8 +43,13 @@ public class DoctorResource {
     }
 
     @GetMapping("/doctor/{id}")
-    public ApiResponse<DoctorInfoResponse> getDoctorByMobile(@PathVariable String id) {
+    public ApiResponse<DoctorInfoResponse> getDoctorById(@PathVariable String id) {
         return doctorService.getDoctorById(id);
+    }
+
+    @PutMapping("/doctor/vacation/data")
+    public ApiResponse<Void> updateDoctor(@RequestBody DoctorVacationRequest request) {
+        return doctorService.vacationRequest(request);
     }
 
 
