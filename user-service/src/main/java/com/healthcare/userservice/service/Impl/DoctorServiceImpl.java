@@ -105,12 +105,61 @@ public class DoctorServiceImpl extends BaseService implements IDoctorService {
                     0L
             );
         }
+
+        // Retrieve all unavailable doctors
+        List<DoctorSetting> unAvailableDoctors = settingRepository.findDoctorsWithUnavailabilitySchedule();
+
+        // Map unavailable doctors by doctorId for quick lookup
+        Map<String, String> unavailableDoctorMap = new HashMap<>();
+        ObjectMapper objectMapper = new ObjectMapper();
+        LocalDate today = LocalDate.now();
+
+        for (DoctorSetting setting : unAvailableDoctors) {
+            try {
+                // Deserialize unavailabilitySchedule
+                List<Map<String, String>> schedules = objectMapper.readValue(
+                        setting.getUnavailabilitySchedule(),
+                        new TypeReference<List<Map<String, String>>>() {}
+                );
+
+                // Filter schedules based on today's date
+                List<Map<String, String>> validSchedules = schedules.stream()
+                        .filter(schedule -> {
+                            String endDateStr = schedule.get("endDate");
+                            LocalDate endDate = LocalDate.parse(endDateStr);
+                            return !today.isAfter(endDate);
+                        })
+                        .collect(Collectors.toList());
+
+                // If valid schedules exist, add to unavailableDoctorMap
+                if (!validSchedules.isEmpty()) {
+                    unavailableDoctorMap.put(setting.getDoctorId(), objectMapper.writeValueAsString(validSchedules));
+                }
+            } catch (Exception e) {
+                throw new IllegalStateException(e.getMessage(), e);
+            }
+        }
+
         // Check if page = -1, fetch all active doctors without pagination
         if (page == -1) {
             List<Doctor> activeDoctors = doctorRepository.findAllByIsActiveTrue(Sort.by(sortOrder));
+
             List<DoctorInfoResponse> doctorInfoResponses = activeDoctors.stream()
-                    .map(doctorMapper::toDoctorInfoResponse)
+                    .map(doctor -> {
+                        DoctorInfoResponse response = doctorMapper.toDoctorInfoResponse(doctor);
+
+                        // Check if the doctor is in the unavailable map
+                        if (unavailableDoctorMap.containsKey(doctor.getDoctorId())) {
+                            response.setIsAvailable(false);
+                            response.setUnavailableDate(unavailableDoctorMap.get(doctor.getDoctorId()));
+                        } else {
+                            response.setIsAvailable(true);
+                            response.setUnavailableDate(null);
+                        }
+                        return response;
+                    })
                     .collect(Collectors.toList());
+
             return new PaginationResponse<>(doctorInfoResponses, (long) doctorInfoResponses.size());
         }
 
@@ -134,7 +183,19 @@ public class DoctorServiceImpl extends BaseService implements IDoctorService {
         }
 
         List<DoctorInfoResponse> doctorInfoResponses = activeDoctorsPage.getContent().stream()
-                .map(doctorMapper::toDoctorInfoResponse)
+                .map(doctor -> {
+                    DoctorInfoResponse response = doctorMapper.toDoctorInfoResponse(doctor);
+
+                    // Check if the doctor is in the unavailable map
+                    if (unavailableDoctorMap.containsKey(doctor.getDoctorId())) {
+                        response.setIsAvailable(false);
+                        response.setUnavailableDate(unavailableDoctorMap.get(doctor.getDoctorId()));
+                    } else {
+                        response.setIsAvailable(true);
+                        response.setUnavailableDate(null);
+                    }
+                    return response;
+                })
                 .collect(Collectors.toList());
 
         return new PaginationResponse<>(
@@ -145,6 +206,7 @@ public class DoctorServiceImpl extends BaseService implements IDoctorService {
                 doctorInfoResponses
         );
     }
+
 
 
     @Override

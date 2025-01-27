@@ -16,4 +16,6 @@ public class DoctorInfoResponse {
     private String department;
     private String specialities;
     private double fee;
+    private Boolean isAvailable;
+    private String unavailableDate;
 }
