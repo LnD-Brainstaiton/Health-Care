@@ -58,28 +58,10 @@ public class DropdownServiceImpl implements IDropdownService {
 
     @Override
     public ApiResponse<Boolean> checkMobile(MobileCheckRequest mobileCheckRequest) {
-        boolean response = false;
+        boolean response = true;
 
-        if (Objects.equals(mobileCheckRequest.getUserType(), "admin")) {
-            Optional<Admin> admin = adminRepository.findByMobileAndIsActiveTrue(mobileCheckRequest.getMobile());
-            if (admin.isPresent() && !Objects.equals(admin.get().getAdminId(), mobileCheckRequest.getUserId())) {
-                response = true;
-            }
-        } else if (Objects.equals(mobileCheckRequest.getUserType(), "patient")) {
-            Optional<Patient> admin = patientRepository.findByMobileAndIsActiveTrue(mobileCheckRequest.getMobile());
-            if (admin.isPresent() && !Objects.equals(admin.get().getPatientId(), mobileCheckRequest.getUserId())) {
-                response = true;
-            }
-        } else if (Objects.equals(mobileCheckRequest.getUserType(), "doctor")) {
-            Optional<Doctor> admin = doctorRepository.findByMobileAndIsActiveTrue(mobileCheckRequest.getMobile());
-            if (admin.isPresent() && !Objects.equals(admin.get().getDoctorId(), mobileCheckRequest.getUserId())) {
-                response = true;
-            }
-        } else if (Objects.equals(mobileCheckRequest.getUserType(), null) && Objects.equals(mobileCheckRequest.getUserId(), null)) {Optional<User> user = userRepository.findByMobileNumber(mobileCheckRequest.getMobile());
-            if(user.isPresent()) {
-                response = true;
-            }
-        }
+        if(userRepository.findByMobileNumberAndIsActiveTrue(mobileCheckRequest.getMobile()).isEmpty())
+            response = false;
         return ApiResponse.<Boolean>builder()
                 .responseCode(ApiResponseCode.OPERATION_SUCCESSFUL.getResponseCode())
                 .responseMessage(ResponseMessage.OPERATION_SUCCESSFUL.getResponseMessage())

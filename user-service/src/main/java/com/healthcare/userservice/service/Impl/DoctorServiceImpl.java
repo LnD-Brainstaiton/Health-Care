@@ -4,23 +4,28 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.healthcare.userservice.config.AuthConfig;
 import com.healthcare.userservice.domain.common.ApiResponse;
+import com.healthcare.userservice.domain.dto.RatingReply;
 import com.healthcare.userservice.domain.entity.BaseEntity;
 import com.healthcare.userservice.domain.entity.Doctor;
+import com.healthcare.userservice.domain.entity.Rating;
 import com.healthcare.userservice.domain.entity.DoctorSetting;
 import com.healthcare.userservice.domain.entity.User;
 import com.healthcare.userservice.domain.enums.ApiResponseCode;
 import com.healthcare.userservice.domain.enums.ResponseMessage;
 import com.healthcare.userservice.domain.mapper.DoctorMapper;
 import com.healthcare.userservice.domain.request.BmdcValidationRequest;
+import com.healthcare.userservice.domain.mapper.RatingMapper;
 import com.healthcare.userservice.domain.request.DoctorInfoUpdateRequest;
 import com.healthcare.userservice.domain.request.DoctorVacationRequest;
 import com.healthcare.userservice.domain.response.CountResponse;
 import com.healthcare.userservice.domain.response.DoctorInfoResponse;
 import com.healthcare.userservice.domain.response.PaginationResponse;
 import com.healthcare.userservice.presenter.service.BmdcClientService;
+import com.healthcare.userservice.domain.response.*;
 import com.healthcare.userservice.presenter.service.IntegrationService;
 import com.healthcare.userservice.repository.DoctorRepository;
 import com.healthcare.userservice.repository.DoctorSettingRepository;
+import com.healthcare.userservice.repository.RatingRepository;
 import com.healthcare.userservice.repository.UserRepository;
 import com.healthcare.userservice.repository.specification.DoctorSpecification;
 import com.healthcare.userservice.service.BaseService;
@@ -30,7 +35,6 @@ import com.healthcare.userservice.common.exceptions.RecordNotFoundException;
 import com.healthcare.userservice.domain.entity.DoctorTimeSlot;
 import com.healthcare.userservice.domain.enums.WeekDays;
 import com.healthcare.userservice.domain.request.TimeSlotRequest;
-import com.healthcare.userservice.domain.response.TimeSlotResponse;
 import com.healthcare.userservice.repository.DoctorTimeSlotRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -41,6 +45,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -61,6 +66,9 @@ public class DoctorServiceImpl extends BaseService implements IDoctorService {
     private final DoctorTimeSlotRepository timeSlotRepository;
     private final IntegrationService integrationService;
     private final UserRepository userRepository;
+    private final RatingRepository ratingRepository;
+    private final RatingMapper ratingMapper;
+
     private final AuthConfig authConfig;
     private final BmdcClientService bmdcClientService;
     private final DoctorSettingRepository settingRepository;
@@ -79,9 +87,21 @@ public class DoctorServiceImpl extends BaseService implements IDoctorService {
     @Override
     public ApiResponse<DoctorInfoResponse> getDoctorById(String id) {
         Optional<Doctor> doctorOptional = doctorRepository.getDoctorByDoctorIdAndIsActive(id, Boolean.TRUE);
+        List<Rating> ratingList = ratingRepository.findAllByDoctorId(id);
+
+        List<RatingResponse> parentCommentList = ratingMapper.mapToRatingResponse(ratingList);
 
         return doctorOptional.map(doctor -> {
             DoctorInfoResponse response = doctorMapper.toDoctorInfoResponse(doctor);
+            response.setRating(BigDecimal.valueOf(ratingList.stream()
+                    .filter(reply -> reply.getCommentParentId().equals("parent"))
+                    .map(Rating::getRating)
+                    .mapToDouble(BigDecimal::doubleValue)
+                    .average()
+                    .orElse(0.0))
+            );
+            response.setRatingResponseList(parentCommentList);
+
             return ApiResponse.<DoctorInfoResponse>builder()
                     .data(response)
                     .responseCode(ApiResponseCode.OPERATION_SUCCESSFUL.getResponseCode())

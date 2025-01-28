@@ -3,6 +3,8 @@ package com.healthcare.userservice.domain.response;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 public class DoctorInfoResponse {
@@ -18,4 +20,6 @@ public class DoctorInfoResponse {
     private double fee;
     private Boolean isAvailable;
     private String unavailableDate;
+    private BigDecimal rating;
+    private List<RatingResponse> ratingResponseList;
 }
