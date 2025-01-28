@@ -6,6 +6,7 @@ import com.healthcare.userservice.domain.common.ApiResponse;
 import com.healthcare.userservice.domain.enums.ApiResponseCode;
 import com.healthcare.userservice.domain.enums.ResponseMessage;
 import com.healthcare.userservice.domain.request.BmdcValidationRequest;
+import com.healthcare.userservice.domain.request.DoctorDiscountRequest;
 import com.healthcare.userservice.domain.request.DoctorInfoUpdateRequest;
 import com.healthcare.userservice.domain.request.DoctorProfessionalInfoRequest;
 import com.healthcare.userservice.domain.request.DoctorVacationRequest;
@@ -103,6 +104,11 @@ public class DoctorResource {
     @PostMapping("/doctor/validate/registration")
     public ApiResponse<String> validateRegistration(@RequestBody BmdcValidationRequest request){
         return doctorService.validateRegistration(request);
+    }
+
+    @PostMapping("/doctor/discount")
+    public ApiResponse<Void> discountForPatient(@RequestBody DoctorDiscountRequest request){
+        return doctorService.discountForPatient(request);
     }
 
 }

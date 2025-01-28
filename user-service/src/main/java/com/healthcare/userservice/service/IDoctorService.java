@@ -2,6 +2,7 @@ package com.healthcare.userservice.service;
 
 import com.healthcare.userservice.domain.common.ApiResponse;
 import com.healthcare.userservice.domain.request.BmdcValidationRequest;
+import com.healthcare.userservice.domain.request.DoctorDiscountRequest;
 import com.healthcare.userservice.domain.request.DoctorInfoUpdateRequest;
 import com.healthcare.userservice.domain.request.DoctorVacationRequest;
 import com.healthcare.userservice.domain.request.TimeSlotRequest;
@@ -29,4 +30,6 @@ public interface IDoctorService {
     ApiResponse<String> validateRegistration(BmdcValidationRequest request);
 
     ApiResponse<Void> vacationRequest(DoctorVacationRequest request);
+
+    ApiResponse<Void> discountForPatient(DoctorDiscountRequest request);
 }

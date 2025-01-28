@@ -36,4 +36,11 @@ public class DoctorSetting extends BaseEntity {
 
     @Column(name = "is_active", nullable = false)
     private Boolean isActive = true;
+
+    @Column(name = "discount_rate")
+    private String discountRate;
+
+    @Column(name = "discount_duration")
+    private String discountDuration;
+
 }

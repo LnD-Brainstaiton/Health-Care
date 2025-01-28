@@ -15,6 +15,7 @@ import com.healthcare.userservice.domain.enums.ResponseMessage;
 import com.healthcare.userservice.domain.mapper.DoctorMapper;
 import com.healthcare.userservice.domain.request.BmdcValidationRequest;
 import com.healthcare.userservice.domain.mapper.RatingMapper;
+import com.healthcare.userservice.domain.request.DoctorDiscountRequest;
 import com.healthcare.userservice.domain.request.DoctorInfoUpdateRequest;
 import com.healthcare.userservice.domain.request.DoctorVacationRequest;
 import com.healthcare.userservice.domain.response.CountResponse;
@@ -397,6 +398,29 @@ public class DoctorServiceImpl extends BaseService implements IDoctorService {
             return new ApiResponse<>(ApiResponseCode.INVALID_REQUEST_DATA.getResponseCode(), "An error occurred while processing the vacation request.", null);
         }
     }
+
+    @Override
+    public ApiResponse<Void> discountForPatient(DoctorDiscountRequest request) {
+        settingRepository.findByDoctorId(getUserIdentity()).ifPresentOrElse(
+                setting -> {
+                    setting.setDiscountDuration(request.getDiscountDuration());
+                    setting.setDiscountRate(request.getDiscountRate());
+                    settingRepository.save(setting);
+                },
+                () -> {
+                    throw new RecordNotFoundException(
+                            ApiResponseCode.RECORD_NOT_FOUND.getResponseCode(),
+                            ResponseMessage.RECORD_NOT_FOUND.getResponseMessage()
+                    );
+                }
+        );
+        return new ApiResponse<>(
+                ApiResponseCode.OPERATION_SUCCESSFUL.getResponseCode(),
+                ResponseMessage.OPERATION_SUCCESSFUL.getResponseMessage(),
+                null
+        );
+    }
+
 
     private ApiResponse<Void> updateDoctorDetails(Doctor doctor, DoctorInfoUpdateRequest request) {
         doctor.setFirstname(request.getFirstname());
