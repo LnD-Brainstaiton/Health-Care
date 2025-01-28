@@ -66,6 +66,7 @@ public class RegistrationServiceImpl implements IRegistrationService {
     private final DoctorTimeSlotRepository timeSlotRepository;
     private final NotificationService notificationService;
     private final KafkaProducerService kafkaProducerService;
+    private final DoctorSettingRepository doctorSettingRepository;
 
 
     @Value("${unique.id.patient.prefix}")
@@ -214,8 +215,10 @@ public class RegistrationServiceImpl implements IRegistrationService {
     @Override
     public RegisterResponse registerDoctor(DoctorProfessionalInfoRequest infoRequest) {
         RegisterResponse response = new RegisterResponse();
+
+        // Fetch the doctor by user ID and active status
         Optional<Doctor> doctor = doctorRepository.getDoctorByDoctorIdAndIsActive(infoRequest.getUserId(), Boolean.TRUE);
-        if(doctor.isPresent()){
+        if (doctor.isPresent()) {
             Doctor updateRequest = doctor.get();
             updateRequest.setDesignation(infoRequest.getDesignation());
             updateRequest.setDepartment(infoRequest.getDepartment());
@@ -226,20 +229,38 @@ public class RegistrationServiceImpl implements IRegistrationService {
             updateRequest.setDob(infoRequest.getDob());
             updateRequest.setDoctorAuthLevel(DoctorAuthLevel.LEVEL2.getAuthLevel());
 
+            // Save associated time slots
             if (infoRequest.getTimeSlots() != null) {
                 for (TimeSlotDto dto : infoRequest.getTimeSlots()) {
-                  saveTimeSlot(dto, infoRequest.getUserId());
+                    saveTimeSlot(dto, infoRequest.getUserId());
                 }
             }
+
+            // Save doctor settings in DoctorSettingRepository
+            saveDoctorSettings(infoRequest.getUserId());
 
             response.setUserId(infoRequest.getUserId());
             response.setUserType(GlobalFeatureCode.DOCTOR.getText());
 
             doctorRepository.save(updateRequest);
-        } else{
+        } else {
             throw new InvalidRequestDataException(ResponseMessage.RECORD_NOT_FOUND);
         }
+
         return response;
+    }
+
+    private void saveDoctorSettings(String doctorId) {
+        Optional<DoctorSetting> existingSettings = doctorSettingRepository.findByDoctorId(doctorId);
+        if (existingSettings.isEmpty()) {
+            DoctorSetting doctorSetting = new DoctorSetting();
+            doctorSetting.setDoctorId(doctorId);
+            doctorSetting.setNotificationPreference(true);
+            doctorSetting.setIsActive(true);
+            doctorSetting.setUnavailabilitySchedule(null);
+
+            doctorSettingRepository.save(doctorSetting);
+        }
     }
 
     private ApiResponse<Void> updateAdminDetails(Admin admin, AdminInfoUpdateRequest request) {

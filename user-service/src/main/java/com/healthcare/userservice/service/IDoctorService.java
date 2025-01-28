@@ -3,6 +3,7 @@ package com.healthcare.userservice.service;
 import com.healthcare.userservice.domain.common.ApiResponse;
 import com.healthcare.userservice.domain.request.BmdcValidationRequest;
 import com.healthcare.userservice.domain.request.DoctorInfoUpdateRequest;
+import com.healthcare.userservice.domain.request.DoctorVacationRequest;
 import com.healthcare.userservice.domain.request.TimeSlotRequest;
 import com.healthcare.userservice.domain.response.CountResponse;
 import com.healthcare.userservice.domain.response.DoctorInfoResponse;
@@ -26,4 +27,6 @@ public interface IDoctorService {
     ApiResponse<String> getCaptcha();
 
     ApiResponse<String> validateRegistration(BmdcValidationRequest request);
+
+    ApiResponse<Void> vacationRequest(DoctorVacationRequest request);
 }

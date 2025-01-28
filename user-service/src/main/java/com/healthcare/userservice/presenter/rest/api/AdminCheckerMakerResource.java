@@ -9,7 +9,7 @@ import com.healthcare.userservice.domain.request.ApproveRejectRequest;
 import com.healthcare.userservice.domain.request.RegistrationRequestTemp;
 import com.healthcare.userservice.domain.response.AdminCheckerMackerResponse;
 import com.healthcare.userservice.domain.response.TempDataResponse;
-import com.healthcare.userservice.service.IAdminCheckerMacker;
+import com.healthcare.userservice.service.IAdminCheckerMaker;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.MissingRequestValueException;
@@ -18,18 +18,18 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(AppUtils.BASE_URL)
 @AllArgsConstructor
-public class AdminCheckerMackerResource {
+public class AdminCheckerMakerResource {
 
-    private final IAdminCheckerMacker iAdminCheckerMacker;
+    private final IAdminCheckerMaker iAdminCheckerMaker;
 
     @PostMapping("/admin/temp/request")
     public ApiResponse<AdminCheckerMackerResponse> saveTemp(@RequestBody RegistrationRequestTemp temp) throws MissingRequestValueException {
-        return iAdminCheckerMacker.saveTemp(temp);
+        return iAdminCheckerMaker.saveTemp(temp);
     }
 
     @PostMapping("admin/request/check")
     public ApiResponse<Void> requestCheck(@RequestBody ApproveRejectRequest request) {
-        iAdminCheckerMacker.requestCheck(request);
+        iAdminCheckerMaker.requestCheck(request);
         return ResponseUtils.createResponseObject(ApiResponseCode.OPERATION_SUCCESSFUL.getResponseCode(), ResponseMessage.OPERATION_SUCCESSFUL.getResponseMessage());
     }
 
@@ -43,12 +43,12 @@ public class AdminCheckerMackerResource {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
 
-        return iAdminCheckerMacker.getTempData(featureCode, requestId, startDate, endDate, operationType, page, size);
+        return iAdminCheckerMaker.getTempData(featureCode, requestId, startDate, endDate, operationType, page, size);
     }
 
     @PostMapping("admin/close/request")
     public ApiResponse<Void> close(@RequestParam String requestId){
-        iAdminCheckerMacker.close(requestId);
+        iAdminCheckerMaker.close(requestId);
         return ResponseUtils.createResponseObject(ApiResponseCode.OPERATION_SUCCESSFUL.getResponseCode(), ResponseMessage.OPERATION_SUCCESSFUL.getResponseMessage());
     }
 }

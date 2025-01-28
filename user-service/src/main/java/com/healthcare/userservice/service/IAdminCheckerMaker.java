@@ -8,7 +8,7 @@ import com.healthcare.userservice.domain.response.TempDataResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.MissingRequestValueException;
 
-public interface IAdminCheckerMacker {
+public interface IAdminCheckerMaker {
 
     ApiResponse<AdminCheckerMackerResponse> saveTemp(RegistrationRequestTemp temp) throws MissingRequestValueException;
 
