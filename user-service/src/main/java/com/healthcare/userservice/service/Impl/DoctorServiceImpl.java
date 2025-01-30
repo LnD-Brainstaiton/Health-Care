@@ -92,6 +92,13 @@ public class DoctorServiceImpl extends BaseService implements IDoctorService {
 
         List<RatingResponse> parentCommentList = ratingMapper.mapToRatingResponse(ratingList);
 
+        Optional<DoctorSetting> optionalDoctorSetting = settingRepository.findByDoctorId(getUserIdentity());
+        if (optionalDoctorSetting.isEmpty()) {
+            return new ApiResponse<>(ApiResponseCode.INVALID_REQUEST_DATA.getResponseCode(), ResponseMessage.RECORD_NOT_FOUND.getResponseMessage(), null);
+        }
+
+        PaginationResponse<AppointmentResponse> appointment = integrationService.getAppointmentResponses(id, getUserIdentity());
+
         return doctorOptional.map(doctor -> {
             DoctorInfoResponse response = doctorMapper.toDoctorInfoResponse(doctor);
             response.setRating(BigDecimal.valueOf(ratingList.stream()

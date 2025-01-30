@@ -7,6 +7,8 @@ import com.healthcare.userservice.domain.enums.ResponseMessage;
 import com.healthcare.userservice.domain.request.TfaRequest;
 import com.healthcare.userservice.domain.request.TfaVerifyRequest;
 import com.healthcare.userservice.domain.request.TimeSlotRequest;
+import com.healthcare.userservice.domain.response.AppointmentResponse;
+import com.healthcare.userservice.domain.response.PaginationResponse;
 import com.healthcare.userservice.domain.response.TfaResponse;
 import com.healthcare.userservice.presenter.rest.event.NotificationEvent;
 import com.healthcare.userservice.presenter.rest.external.AppointmentClient;
@@ -57,4 +59,13 @@ public class IntegrationService extends BaseService {
         }
         return response.getData();
     }
+
+    public PaginationResponse<AppointmentResponse> getAppointmentResponses(String doctorId, String patientId) {
+        ApiResponse<PaginationResponse<AppointmentResponse>> response = appointmentClient.listAppointments(0, 10, "createdAt", "desc", doctorId, patientId, null, null, null);
+        if (ApiResponseCode.isNotOperationSuccessful(response)) {
+            throw new FeignClientException(response.getResponseCode(), response.getResponseMessage());
+        }
+        return response.getData();
+    }
+
 }

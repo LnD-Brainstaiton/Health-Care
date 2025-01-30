@@ -23,4 +23,6 @@ public class DoctorInfoResponse {
     private String unavailableDate;
     private BigDecimal rating;
     private List<RatingResponse> ratingResponseList;
+    private Boolean discountEligibility;
+    private String discountRate;
 }
