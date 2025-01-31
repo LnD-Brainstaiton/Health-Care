@@ -15,20 +15,22 @@ import java.util.List;
 @Repository
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
 
-    @Query("SELECT a FROM Appointment  a WHERE (:doctorId IS NULL OR a.doctorId LIKE %:doctorId%) and " +
+    @Query("SELECT a FROM Appointment a WHERE (:doctorId IS NULL OR a.doctorId LIKE %:doctorId%) and " +
             "(:patientId IS NULL OR a.patientId LIKE %:patientId%) and " +
             "(:appointmentId IS NULL OR a.appointmentNo LIKE %:appointmentId%) and " +
             "(a.appointmentDate >= :date) and " +
-            "(a.appointmentTime >= :time)" +
-            "ORDER BY a.appointmentDate, a.appointmentTime ASC ")
-        Page<Appointment> findByParam(
-                @Param("doctorId") String doctorId,
-                @Param("patientId") String patientId,
-                @Param("appointmentId") String appointmentId,
-                @Param("date") LocalDate date,
-                @Param("time") LocalTime time,
-                Pageable pageable
-        );
+            "(a.appointmentTime >= :time) and " +
+            "(:isAppointmentDone IS NULL OR a.isAppointmentDone = :isAppointmentDone) " +
+            "ORDER BY a.appointmentDate, a.appointmentTime ASC")
+    Page<Appointment> findByParam(
+            @Param("doctorId") String doctorId,
+            @Param("patientId") String patientId,
+            @Param("appointmentId") String appointmentId,
+            @Param("date") LocalDate date,
+            @Param("time") LocalTime time,
+            @Param("isAppointmentDone") Boolean isAppointmentDone,
+            Pageable pageable
+    );
 
     @Query("SELECT a FROM Appointment  a WHERE (:doctorId IS NULL OR a.doctorId LIKE %:doctorId%) and " +
             "(a.appointmentDate >= :date) and " +

@@ -70,4 +70,7 @@ public class Appointment extends BaseEntity {
     @Column(name = "REASON", columnDefinition = "TEXT")
     private String reason;
 
+    @Column(name = "IS_APPOINTMENT_DONE")
+    private Boolean isAppointmentDone;
+
 }

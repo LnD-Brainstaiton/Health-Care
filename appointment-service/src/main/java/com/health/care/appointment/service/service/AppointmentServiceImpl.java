@@ -81,7 +81,7 @@ public class AppointmentServiceImpl implements IAppointmentService{
     }
 
     @Override
-    public PaginationResponse<AppointmentResponse> listOfAppointments(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder, String doctorId, String patientId, String appointmentId, String date, String time) {
+    public PaginationResponse<AppointmentResponse> listOfAppointments(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder, String doctorId, String patientId, String appointmentId, Boolean isAppointmentDone, String date, String time) {
 
         final PaginationRequest paginationRequest = PageUtils.mapToPaginationRequest(pageNumber, pageSize, sortBy, sortOrder);
         final Pageable pageable = PageUtils.getPageable(paginationRequest);
@@ -97,7 +97,7 @@ public class AppointmentServiceImpl implements IAppointmentService{
         }
 
 
-        final Page<AppointmentResponse> page = appointmentRepository.findByParam(doctorId, patientId, appointmentId, convertedDate, convertedTime, pageable).map(AppointmentResponse::from);
+        final Page<AppointmentResponse> page = appointmentRepository.findByParam(doctorId, patientId, appointmentId, convertedDate, convertedTime, isAppointmentDone, pageable).map(AppointmentResponse::from);
 
         return page.getContent().isEmpty() ?
                 PageUtils.mapToPaginationResponseDto(Page.empty(), paginationRequest) :

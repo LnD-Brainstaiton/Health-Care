@@ -54,10 +54,11 @@ public class AppointmentResource {
             @RequestParam(required = false) String doctorId,
             @RequestParam(required = false) String patientId,
             @RequestParam(required = false) String appointmentId,
+            @RequestParam(required = false) Boolean isAppointmentDone,
             @RequestParam(required = false) @JsonFormat(pattern = "yyyy-MM-dd") String date,
             @RequestParam(required = false) @JsonFormat(pattern = "HH:mm:ss") String time
     ){
-        return ResponseUtils.createResponseObject(ResponseMessage.OPERATION_SUCCESSFUL, appointmentService.listOfAppointments(pageNumber, pageSize, sortBy, sortOrder, doctorId, patientId, appointmentId, date, time));
+        return ResponseUtils.createResponseObject(ResponseMessage.OPERATION_SUCCESSFUL, appointmentService.listOfAppointments(pageNumber, pageSize, sortBy, sortOrder, doctorId, patientId, appointmentId, isAppointmentDone, date, time));
     }
 
     @PostMapping("/time-slot")

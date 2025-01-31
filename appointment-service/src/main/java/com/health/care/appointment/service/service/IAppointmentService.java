@@ -23,6 +23,7 @@ public interface IAppointmentService {
             String doctorId,
             String patientId,
             String appointmentId,
+            Boolean isAppointmentDone,
             String date,
             String time
     );
