@@ -61,7 +61,7 @@ public class IntegrationService extends BaseService {
     }
 
     public PaginationResponse<AppointmentResponse> getAppointmentResponses(String doctorId, String patientId) {
-        ApiResponse<PaginationResponse<AppointmentResponse>> response = appointmentClient.listAppointments(0, 10, "createdAt", "desc", doctorId, patientId, null, null, null);
+        ApiResponse<PaginationResponse<AppointmentResponse>> response = appointmentClient.listAppointments(0, 10, "appointmentDate", "desc", doctorId, patientId, null, true, null, null);
         if (ApiResponseCode.isNotOperationSuccessful(response)) {
             throw new FeignClientException(response.getResponseCode(), response.getResponseMessage());
         }

@@ -26,11 +26,12 @@ public interface AppointmentClient {
     ApiResponse<PaginationResponse<AppointmentResponse>> listAppointments(
             @RequestParam(required = false, defaultValue = "0") Integer pageNumber,
             @RequestParam(required = false, defaultValue = "10") Integer pageSize,
-            @RequestParam(required = false, defaultValue = "updatedAt") String sortBy,
+            @RequestParam(required = false, defaultValue = "appointmentDate") String sortBy,
             @RequestParam(required = false, defaultValue = "desc") String sortOrder,
             @RequestParam(required = false) String doctorId,
             @RequestParam(required = false) String patientId,
             @RequestParam(required = false) String appointmentId,
+            @RequestParam(required = false) Boolean isAppointmentDone,
             @RequestParam(required = false) @JsonFormat(pattern = "yyyy-MM-dd") String date,
             @RequestParam(required = false) @JsonFormat(pattern = "HH:mm:ss") String time
     );

@@ -89,26 +89,56 @@ public class DoctorServiceImpl extends BaseService implements IDoctorService {
     public ApiResponse<DoctorInfoResponse> getDoctorById(String id) {
         Optional<Doctor> doctorOptional = doctorRepository.getDoctorByDoctorIdAndIsActive(id, Boolean.TRUE);
         List<Rating> ratingList = ratingRepository.findAllByDoctorId(id);
-
         List<RatingResponse> parentCommentList = ratingMapper.mapToRatingResponse(ratingList);
 
         Optional<DoctorSetting> optionalDoctorSetting = settingRepository.findByDoctorId(getUserIdentity());
         if (optionalDoctorSetting.isEmpty()) {
-            return new ApiResponse<>(ApiResponseCode.INVALID_REQUEST_DATA.getResponseCode(), ResponseMessage.RECORD_NOT_FOUND.getResponseMessage(), null);
+            return new ApiResponse<>(
+                    ApiResponseCode.INVALID_REQUEST_DATA.getResponseCode(),
+                    ResponseMessage.RECORD_NOT_FOUND.getResponseMessage(),
+                    null
+            );
+        }
+
+        DoctorSetting doctorSetting = optionalDoctorSetting.get();
+        int discountDays;
+
+        try {
+            discountDays = Integer.parseInt(doctorSetting.getDiscountDuration());
+        } catch (NumberFormatException e) {
+            throw new RecordNotFoundException(
+                    ApiResponseCode.RECORD_NOT_FOUND.getResponseCode(),
+                    e.getMessage()
+            );
         }
 
         PaginationResponse<AppointmentResponse> appointment = integrationService.getAppointmentResponses(id, getUserIdentity());
+        boolean isDiscountApplicable = false;
+
+        if (!appointment.getData().isEmpty()) {
+            AppointmentResponse latestAppointment = appointment.getData().get(0);
+            LocalDate appointmentDate = latestAppointment.getAppointmentDate();
+            LocalDate validTillDate = appointmentDate.plusDays(discountDays);
+            LocalDate today = LocalDate.now();
+
+            isDiscountApplicable = !today.isBefore(appointmentDate) && !today.isAfter(validTillDate);
+        }
+
+        boolean finalIsDiscountApplicable = isDiscountApplicable;
 
         return doctorOptional.map(doctor -> {
             DoctorInfoResponse response = doctorMapper.toDoctorInfoResponse(doctor);
-            response.setRating(BigDecimal.valueOf(ratingList.stream()
-                    .filter(reply -> reply.getCommentParentId().equals("parent"))
-                    .map(Rating::getRating)
-                    .mapToDouble(BigDecimal::doubleValue)
-                    .average()
-                    .orElse(0.0))
+            response.setRating(
+                    BigDecimal.valueOf(ratingList.stream()
+                            .filter(reply -> "parent".equals(reply.getCommentParentId()))
+                            .map(Rating::getRating)
+                            .mapToDouble(BigDecimal::doubleValue)
+                            .average()
+                            .orElse(0.0))
             );
             response.setRatingResponseList(parentCommentList);
+            response.setDiscountRate(doctorSetting.getDiscountRate());
+            response.setDiscountEligibility(finalIsDiscountApplicable);
 
             return ApiResponse.<DoctorInfoResponse>builder()
                     .data(response)
@@ -120,6 +150,7 @@ public class DoctorServiceImpl extends BaseService implements IDoctorService {
                 .responseMessage(ResponseMessage.RECORD_NOT_FOUND.getResponseMessage())
                 .build());
     }
+
 
     @Override
     public PaginationResponse<DoctorInfoResponse> getAllDoctorInfo(int page, int size, String sort, String firstnameLastname, String id,

@@ -26,6 +26,7 @@ public class AppointmentResponse implements Serializable {
     private String patientContactNo;
     private BigDecimal fee;
     private String reason;
+    private Boolean isAppointmentDone;
 
     public static AppointmentResponse from(Appointment appointment) {
         return AppointmentResponse.builder()
@@ -42,6 +43,7 @@ public class AppointmentResponse implements Serializable {
                 .patientContactNo(appointment.getPatientContactNo())
                 .fee(appointment.getFee())
                 .reason(appointment.getReason())
+                .isAppointmentDone(appointment.getIsAppointmentDone())
                 .build();
     }
 }
