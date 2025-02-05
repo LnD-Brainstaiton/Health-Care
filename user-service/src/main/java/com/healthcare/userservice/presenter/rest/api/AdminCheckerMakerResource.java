@@ -37,7 +37,6 @@ public class AdminCheckerMackerResource {
     public ApiResponse<Page<TempDataResponse>> getTempData(
             @RequestParam(required = false) String featureCode,
             @RequestParam(required = false) String requestId,
-            @RequestParam(required = false) String checkerResponse,
             @RequestParam(required = false) String startDate,
             @RequestParam(required = false) String endDate,
             @RequestParam(required = false) Boolean operationType,

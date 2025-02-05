@@ -67,6 +67,8 @@ public class RegistrationServiceImpl implements IRegistrationService {
     private final NotificationService notificationService;
     private final KafkaProducerService kafkaProducerService;
     private final TempDataRepository tempDataRepository;
+    private final DoctorSettingRepository doctorSettingRepository;
+
 
     @Value("${unique.id.patient.prefix}")
     private String patientPrefix;
@@ -211,7 +213,6 @@ public class RegistrationServiceImpl implements IRegistrationService {
                 .build();
     }
 
-    @Transactional
     @Override
     public RegisterResponse registerDoctor(DoctorProfessionalInfoRequest infoRequest) {
         RegisterResponse response = new RegisterResponse();
@@ -237,10 +238,6 @@ public class RegistrationServiceImpl implements IRegistrationService {
             response.setUserType(GlobalFeatureCode.DOCTOR.getText());
 
             doctorRepository.save(updateRequest);
-
-            TempData tempData = tempDataRepository.findByMakerId(infoRequest.getUserId());
-            tempData.setCheckerResponse(1);
-            tempDataRepository.save(tempData);
         } else{
             throw new InvalidRequestDataException(ResponseMessage.RECORD_NOT_FOUND);
         }

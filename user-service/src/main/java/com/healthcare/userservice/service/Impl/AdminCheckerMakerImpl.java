@@ -19,7 +19,7 @@ import com.healthcare.userservice.domain.response.TempDataResponse;
 import com.healthcare.userservice.repository.TempDataRepository;
 import com.healthcare.userservice.repository.specification.TempDataSpecifications;
 import com.healthcare.userservice.service.BaseService;
-import com.healthcare.userservice.service.IAdminCheckerMacker;
+import com.healthcare.userservice.service.IAdminCheckerMaker;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +44,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class AdminCheckerMakerImpl extends BaseService implements IAdminCheckerMacker {
+public class AdminCheckerMakerImpl extends BaseService implements IAdminCheckerMaker {
 
     private final TempDataRepository tempDataRepository;
     private final UniqueIdGeneratorImpl uniqueIdGenerator;
