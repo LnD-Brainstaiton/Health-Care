@@ -76,11 +76,11 @@ public class AdminCheckerMakerImpl extends BaseService implements IAdminCheckerM
 
     @Override
     public ApiResponse<Page<TempDataResponse>> getTempData(
-            String featureCode, String requestId, String startDate, String endDate, Boolean operationType, int page, int size) {
+            String featureCode, String requestId, String checkerResponse, String startDate, String endDate, Boolean operationType, int page, int size) {
 
         ApiResponse<Page<TempDataResponse>> response = new ApiResponse<>();
 
-        Specification<TempData> spec = TempDataSpecifications.buildSpecification(featureCode, requestId, startDate, endDate, operationType, getUserIdentity(), Boolean.TRUE);
+        Specification<TempData> spec = TempDataSpecifications.buildSpecification(featureCode, requestId,checkerResponse, startDate, endDate, operationType, getUserIdentity(), Boolean.TRUE);
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
 

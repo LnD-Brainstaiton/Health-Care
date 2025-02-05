@@ -37,13 +37,14 @@ public class AdminCheckerMackerResource {
     public ApiResponse<Page<TempDataResponse>> getTempData(
             @RequestParam(required = false) String featureCode,
             @RequestParam(required = false) String requestId,
+            @RequestParam(required = false) String checkerResponse,
             @RequestParam(required = false) String startDate,
             @RequestParam(required = false) String endDate,
             @RequestParam(required = false) Boolean operationType,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
 
-        return iAdminCheckerMacker.getTempData(featureCode, requestId, startDate, endDate, operationType, page, size);
+        return iAdminCheckerMacker.getTempData(featureCode, requestId, checkerResponse, startDate, endDate, operationType, page, size);
     }
 
     @PostMapping("admin/close/request")

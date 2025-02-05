@@ -13,6 +13,7 @@ public class TempDataSpecifications {
     public static Specification<TempData> buildSpecification(
             String featureCode,
             String requestId,
+            String checkerResponse,
             String startDate,
             String endDate,
             Boolean operationType,
@@ -27,6 +28,8 @@ public class TempDataSpecifications {
             if (requestId != null && !requestId.isEmpty()) {
                 predicates.add(criteriaBuilder.like(root.get("requestId"), "%" + requestId + "%"));
             }
+
+            predicates.add(criteriaBuilder.equal(root.get("checkerResponse"), checkerResponse));
 
 
             if (startDate != null && endDate != null) {
