@@ -22,7 +22,7 @@ public interface RatingMapper {
                     RatingResponse ratingResponse = mapToRatingResponse(parentComment);
                     List<RatingReply> ratingReplyList = ratingList
                             .stream()
-                            .filter(rating -> rating.getCommentParentId().equals(parentComment.getRatingId()))
+                            .filter(rating -> rating.getCommentParentId().equals(parentComment.getCommentId()))
                             .map(this::mapToRatingReply)
                             .toList();
 
