@@ -1,6 +1,7 @@
 package com.healthcare.userservice.service;
 
 import com.healthcare.userservice.domain.common.ApiResponse;
+import com.healthcare.userservice.domain.request.EmailCheckRequest;
 import com.healthcare.userservice.domain.request.MobileCheckRequest;
 import com.healthcare.userservice.domain.response.*;
 
@@ -20,4 +21,6 @@ public interface IDropdownService {
     ApiResponse<CountResponse> pendingAppointmentCount();
 
     ApiResponse<CountResponse> pendingAdminCount();
+
+    ApiResponse<Boolean> checkEmail(EmailCheckRequest emailCheckRequest);
 }

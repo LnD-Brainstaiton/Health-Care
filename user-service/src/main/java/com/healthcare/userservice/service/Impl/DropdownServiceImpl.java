@@ -3,6 +3,7 @@ package com.healthcare.userservice.service.Impl;
 import com.healthcare.userservice.domain.common.ApiResponse;
 import com.healthcare.userservice.domain.entity.*;
 import com.healthcare.userservice.domain.enums.*;
+import com.healthcare.userservice.domain.request.EmailCheckRequest;
 import com.healthcare.userservice.domain.request.MobileCheckRequest;
 import com.healthcare.userservice.domain.response.*;
 import com.healthcare.userservice.repository.*;
@@ -102,6 +103,19 @@ public class DropdownServiceImpl implements IDropdownService {
                 .data(countResponse)
                 .responseCode(ApiResponseCode.OPERATION_SUCCESSFUL.getResponseCode())
                 .responseMessage(ResponseMessage.OPERATION_SUCCESSFUL.getResponseMessage())
+                .build();
+    }
+
+    @Override
+    public ApiResponse<Boolean> checkEmail(EmailCheckRequest emailCheckRequest) {
+        boolean response = true;
+
+        if(userRepository.findByEmailAndIsActiveTrue(emailCheckRequest.getEmail()).isEmpty())
+            response = false;
+        return ApiResponse.<Boolean>builder()
+                .responseCode(ApiResponseCode.OPERATION_SUCCESSFUL.getResponseCode())
+                .responseMessage(ResponseMessage.OPERATION_SUCCESSFUL.getResponseMessage())
+                .data(response)
                 .build();
     }
 

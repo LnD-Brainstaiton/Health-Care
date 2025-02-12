@@ -9,7 +9,7 @@ import com.healthcare.userservice.domain.request.ApproveRejectRequest;
 import com.healthcare.userservice.domain.request.RegistrationRequestTemp;
 import com.healthcare.userservice.domain.response.AdminCheckerMackerResponse;
 import com.healthcare.userservice.domain.response.TempDataResponse;
-import com.healthcare.userservice.service.IAdminCheckerMacker;
+import com.healthcare.userservice.service.IAdminCheckerMaker;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.MissingRequestValueException;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 public class AdminCheckerMackerResource {
 
-    private final IAdminCheckerMacker iAdminCheckerMacker;
+    private final IAdminCheckerMaker iAdminCheckerMacker;
 
     @PostMapping("/admin/temp/request")
     public ApiResponse<AdminCheckerMackerResponse> saveTemp(@RequestBody RegistrationRequestTemp temp) throws MissingRequestValueException {
@@ -38,6 +38,7 @@ public class AdminCheckerMackerResource {
             @RequestParam(required = false) String featureCode,
             @RequestParam(required = false) String requestId,
             @RequestParam(required = false) String startDate,
+            @RequestParam(required = false) String checkerResponse,
             @RequestParam(required = false) String endDate,
             @RequestParam(required = false) Boolean operationType,
             @RequestParam(defaultValue = "0") int page,

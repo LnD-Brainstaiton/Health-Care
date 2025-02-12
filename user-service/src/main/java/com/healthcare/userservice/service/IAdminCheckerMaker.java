@@ -12,7 +12,7 @@ public interface IAdminCheckerMaker {
 
     ApiResponse<AdminCheckerMackerResponse> saveTemp(RegistrationRequestTemp temp) throws MissingRequestValueException;
 
-    ApiResponse<Page<TempDataResponse>> getTempData(String featureCode, String requestId, String startDate, String endDate, Boolean operationType, int page, int size);
+    ApiResponse<Page<TempDataResponse>> getTempData(String featureCode, String requestId, String checkerResponse, String startDate, String endDate, Boolean operationType, int page, int size);
 
     void requestCheck(ApproveRejectRequest request);
 

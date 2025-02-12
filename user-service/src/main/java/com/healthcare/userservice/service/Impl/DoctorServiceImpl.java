@@ -4,8 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.healthcare.userservice.config.AuthConfig;
 import com.healthcare.userservice.domain.common.ApiResponse;
-import com.healthcare.userservice.domain.dto.RatingReply;
-import com.healthcare.userservice.domain.entity.BaseEntity;
 import com.healthcare.userservice.domain.entity.Doctor;
 import com.healthcare.userservice.domain.entity.Rating;
 import com.healthcare.userservice.domain.entity.DoctorSetting;
@@ -56,6 +54,16 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Base64;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 
 @Service
 @RequiredArgsConstructor
@@ -308,21 +316,99 @@ public class DoctorServiceImpl extends BaseService implements IDoctorService {
         return timeSlotResponse;
     }
 
+
     @Override
     public ApiResponse<String> getCaptcha() {
-       ApiResponse<String> response = new ApiResponse<>();
-       String captcha = bmdcClientService.fetchCaptcha();
-       if(captcha == null || captcha.isEmpty()) {
-           response.setResponseCode(ApiResponseCode.RECORD_NOT_FOUND.getResponseCode());
-           response.setResponseMessage(ResponseMessage.RECORD_NOT_FOUND.getResponseMessage());
+        ApiResponse<String> response = new ApiResponse<>();
+        String base64Captcha = bmdcClientService.fetchCaptcha();
 
-           return response;
-       }
+        if (base64Captcha == null || base64Captcha.isEmpty()) {
+            response.setResponseCode(ApiResponseCode.RECORD_NOT_FOUND.getResponseCode());
+            response.setResponseMessage(ResponseMessage.RECORD_NOT_FOUND.getResponseMessage());
+            response.setData(null);
+            return response;
+        }
+
+        byte[] captchaBytes = decodeBase64Image(base64Captcha);
+        if (captchaBytes == null) {
+            response.setResponseCode(ApiResponseCode.RECORD_NOT_FOUND.getResponseCode());
+            response.setResponseMessage("Failed to fetch captcha image");
+            response.setData(null);
+            return response;
+        }
+
+        // Convert byte[] to Base64 String
+        String base64EncodedCaptcha = Base64.getEncoder().encodeToString(captchaBytes);
+
         response.setResponseCode(ApiResponseCode.OPERATION_SUCCESSFUL.getResponseCode());
         response.setResponseMessage(ResponseMessage.OPERATION_SUCCESSFUL.getResponseMessage());
-        response.setData(captcha);
+        response.setData(base64EncodedCaptcha);
+
         return response;
     }
+
+
+
+    private byte[] decodeBase64Image(String input) {
+        if (input == null || input.isEmpty()) {
+            return null;
+        }
+
+        // If the input is already a Base64-encoded image (not wrapped in an <img> tag)
+        if (input.startsWith("data:image/")) {
+            String base64Data = input.substring(input.indexOf(",") + 1); // Remove the prefix
+            return Base64.getDecoder().decode(base64Data);
+        }
+
+        // Otherwise, attempt to extract from an HTML <img> tag
+        Pattern pattern = Pattern.compile("<img\\s+src=\"(data:image/\\w+;base64,([^\"]+)|https?://[^\"]+)\"");
+        Matcher matcher = pattern.matcher(input);
+
+        if (matcher.find()) {
+            String base64Data = matcher.group(2);
+            if (base64Data != null) {
+                return Base64.getDecoder().decode(base64Data);
+            }
+
+            String imageUrl = matcher.group(1);
+            return downloadImageAsBytes(imageUrl);
+        }
+
+        return null;
+    }
+
+
+
+    private byte[] downloadImageAsBytes(String imageUrl) {
+        if (imageUrl == null || imageUrl.isEmpty()) {
+            return null;
+        }
+
+        try {
+            URL url = new URL(imageUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("User-Agent", "Mozilla/5.0");
+
+            try (InputStream inputStream = connection.getInputStream();
+                 ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+
+                byte[] buffer = new byte[4096];
+                int bytesRead;
+                while ((bytesRead = inputStream.read(buffer)) != -1) {
+                    outputStream.write(buffer, 0, bytesRead); // Fix incorrect writing
+                }
+
+                return outputStream.toByteArray();
+            } finally {
+                connection.disconnect(); // Ensure connection is closed
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 
     @Override
     public ApiResponse<String> validateRegistration(BmdcValidationRequest request) {
