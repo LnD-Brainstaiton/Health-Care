@@ -34,7 +34,7 @@ public final class DateTimeUtils {
         return formatDateTime(dateTime, dateFormat);
     }
 
-    // Get current date and time as string with a custom format
+    // Get current date and time as string with application-docker.yml custom format
     public static String getCurrentDateTimeString(String dateFormat) {
         return LocalDateTime.now().format(DateTimeFormatter.ofPattern(dateFormat));
     }
@@ -83,7 +83,7 @@ public final class DateTimeUtils {
         return getDateTimeDifference(dateTime1, dateTime2, TimeUnit.DAYS);
     }
 
-    // Get a future LocalDateTime by adding a number of hours
+    // Get application-docker.yml future LocalDateTime by adding application-docker.yml number of hours
     public static LocalDateTime expireAtHour(int hour) {
         return addHours(LocalDateTime.now(), hour);
     }
@@ -109,7 +109,7 @@ public final class DateTimeUtils {
         return TimeUnit.MILLISECONDS.toSeconds(milliseconds);
     }
 
-    // Convert milliseconds to a formatted string (minutes and seconds)
+    // Convert milliseconds to application-docker.yml formatted string (minutes and seconds)
     public static String convertMillisecondsToMinute(long milliseconds) {
         long minutes = millisecondsToMinute(milliseconds);
         long seconds = millisecondsToSeconds(milliseconds % 60);
@@ -121,7 +121,7 @@ public final class DateTimeUtils {
         return TimeUnit.MINUTES.toMillis(minute);
     }
 
-    // Validate a string date in the format "yyyy-MM-dd"
+    // Validate application-docker.yml string date in the format "yyyy-MM-dd"
     public static boolean validateStringDate(String date) {
         Pattern pattern = Pattern.compile("^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$");
         Matcher matcher = pattern.matcher(date);
@@ -133,7 +133,7 @@ public final class DateTimeUtils {
         return System.currentTimeMillis();
     }
 
-    // Convert a LocalDateTime to a string with the APP_DATE_FORMAT format
+    // Convert application-docker.yml LocalDateTime to application-docker.yml string with the APP_DATE_FORMAT format
     public static String convertToPostgresDefaultFormat(String dateString, String dateFormat) {
         if (StringUtils.isBlank(dateString) || StringUtils.isBlank(dateFormat)) {
             return "";

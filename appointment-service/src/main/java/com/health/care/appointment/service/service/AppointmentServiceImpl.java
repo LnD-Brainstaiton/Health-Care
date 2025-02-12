@@ -10,6 +10,7 @@ import com.health.care.appointment.service.domain.enums.ApiResponseCode;
 import com.health.care.appointment.service.domain.enums.ResponseMessage;
 import com.health.care.appointment.service.domain.request.CreateAppointmentRequest;
 import com.health.care.appointment.service.domain.request.PaginationRequest;
+import com.health.care.appointment.service.domain.request.TimeSlotRequest;
 import com.health.care.appointment.service.domain.request.UpdateAppointmentRequest;
 import com.health.care.appointment.service.domain.response.AppointmentResponse;
 import com.health.care.appointment.service.domain.response.CountResponse;
@@ -129,6 +130,13 @@ public class AppointmentServiceImpl implements IAppointmentService{
                 .build();
     }
 
+    @Override
+    public List<LocalTime> getAppointedTimeSlot(TimeSlotRequest request) {
+        validateTimeSlotRequest(request);
+
+        return appointmentRepository.getAppointedTime(request.getDoctorId(), request.getDate());
+    }
+
 
     private void validateAppointmentRequest(CreateAppointmentRequest request) {
         if(Objects.isNull(request) ||
@@ -153,6 +161,16 @@ public class AppointmentServiceImpl implements IAppointmentService{
             StringUtils.isBlank(request.getPatientContactNo()) ||
             Objects.isNull(request.getPatientGender()) ||
             Objects.isNull(request.getPatientAge())){
+            throw new InvalidRequestDataException(ResponseMessage.INVALID_REQUEST_DATA);
+        }
+    }
+
+    private void validateTimeSlotRequest(TimeSlotRequest request){
+
+        if(Objects.isNull(request) ||
+                StringUtils.isEmpty(request.getDoctorId()) ||
+                Objects.isNull(request.getDate())){
+
             throw new InvalidRequestDataException(ResponseMessage.INVALID_REQUEST_DATA);
         }
     }

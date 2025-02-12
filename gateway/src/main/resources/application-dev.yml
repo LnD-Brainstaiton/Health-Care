@@ -19,6 +19,7 @@ spring:
             - Path=/api/v1/appointment/**  # Route all requests to /api/v1/appointment/** to the appointment service
           filters:
             - AuthenticationFilter
+
       globalcors:
         corsConfigurations:
           '[/**]':
@@ -28,7 +29,7 @@ spring:
             allowCredentials: true
 
   r2dbc:
-    url: r2dbc:postgresql://localhost:5432/health_care?currentSchema=gateway
+    url: r2dbc:postgresql://172.16.230.59:5432/health_care?currentSchema=gateway
     username: superadmin
     password: admin@123
   jpa:

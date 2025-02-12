@@ -5,6 +5,12 @@ spring:
     url: jdbc:postgresql://172.16.230.59:5432/health_care?currentSchema=tfa
     username: superadmin
     password: admin@123
+    hikari:
+      maximum-pool-size: 50
+      minimum-idle: 10
+      idle-timeout: 60000
+      connection-timeout: 30000
+      max-lifetime: 1800000
   jpa:
     hibernate:
       ddl-auto: update
@@ -42,7 +48,7 @@ eureka:
     prefer-ip-address: true
 
 service:
-  mode: dummy
+  mode: real
 
 otp:
   bad-odt-limit: 10

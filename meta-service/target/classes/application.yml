@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: meta-service
+  datasource:
+    url: jdbc:postgresql://172.16.230.59:5432/health_care?currentSchema=meta
+    password: admin@123
+    username: superadmin
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/  # Eureka server URL
+    fetch-registry: true
+    register-with-eureka: true
+  instance:
+    hostname: localhost  # Optional: specify the hostname
+    prefer-ip-address: true
+server:
+  port: 8092

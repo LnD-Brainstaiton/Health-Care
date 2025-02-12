@@ -1,0 +1,25 @@
+healthcare:
+  kafka:
+    bootstrap-servers: 172.16.230.59:9092
+    producer:
+      compressionType: gzip
+      acks: all
+      batchSize: 16384
+      batchSizeBoostFactor: 2
+      lingerMs: 5
+      requestTimeoutMs: 30000
+      retryCount: 3
+    consumer:
+      groupId: health-care
+      batchListener: true
+      autoStartup: true
+      concurrencyLevel: 5
+      sessionTimeoutMs: 30000
+      heartbeatIntervalMs: 1000
+      maxPollIntervalMs: 300000
+      pollTimeoutMs: 5000
+      maxPollRecords: 500
+      maxPartitionFetchBytesDefault: 1048576
+      maxPartitionFetchBytesBoostFactor: 2
+    topic:
+      dynamic-notification: DYNAMIC_NOTIFICATION
